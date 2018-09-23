@@ -1,2 +1,1 @@
-# CherrypickPortal
-Web portal for cherrypick
+## Cherry Pick Web Portal
