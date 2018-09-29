@@ -7,8 +7,6 @@ import {withStyles} from '@material-ui/core/styles/index';
 import {Card, CardContent, Icon, Tab, Tabs, Typography} from '@material-ui/core';
 import classNames from 'classnames';
 import {FuseAnimate} from '@fuse';
-import FirebaseRegisterTab from './tabs/FirebaseRegisterTab';
-import Auth0RegisterTab from './tabs/Auth0RegisterTab';
 import RegularRegisterTab from './tabs/RegularRegisterTab';
 
 const styles = theme => ({
@@ -45,7 +43,7 @@ class Register extends Component {
     };
 
     onSubmit = (model) => {
-        this.props.registerWithFirebase(model);
+        // this.props.registerWithFirebase(model);
     };
 
     componentDidUpdate(prevProps, prevState)
@@ -106,32 +104,7 @@ class Register extends Component {
 
                             <Typography variant="title" className="md:w-full mb-32">CREATE AN ACCOUNT</Typography>
 
-                            <Tabs
-                                value={tabValue}
-                                onChange={this.handleTabChange}
-                                fullWidth={true}
-                                className="mb-32"
-                            >
-                                <Tab
-                                    icon={<img className="h-40" src="assets/images/logos/firebase.svg" alt="firebase"/>}
-                                    className="min-w-0"
-                                    label="Firebase"
-                                />
-                                <Tab
-                                    icon={<img className="h-40" src="assets/images/logos/auth0.svg" alt="auth0"/>}
-                                    className="min-w-0"
-                                    label="Auth0"
-                                />
-                                <Tab
-                                    icon={<Icon className="h-40 text-40">security</Icon>}
-                                    className="min-w-0"
-                                    label="Regular"
-                                />
-                            </Tabs>
-
-                            {tabValue === 0 && <FirebaseRegisterTab/>}
-                            {tabValue === 1 && <Auth0RegisterTab/>}
-                            {tabValue === 2 && <RegularRegisterTab/>}
+                            <RegularRegisterTab/>
 
                             <div className="flex flex-col items-center justify-center pt-32 pb-24">
                                 <span className="font-medium">Already have an account?</span>
@@ -152,7 +125,7 @@ class Register extends Component {
 function mapDispatchToProps(dispatch)
 {
     return bindActionCreators({
-        registerWithFirebase: Actions.registerWithFirebase
+        // registerWithFirebase: Actions.registerWithFirebase
     }, dispatch);
 }
 

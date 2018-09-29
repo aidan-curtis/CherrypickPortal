@@ -6,6 +6,8 @@ import {bindActionCreators} from 'redux';
 import * as Actions from 'auth/store/actions';
 import {withRouter} from 'react-router-dom';
 import connect from 'react-redux/es/connect/connect';
+import axios from 'axios'
+
 
 const styles = theme => ({
     root: {

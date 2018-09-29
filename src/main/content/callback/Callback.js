@@ -10,18 +10,7 @@ import {withRouter} from 'react-router-dom';
 class Callback extends Component {
     componentDidMount()
     {
-        auth0Service.lock.on('authenticated', () => {
-            this.props.showMessage({message: 'Logging in with Auth0'});
-
-            /**
-             * Retrieve user data from Auth0
-             */
-            auth0Service.getUserData().then(tokenData => {
-                this.props.setUserDataAuth0(tokenData);
-                this.props.history.push('/');
-                this.props.showMessage({message: 'Logged in with Auth0'});
-            });
-        });
+       
     }
 
     render()
@@ -35,7 +24,6 @@ class Callback extends Component {
 function mapDispatchToProps(dispatch)
 {
     return bindActionCreators({
-            setUserDataAuth0: userActions.setUserDataAuth0,
             showMessage     : Actions.showMessage,
             hideMessage     : Actions.hideMessage
         },
