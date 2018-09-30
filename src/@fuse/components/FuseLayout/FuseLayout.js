@@ -53,7 +53,7 @@ class FuseLayout extends Component {
 
     routeSettingsCheck = () => {
         const matched = matchRoutes(this.props.routes, this.props.location.pathname)[0];
-
+        console.log(matched)
         if ( matched && matched.route.settings )
         {
             const routeSettings = _.merge({}, this.props.defaultSettings, matched.route.settings);
@@ -73,9 +73,11 @@ class FuseLayout extends Component {
 
     render()
     {
+
         const {settings, classes} = this.props;
         // console.warn('FuseLayout:: rendered');
         const Layout = FuseLayouts[settings.layout.style].component;
+        
         return (
             <Layout className={classes.root} {...this.props}/>
         );

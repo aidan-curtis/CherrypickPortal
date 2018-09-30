@@ -3,7 +3,6 @@ import {withStyles} from '@material-ui/core/styles/index';
 import classNames from 'classnames';
 import {Avatar, Button, Icon, IconButton, ListItemIcon, ListItemText, Popover, MenuItem, Typography, Hidden} from '@material-ui/core';
 import {connect} from 'react-redux';
-import * as quickPanelActions from 'main/quickPanel/store/actions';
 import * as authActions from 'auth/store/actions';
 import {bindActionCreators} from 'redux';
 import {FuseShortcuts, FuseAnimate} from '@fuse';
@@ -37,34 +36,33 @@ class MainToolbar extends Component {
 
     render()
     {
-        const {classes, toggleQuickPanel, user, logout, openChatPanel} = this.props;
+        const {classes, user, logout, openChatPanel} = this.props;
         const {userMenu} = this.state;
 
         return (
             <div className={classNames(classes.root, "flex flex-row")}>
 
-                <div className="flex flex-1">
-                    <FuseShortcuts/>
+                <div className="flex flex-1"> 
                 </div>
 
                 <div className="flex">
                     <FuseAnimate delay={300}>
                         <Button className="h-64" onClick={this.userMenuClick}>
-                            {user.data.photoURL ?
+                            {user.team.imageUri ?
                                 (
-                                    <Avatar className="" alt="user photo" src={user.data.photoURL}/>
+                                    <Avatar className="" alt="user photo" src={user.team.imageUri}/>
                                 )
                                 :
                                 (
                                     <Avatar className="">
-                                        {user.data.displayName[0]}
+                                        {user.team.team_name}
                                     </Avatar>
                                 )
                             }
 
                             <div className="hidden md:flex flex-col ml-12 items-start">
                                 <Typography component="span" className="normal-case font-500 flex">
-                                    {user.data.displayName}
+                                    {user.team.team_name}
                                 </Typography>
                                 <Typography className="text-11 capitalize" color="textSecondary">
                                     Team
@@ -93,8 +91,6 @@ class MainToolbar extends Component {
                     >
                         {(
                             <React.Fragment>
-                                
-                                
                                 <MenuItem
                                     onClick={() => {
                                         logout();
@@ -120,7 +116,6 @@ class MainToolbar extends Component {
 function mapDispatchToProps(dispatch)
 {
     return bindActionCreators({
-        toggleQuickPanel: quickPanelActions.toggleQuickPanel,
         logout          : authActions.logoutUser
     }, dispatch);
 }

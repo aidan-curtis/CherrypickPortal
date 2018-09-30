@@ -45,12 +45,12 @@ function MainNavbar({classes, navigation, layoutStyle, user})
                 elevation={0}
                 className="user relative flex flex-col items-center justify-center pt-24 pb-64 mb-32 z-0"
             >
-                <Typography className="username text-16 whitespace-no-wrap" color="inherit">{user.data.displayName}</Typography>
-                <Typography className="email text-13 mt-8 opacity-50 whitespace-no-wrap" color="inherit">{user.data.email}</Typography>
+                <Typography className="username text-16 whitespace-no-wrap" color="inherit">{user.team.team_name}</Typography>
+                <Typography className="email text-13 mt-8 opacity-50 whitespace-no-wrap" color="inherit">{user.team.email}</Typography>
                 <Avatar
                     className={classNames(classes.avatar, "avatar")}
                     alt="user photo"
-                    src={user.data.photoURL && user.data.photoURL !== '' ? user.data.photoURL : "assets/images/avatars/profile.jpg"}
+                    src={user.team.imageUri && user.team.imageUri !== '' ? user.team.imageUri : "assets/images/avatars/profile.jpg"}
                 />
             </AppBar>
         );

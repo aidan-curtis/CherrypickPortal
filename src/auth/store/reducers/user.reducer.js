@@ -1,21 +1,17 @@
 import * as Actions from '../actions';
 
 const initialState = {
-    role: 'guest',
-    data: {
-        'displayName': 'John Doe',
-        'photoURL'   : 'assets/images/avatars/Velazquez.jpg',
-        'email'      : 'johndoe@withinpixels.com',
-        shortcuts    : [
-            'calendar',
-            'mail',
-            'contacts',
-            'todo'
-        ]
-    }
+    team: {
+        team_name: "",
+        imageUri: "",
+        email: ""
+    },
+    Videos: [],
+    token: ""
 };
 
 const user = function (state = initialState, action) {
+
     switch ( action.type )
     {
         case Actions.SET_USER_DATA:

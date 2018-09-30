@@ -17,11 +17,10 @@ export const USER_LOGGED_OUT = '[USER] LOGGED OUT';
 export function setUserData(user)
 {
     return (dispatch) => {
-
         /*
         Set User Settings
          */
-        dispatch(setDefaultSettings(user.data.settings));
+        dispatch(setDefaultSettings(user));
 
         /*
         Set User Data
@@ -89,21 +88,8 @@ export function logoutUser()
     });
 
     return (dispatch, getState) => {
-
         const user = getState().auth.user;
-
-        if ( user.role !== 'guest' )
-        {
-            switch ( user.from )
-            {
-                default:
-                {
-                }
-            }
-        }
-
         dispatch(setDefaultSettings(FuseDefaultSettings));
-
         dispatch({
             type: USER_LOGGED_OUT
         })

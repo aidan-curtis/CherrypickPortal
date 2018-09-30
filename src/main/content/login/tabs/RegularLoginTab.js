@@ -6,7 +6,6 @@ import {bindActionCreators} from 'redux';
 import * as Actions from 'auth/store/actions';
 import {withRouter} from 'react-router-dom';
 import connect from 'react-redux/es/connect/connect';
-import axios from 'axios'
 
 
 const styles = theme => ({
@@ -36,6 +35,7 @@ class RegularLoginTab extends Component {
 
     componentDidUpdate(prevProps, prevState)
     {
+
         if ( this.props.login.error && (this.props.login.error.email || this.props.login.error.password) )
         {
             this.form.updateInputsWithError({
@@ -46,7 +46,7 @@ class RegularLoginTab extends Component {
             this.disableButton();
         }
 
-        if ( this.props.user.role !== 'guest' )
+        if ( this.props.user.token !== '' )
         {
             const pathname = this.props.location.state && this.props.location.state.redirectUrl ? this.props.location.state.redirectUrl : '/';
             this.props.history.push({

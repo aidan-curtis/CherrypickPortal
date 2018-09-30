@@ -23,7 +23,7 @@ export const LoginConfig = {
             }
         }
     },
-    auth    : authRoles.onlyGuest,
+    // auth    : authRoles.onlyGuest,
     routes  : [
         {
             path     : '/login',
