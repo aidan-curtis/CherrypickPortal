@@ -12,6 +12,8 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
+import { Redirect } from 'react-router-dom'
+
 
 
 const styles = theme => ({
@@ -27,6 +29,24 @@ class Tournaments extends Component {
         super(props);
     }
 
+
+    state = {
+      redirect: false
+    }
+
+    redirectToTarget = () => {
+      this.props.history.push(`/apps/dashboards/video`)
+    }
+
+
+    renderRedirect = () => {
+      if (this.state.redirect) {
+        return <Redirect to='/apps/dashboards/video' />
+      }
+    }
+ 
+
+
     render()
     {
 
@@ -34,8 +54,9 @@ class Tournaments extends Component {
         const {classes} = this.props;
         return (
             <div className={classes.root} style = {{padding: 50}}>
-                 {this.props.user.team.Videos.map(function(video, index){
-                    return (<Card key = {index} style = {{width: 200, height: 280}}>
+                {this.renderRedirect()}
+                {this.props.user.team.Videos.map((video, index)=>
+                    (<Card key = {index} style = {{width: 200, height: 280}}>
                                 <CardActionArea>
                                     <CardMedia
                                       title="Thumb"
@@ -49,12 +70,12 @@ class Tournaments extends Component {
                                     </CardContent>
                                   </CardActionArea>
                                   <CardActions>
-                                    <Button size="small" color="primary">
+                                    <Button size="small" color="primary" onClick={() => {this.setState({redirect: true})}}>
                                       View
                                     </Button>
                                   </CardActions>
                             </Card>)
-                  })}
+                  )}
             </div>
         )
     };

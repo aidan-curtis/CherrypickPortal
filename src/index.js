@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import history from './history';
 import './react-table-defaults';
 import './styles/index.css';
+import '../node_modules/video-react/dist/video-react.css'
 import JssProvider from 'react-jss/lib/JssProvider';
 import {create} from 'jss';
 import {createGenerateClassName, jssPreset} from '@material-ui/core/styles';

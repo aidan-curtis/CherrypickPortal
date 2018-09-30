@@ -7,6 +7,27 @@ const initialState = {
         imageUri: "",
         email: ""
     },
+    activeVideo: {
+        Segments: [
+        {name: "testing", timestamp: 5},
+        {name: "testing2", timestamp: 10},
+        {name: "testing", timestamp: 15},
+        {name: "testing2", timestamp: 20},
+        {name: "testing2", timestamp: 25},
+        {name: "testing2", timestamp: 30},
+        {name: "testing2", timestamp: 35},
+        {name: "testing2", timestamp: 40},
+        {name: "testing2", timestamp: 45},
+        {name: "testing2", timestamp: 50},
+        {name: "testing2", timestamp: 55},
+        {name: "testing2", timestamp: 60},
+        {name: "testing2", timestamp: 65},
+        {name: "testing2", timestamp: 70},
+        {name: "testing2", timestamp: 75},
+        {name: "testing2", timestamp: 80},
+        {name: "testing2", timestamp: 85}
+         ]
+    },
     token: ""
 };
 
