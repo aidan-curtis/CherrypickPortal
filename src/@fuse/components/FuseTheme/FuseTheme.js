@@ -5,7 +5,6 @@ import {withRouter} from 'react-router-dom';
 import {fuseThemesConfig} from 'fuse-configs/fuseThemesConfig';
 import _ from 'lodash';
 import {fuseDark} from '@fuse/fuse-colors';
-import lightBlue from '@material-ui/core/colors/lightBlue';
 import red from '@material-ui/core/colors/red';
 
 const mustHaveOptions = {
@@ -20,9 +19,9 @@ export const defaults = {
             type     : 'light',
             primary  : fuseDark,
             secondary: {
-                light: lightBlue[400],
-                main : lightBlue[600],
-                dark : lightBlue[700]
+                light: red[400],
+                main : red[600],
+                dark : red[700]
             },
             error    : red
         },
@@ -35,9 +34,9 @@ export const defaults = {
             type     : 'dark',
             primary  : fuseDark,
             secondary: {
-                light: lightBlue[400],
-                main : lightBlue[600],
-                dark : lightBlue[700]
+                light: red[400],
+                main : red[600],
+                dark : red[700]
             },
             error    : red
         },

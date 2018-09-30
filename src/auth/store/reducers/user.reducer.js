@@ -2,11 +2,11 @@ import * as Actions from '../actions';
 
 const initialState = {
     team: {
+        Videos: [],
         team_name: "",
         imageUri: "",
         email: ""
     },
-    Videos: [],
     token: ""
 };
 

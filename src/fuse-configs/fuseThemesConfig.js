@@ -1,5 +1,4 @@
 import {fuseDark} from '@fuse/fuse-colors';
-import lightBlue from '@material-ui/core/colors/lightBlue';
 import red from '@material-ui/core/colors/red';
 
 export const fuseThemesConfig = {
@@ -8,9 +7,9 @@ export const fuseThemesConfig = {
             type     : 'light',
             primary  : fuseDark,
             secondary: {
-                light: lightBlue[400],
-                main : lightBlue[600],
-                dark : lightBlue[700]
+                light: red[200],
+                main : red[400],
+                dark : red[500]
             },
             error    : red
         },
@@ -112,9 +111,9 @@ export const fuseThemesConfig = {
             type     : 'dark',
             primary  : fuseDark,
             secondary: {
-                light: lightBlue[400],
-                main : lightBlue[600],
-                dark : lightBlue[700]
+                light: red[400],
+                main : red[600],
+                dark : red[700]
             },
             error    : red
         },
