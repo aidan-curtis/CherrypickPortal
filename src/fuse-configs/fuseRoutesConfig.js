@@ -8,10 +8,12 @@ import {LoginConfig} from 'main/content/login/LoginConfig';
 import {RegisterConfig} from 'main/content/register/RegisterConfig';
 import {LogoutConfig} from 'main/content/logout/LogoutConfig';
 import {CallbackConfig} from 'main/content/callback/CallbackConfig';
+import {HomepageConfig} from 'main/content/homepage/HomepageConfig'
 
 const routeConfigs = [
     ...appsConfigs,
     ...pagesConfigs,
+    HomepageConfig,
     LoginConfig,
     UserInterfaceConfig,
     RegisterConfig,
@@ -24,7 +26,7 @@ export const routes = [
     {
         path     : '/',
         exact    : true,
-        component: () => <Redirect to="/apps/dashboards/tournaments"/>
+        component: () => <Redirect to="/"/>
     },
     {
         component: () => <Redirect to="/pages/errors/error-404"/>
