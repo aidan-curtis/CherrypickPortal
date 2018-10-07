@@ -54,8 +54,7 @@ class Login extends Component {
 
                     <FuseAnimate delay={400}>
                         <Typography variant="subheading" color="inherit" className="max-w-512 mt-16">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ullamcorper nisl erat, vel convallis elit fermentum pellentesque. Sed mollis velit
-                            facilisis facilisis.
+                            Log into your portal to get access to your segmented videos. Please contact us if you cannot access your account.
                         </Typography>
                     </FuseAnimate>
                 </div>
@@ -65,7 +64,6 @@ class Login extends Component {
                     <Card className={classNames(classes.card, "mx-auto m-16 md:m-0")}>
 
                         <CardContent className="flex flex-col items-center justify-center p-32 md:p-48 md:pt-128 ">
-
                             <Typography variant="title" className="text-center md:w-full mb-48">LOGIN TO YOUR ACCOUNT</Typography>
                             <RegularLoginTab/>
 

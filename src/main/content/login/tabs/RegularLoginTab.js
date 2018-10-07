@@ -48,7 +48,7 @@ class RegularLoginTab extends Component {
 
         if ( this.props.user.token !== '' )
         {
-            const pathname = this.props.location.state && this.props.location.state.redirectUrl ? this.props.location.state.redirectUrl : '/';
+            const pathname = this.props.location.state && this.props.location.state.redirectUrl ? this.props.location.state.redirectUrl : '/apps/dashboards/tournaments';
             this.props.history.push({
                 pathname
             });

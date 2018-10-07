@@ -44,7 +44,6 @@ class FuseAuthorization extends Component {
                 }
                 else
                 {
-
                     this.props.history.push({
                         pathname: '/'
                     });
