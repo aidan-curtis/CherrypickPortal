@@ -9,6 +9,7 @@ import {Divider, List, Hidden} from '@material-ui/core';
 import {withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+
 const propTypes = {
     navigation: PropTypes.array.isRequired
 };
@@ -46,8 +47,13 @@ class FuseNavigation extends Component {
                             )}
                         </React.Fragment>
                     ))
+                   
                 }
+
             </List>
+                     
+   
+
         );
 
         const horizontalNav = (
@@ -89,10 +95,12 @@ class FuseNavigation extends Component {
                         <React.Fragment>
                             <Hidden lgUp>
                                 {verticalNav}
+
                             </Hidden>
                             <Hidden mdDown>
                                 {horizontalNav}
                             </Hidden>
+                        
                         </React.Fragment>
                     )
                 }

@@ -7,6 +7,7 @@ import {connect} from 'react-redux';
 import * as Actions from 'store/actions';
 import {AppBar, Hidden, Icon, IconButton, Toolbar, Drawer, MuiThemeProvider} from '@material-ui/core';
 import {FuseScrollbars, FuseMessage, FuseThemes} from '@fuse';
+import {Button} from '@material-ui/core';
 import classNames from 'classnames';
 import _ from 'lodash';
 
@@ -234,16 +235,7 @@ class FuseLayout1 extends Component {
                 <div className={classes.navbarHeader}>
                     {navbarHeader}
                 </div>
-                <Hidden mdDown>
-                    <IconButton onClick={this.handleToggleFolded} color="inherit">
-                        <Icon>menu</Icon>
-                    </IconButton>
-                </Hidden>
-                <Hidden lgUp>
-                    <IconButton onClick={navbarCloseMobile} color="inherit">
-                        <Icon>menu</Icon>
-                    </IconButton>
-                </Hidden>
+                
             </AppBar>
         );
 
@@ -270,6 +262,7 @@ class FuseLayout1 extends Component {
                         >
                             {navbarHeaderTemplate}
                             {navbarContentTemplate}
+
                         </div>
                     </Hidden>
 
