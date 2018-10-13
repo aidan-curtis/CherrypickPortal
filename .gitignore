@@ -18,6 +18,7 @@
 
 /.idea
 /.vscode
+/.env
 
 /src/styles/fuse-helpers.css
 

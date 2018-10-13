@@ -25,8 +25,6 @@ export function setUserData(user)
         /*
             Store token for authorization
         */
-        console.log("This is what was returned from the server")
-        console.log(user)
         localStorage.setItem("token",user.token)
 
         /*

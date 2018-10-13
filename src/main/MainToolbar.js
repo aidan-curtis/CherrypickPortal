@@ -68,9 +68,9 @@ class MainToolbar extends Component {
 					<DialogContent>
 						<DialogContentText id="alert-dialog-description">
 							<FilePond 
-							server={{
+								name="content"
+								server={{
 									url: 'http://54.152.39.99:5002/private_api',
-									timeout: 7000,
 									process: {
 										url: '/upload_video',
 										method: 'POST',
@@ -86,7 +86,7 @@ class MainToolbar extends Component {
 										}
 									}
 								}}
-							 name="content"/>
+							/>
 						</DialogContentText>
 					</DialogContent>
 					<DialogActions>

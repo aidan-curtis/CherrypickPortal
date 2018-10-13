@@ -23,6 +23,8 @@ import store from 'store';
 import SettingsPanel from 'main/SettingsPanel';
 import {Auth} from 'auth';
 
+require('dotenv').config({ path: './.env' })
+
 const jss = create({
     ...jssPreset(),
     plugins: [...jssPreset().plugins, jssExtend()]
