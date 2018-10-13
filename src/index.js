@@ -19,9 +19,14 @@ import MainNavbarContent from './main/MainNavbarContent';
 import MainNavbarHeader from './main/MainNavbarHeader';
 import MainFooter from './main/MainFooter';
 import jssExtend from 'jss-extend'
-import store from 'store';
 import SettingsPanel from 'main/SettingsPanel';
 import {Auth} from 'auth';
+import { PersistGate } from 'redux-persist/integration/react'
+import {applyMiddleware, compose, createStore} from 'redux';
+import reducers from 'store/reducers';
+import thunk from 'redux-thunk';
+import store from 'store';
+import { persistStore } from 'redux-persist'
 
 require('dotenv').config({ path: './.env' })
 
@@ -33,9 +38,12 @@ const jss = create({
 jss.options.insertionPoint = document.getElementById('jss-insertion-point');
 const generateClassName = createGenerateClassName();
 
+const persistor = persistStore(store)
+
 ReactDOM.render(
     <JssProvider jss={jss} generateClassName={generateClassName}>
         <Provider store={store}>
+              <PersistGate loading={null} persistor={persistor}>
             <Auth>
                 <Router history={history}>
                     <FuseAuthorization routes={routes}>
@@ -57,6 +65,7 @@ ReactDOM.render(
                     </FuseAuthorization>
                 </Router>
             </Auth>
+            </PersistGate>
         </Provider>
     </JssProvider>
     , document.getElementById('root'));
