@@ -59,7 +59,7 @@ class Tournaments extends Component {
 							<Card key = {index} style = {{width: "100%", height: 280}}>
 								<CardActionArea>
 									<CardMedia title="Thumb">
-										<img src={video.imageUri}/>
+										{(video.imageUri==null || video.imageUri==undefined || video.imageUri == "")? <img src="assets/images/processing.png"/>:<img src={video.imageUri}/> }
 									</CardMedia>
 									<CardContent>
 										<Typography gutterBottom variant="headline" component="h2">
