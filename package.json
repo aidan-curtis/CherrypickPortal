@@ -12,6 +12,7 @@
         "chart.js": "2.7.2",
         "dotenv": "^6.1.0",
         "downshift": "2.2.2",
+        "filepond-plugin-file-validate-type": "^1.2.0",
         "filepond-plugin-image-preview": "^3.0.0",
         "formsy-react": "1.1.4",
         "google-map-react": "1.0.6",

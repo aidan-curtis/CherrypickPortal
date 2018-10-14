@@ -21,6 +21,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
+
+
 const styles = theme => ({
 	root: {
 		width: '100%'
@@ -29,9 +31,13 @@ const styles = theme => ({
 
 class Video extends Component {
 
+	state = {video:  null}
 	constructor(props)
 	{
 		super(props);
+		this.state = {
+			video: this.props.user.activeVideo
+		}
 	}
 
 	state = {
@@ -63,11 +69,10 @@ class Video extends Component {
 
 
 
-
-
 	render()
 	{
 		const {classes} = this.props;
+		console.log(this.state.video.videoUri)
 		return (
 			<div className={classes.root} style = {{padding: 50}}>
 				<Grid container spacing={24}>
@@ -75,8 +80,8 @@ class Video extends Component {
 						<Player
 							playsInline
 							ref="player"
-							poster="https://s3.amazonaws.com/cherrypick-game-videos/Ashton%26AJ+vs+Diemer%26Castelino+(DU)_2018-09-30-00.21.51.252-UTC_0.png"
-							src="https://s3.amazonaws.com/cherrypick-game-videos/Ashton%26AJ+vs+Diemer%26Castelino+(DU)_2018-09-30-00.21.51.252-UTC_0.mp4"
+							poster={this.state.video.imageUri}
+							src={this.state.video.videoUri}
 						/>
 					</Grid>
 					<Grid item xs={4}>
@@ -90,7 +95,7 @@ class Video extends Component {
 										</TableRow>
 									</TableHead>
 									<TableBody>
-										{this.props.user.activeVideo.Segments.map((segment, index)=>{
+										{this.state.video.Segments.map((segment, index)=>{
 											var cell_color = "#fff"
 											if(this.state.selected===index){
 												cell_color = "#eee"

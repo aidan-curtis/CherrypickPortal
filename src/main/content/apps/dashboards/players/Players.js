@@ -13,78 +13,89 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import { Redirect } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import store from 'store'
+import * as Actions from 'auth/store/actions';
+
 
 const styles = theme => ({
-    root: {
-        width: '100%'
-    }
+	root: {
+		width: '100%'
+	}
 });
 
 class Players extends Component {
 
-    constructor(props)
-    {
-        super(props);
-    }
+
+	state = {
+		clicked: false
+	}
+
+	constructor(props)
+	{
+		super(props);
+	}
+
+	redirectToTarget = () => {
+		this.props.history.push(`/apps/dashboards/video`)
+	}
 
 
-    state = {
-      redirect: false
-    }
+	renderRedirect = () => {
+		if (this.props.user.activeVideo !== null && this.props.user.activeVideo !== undefined && this.state.clicked) {
+			return <Redirect to='/apps/dashboards/video'/>
+		}
+	}
 
-    redirectToTarget = () => {
-      this.props.history.push(`/apps/dashboards/video`)
-    }
-
-
-    renderRedirect = () => {
-      if (this.state.redirect) {
-        return <Redirect to='/apps/dashboards/video' />
-      }
-    }
- 
-
-    render()
-    {
-        const {classes} = this.props;
-        return (
-            <div className={classes.root} style = {{padding: 50}}>
-                {this.renderRedirect()}
-                 {this.props.user.team.Videos.map((video, index)=>
-                    (<Card key = {index} style = {{width: 200, height: 280}}>
-                                <CardActionArea>
-                                    <CardMedia
-                                      title="Thumb">
-                                        <img src="https://s3.amazonaws.com/cherrypick-game-videos/Ashton%26AJ+vs+Diemer%26Castelino+(DU)_2018-09-30-00.21.51.252-UTC_0.png"/>
-                                    </CardMedia>
-                                    <CardContent>
-                                      <Typography gutterBottom variant="headline" component="h2">
-                                            {video.metadata.playerName}
-                                      </Typography>
-                                    </CardContent>
-                                  </CardActionArea>
-                                  <CardActions>
-                                    <Button size="small" color="primary" onClick={() => {this.setState({redirect: true})}}>
-                                      View
-                                    </Button>
-                                  </CardActions>
-                            </Card>)
-                  )}
-            </div>
-        )
-    };
+	render()
+	{
+		const {classes} = this.props;
+		return (
+			<div className={classes.root} style = {{padding: 50}}>
+				{this.renderRedirect()}
+				<Grid container spacing={24}>
+				{this.props.user.team.Videos.map((video, index)=>
+						(<Grid item xs={2}>
+							<Card key = {index} style = {{width: "100%", height: 280}}>
+								<CardActionArea>
+									<CardMedia title="Thumb">
+											{(video.imageUri==null || video.imageUri==undefined || video.imageUri == "")? <img src="assets/images/processing.png"/>:<img src={video.imageUri}/> }
+									</CardMedia>
+									<CardContent>
+										<Typography gutterBottom variant="headline" component="h2">
+											{video.metadata.playerName}
+										</Typography>
+									</CardContent>
+								</CardActionArea>
+								<CardActions>
+									<Button size="small" color="primary" onClick={() => {
+										this.setState({clicked: true})
+										store.dispatch(this.props.setCurrentVideo(video))
+									}}>
+										View
+									</Button>
+								</CardActions>
+							</Card>
+						</Grid>)
+					)}
+				</Grid>
+			</div>
+		)
+	};
 }
 
 function mapDispatchToProps(dispatch)
 {
-    return bindActionCreators({}, dispatch);
+	return bindActionCreators({
+		setCurrentVideo: Actions.setCurrentVideo
+	}, dispatch);
 }
 
 function mapStateToProps({auth})
 {
-    return {
-        user: auth.user
-    }
+	return {
+		user: auth.user
+	}
 }
 
 export default withStyles(styles, {withTheme: true})(withRouter(connect(mapStateToProps, mapDispatchToProps)(Players)));

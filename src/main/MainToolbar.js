@@ -12,8 +12,22 @@ import * as authActions from 'auth/store/actions';
 import {bindActionCreators} from 'redux';
 import {FuseShortcuts, FuseAnimate} from '@fuse';
 import {Link} from 'react-router-dom';
-import { FilePond } from 'react-filepond';
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+import { FilePond, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
+import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormLabel from '@material-ui/core/FormLabel';
+import axios from 'axios/index';
+import store from 'store';
+
+export const SET_USER_DATA = '[USER] SET DATA';
+
+
+
+
+registerPlugin(FilePondPluginFileValidateType)
 
 
 const styles = theme => ({
@@ -31,11 +45,31 @@ const styles = theme => ({
 
 class MainToolbar extends Component {
 	state = {
-		userMenu: null
+		userMenu: null,
+		player_name: "",
+		tournament_name: "",
+		upload_filename: "",
+		open: false
 	};
+
+	refresh(){
+		axios({
+			method: "GET",
+			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/get_team",
+			responseType: 'json',
+			headers: {
+				"authorization": localStorage.token
+			}
+		}).then((response) => {
+			store.dispatch({
+				type   : SET_USER_DATA,
+				payload: response.data
+			})
+		})
+	}
 	constructor(){
 		super()
-		
+		this.refresh()
 	}
 
 	userMenuClick = event => {
@@ -48,14 +82,53 @@ class MainToolbar extends Component {
 		this.setState({userMenu: null});
 	};
 	handleClose = () => {
-		this.setState({open: false});
+		this.setState({open: false, upload_filename: ""});
 	};
+
+	handleChange = name => event => {
+		this.setState({
+			[name]: event.target.value,
+		});
+	};
+
+	handleServerResponse = response => {
+		if(JSON.parse(response)["success"]){
+			this.setState({
+				upload_filename: JSON.parse(response)["filename"]
+			})
+		}	
+	}
+
+	handleSubmitForm = () => {
+		console.log("submitting")
+		console.log(this.state.upload_filename)
+		axios({
+			method: "POST",
+			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/create_video",
+			responseType: 'json',
+			headers: {
+				"authorization": localStorage.token
+			},
+			data: {
+				"upload_filename": this.state.upload_filename,
+				"tournament_name": this.state.tournament_name,
+				"player_name": this.state.player_name
+			}
+		}).then((response) => {
+			this.setState({
+				open: false,
+				upload_filename: ""
+			})
+			this.refresh()
+		})
+	}
 
 	render()
 	{
+
 		const {classes, user, logout, openChatPanel} = this.props;
 		const {userMenu} = this.state;
-
+		console.log(user)
 		return (
 			<div className={classNames(classes.root, "flex flex-row")}>
 				<Dialog
@@ -64,13 +137,14 @@ class MainToolbar extends Component {
 					aria-labelledby="alert-dialog-title"
 					aria-describedby="alert-dialog-description"
 				>
-					<DialogTitle id="alert-dialog-title">{"Upload a video for segmentation."}</DialogTitle>
+					<DialogTitle id="alert-dialog-title">{ this.state.upload_filename == ""? "Upload a video for segmentation.": "Input Video Metadata"}</DialogTitle>
 					<DialogContent>
 						<DialogContentText id="alert-dialog-description">
 							<FilePond 
 								name="content"
+								acceptedFileTypes = {["video/mp4"]}
 								server={{
-									url: 'http://54.152.39.99:5002/private_api',
+									url: process.env.REACT_APP_API_ENDPOINT+'/private_api',
 									process: {
 										url: '/upload_video',
 										method: 'POST',
@@ -78,15 +152,38 @@ class MainToolbar extends Component {
 											"authorization": localStorage.getItem("token")
 										},
 										withCredentials: false,
-										onload: function(response) {
-											return response.key;
-										},
+										onload: this.handleServerResponse,
 										onerror: function(response) {
 											return response.data;
 										}
 									}
 								}}
 							/>
+							{this.state.upload_filename != "" ?
+								<FormControl component="fieldset">
+									<FormGroup>
+										<TextField
+											id=""
+											label="Tournament Name"
+											style={{width: "300px"}}
+											value={this.state.tournament_name}
+											onChange={this.handleChange('tournament_name')}
+											margin="normal"
+
+										/>
+										<TextField
+											id="player_name"
+											label="Player Name"
+											value={this.state.player_name}
+											onChange={this.handleChange('player_name')}
+											margin="normal"
+										/>
+									</FormGroup>
+									<Button variant="contained" onClick={this.handleSubmitForm} className={classes.button} style={{marginTop: "20px", width: "300px"}}>
+        								Submit
+      								</Button>
+								</FormControl> : null
+							}
 						</DialogContentText>
 					</DialogContent>
 					<DialogActions>

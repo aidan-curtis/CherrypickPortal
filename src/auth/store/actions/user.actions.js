@@ -9,6 +9,8 @@ import * as Actions from 'store/actions';
 export const SET_USER_DATA = '[USER] SET DATA';
 export const REMOVE_USER_DATA = '[USER] REMOVE DATA';
 export const USER_LOGGED_OUT = '[USER] LOGGED OUT';
+export const SET_CURRENT_VIDEO = '[USER] SET CURREN VIDEO'
+
 
 
 /**
@@ -16,25 +18,25 @@ export const USER_LOGGED_OUT = '[USER] LOGGED OUT';
  */
 export function setUserData(user)
 {
-    return (dispatch) => {
-        /*
-        Set User Settings
-         */
-        dispatch(setDefaultSettings(user));
+	return (dispatch) => {
+		/*
+			Set User Settings
+		 */
+		dispatch(setDefaultSettings(user));
 
-        /*
-            Store token for authorization
-        */
-        localStorage.setItem("token",user.token)
+		/*
+			Store token for authorization
+		*/
+		localStorage.setItem("token",user.token)
 
-        /*
-        Set User Data
-         */
-        dispatch({
-            type   : SET_USER_DATA,
-            payload: user
-        })
-    }
+		/*
+			Set User Data
+		 */
+		dispatch({
+			type   : SET_USER_DATA,
+			payload: user
+		})
+	}
 }
 
 /**
@@ -42,14 +44,14 @@ export function setUserData(user)
  */
 export function updateUserSettings(settings)
 {
-    return (dispatch, getState) => {
-        const oldUser = getState().auth.user;
-        const user = _.merge({}, oldUser, {data: {settings}});
+	return (dispatch, getState) => {
+		const oldUser = getState().auth.user;
+		const user = _.merge({}, oldUser, {data: {settings}});
 
-        updateUserData(user);
+		updateUserData(user);
 
-        return dispatch(setUserData(user));
-    }
+		return dispatch(setUserData(user));
+	}
 }
 
 /**
@@ -57,20 +59,20 @@ export function updateUserSettings(settings)
  */
 export function updateUserShortcuts(shortcuts)
 {
-    return (dispatch, getState) => {
-        const user = getState().auth.user;
-        const newUser = {
-            ...user,
-            data: {
-                ...user.data,
-                shortcuts
-            }
-        };
+	return (dispatch, getState) => {
+		const user = getState().auth.user;
+		const newUser = {
+			...user,
+			data: {
+				...user.data,
+				shortcuts
+			}
+		};
 
-        updateUserData(newUser);
+		updateUserData(newUser);
 
-        return dispatch(setUserData(newUser));
-    }
+		return dispatch(setUserData(newUser));
+	}
 }
 
 /**
@@ -78,27 +80,45 @@ export function updateUserShortcuts(shortcuts)
  */
 export function removeUserData()
 {
-    return {
-        type: REMOVE_USER_DATA
-    }
+	return {
+		type: REMOVE_USER_DATA
+	}
 }
+
+export function setCurrentVideo(value)
+{
+	return {
+		type: SET_CURRENT_VIDEO,
+		payload: value
+	}
+}
+
+export function clearCurrentVideo()
+{
+	return {
+		type: SET_CURRENT_VIDEO,
+		payload: undefined
+	}
+}
+
+
 
 /**
  * Logout
  */
 export function logoutUser()
 {
-    history.push({
-        pathname: '/'
-    });
+	history.push({
+		pathname: '/'
+	});
 
-    return (dispatch, getState) => {
-        const user = getState().auth.user;
-        dispatch(setDefaultSettings(FuseDefaultSettings));
-        dispatch({
-            type: USER_LOGGED_OUT
-        })
-    }
+	return (dispatch, getState) => {
+		const user = getState().auth.user;
+		dispatch(setDefaultSettings(FuseDefaultSettings));
+		dispatch({
+			type: USER_LOGGED_OUT
+		})
+	}
 }
 
 /**
@@ -106,15 +126,15 @@ export function logoutUser()
  */
 function updateUserData(user)
 {
-    if ( user.role === 'guest' )
-    {
-        return;
-    }
+	if ( user.role === 'guest' )
+	{
+		return;
+	}
 
-    switch ( user.from )
-    {
-        default:
-        {
-        }
-    }
+	switch ( user.from )
+	{
+		default:
+		{
+		}
+	}
 }
