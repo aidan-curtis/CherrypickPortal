@@ -48,8 +48,9 @@ class MainToolbar extends Component {
 		userMenu: null,
 		player_name: "",
 		tournament_name: "",
-		upload_filename: "",
-		open: false
+		upload_filenames: [],
+		open: false,
+		continued: false
 	};
 
 	refresh(){
@@ -76,13 +77,18 @@ class MainToolbar extends Component {
 		this.setState({userMenu: event.currentTarget});
 	};
 	uploadVideo = event => {
-		this.setState({open: true})
+		this.setState({open: true, continued: false, upload_filenames: []})
 	};
 	userMenuClose = () => {
 		this.setState({userMenu: null});
 	};
 	handleClose = () => {
-		this.setState({open: false, upload_filename: ""});
+		this.setState({
+			open: false, 
+			upload_filenames: [], 
+			continued: false,
+			tournament_name: "",
+			player_name: "",});
 	};
 
 	handleChange = name => event => {
@@ -93,15 +99,24 @@ class MainToolbar extends Component {
 
 	handleServerResponse = response => {
 		if(JSON.parse(response)["success"]){
+			var upload_filenames = this.state.upload_filenames
+			console.log(JSON.parse(response)["file_info"][0])
+			console.log(JSON.parse(response)["file_info"][0]["location"])
+			upload_filenames.push(JSON.parse(response)["file_info"][0]["location"])
 			this.setState({
-				upload_filename: JSON.parse(response)["filename"]
+				upload_filenames: upload_filenames
 			})
 		}	
 	}
 
+
+	handleSubmitContinue = () => {
+		this.setState({
+			continued: true
+		})
+	}
 	handleSubmitForm = () => {
-		console.log("submitting")
-		console.log(this.state.upload_filename)
+
 		axios({
 			method: "POST",
 			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/create_video",
@@ -110,17 +125,22 @@ class MainToolbar extends Component {
 				"authorization": localStorage.token
 			},
 			data: {
-				"upload_filename": this.state.upload_filename,
+				"upload_filenames": this.state.upload_filenames,
 				"tournament_name": this.state.tournament_name,
 				"player_name": this.state.player_name
 			}
 		}).then((response) => {
 			this.setState({
 				open: false,
-				upload_filename: ""
+				upload_filenames: [],
+				tournament_name: "",
+				player_name: "",
+				continued: false
 			})
 			this.refresh()
 		})
+
+
 	}
 
 	render()
@@ -137,29 +157,39 @@ class MainToolbar extends Component {
 					aria-labelledby="alert-dialog-title"
 					aria-describedby="alert-dialog-description"
 				>
-					<DialogTitle id="alert-dialog-title">{ this.state.upload_filename == ""? "Upload a video for segmentation.": "Input Video Metadata"}</DialogTitle>
+					<DialogTitle id="alert-dialog-title">{ this.state.upload_filenames.continued==false? "What match are you uploading?": "Upload the videos for that match"}</DialogTitle>
 					<DialogContent>
 						<DialogContentText id="alert-dialog-description">
-							<FilePond 
-								name="content"
-								acceptedFileTypes = {["video/mp4"]}
-								server={{
-									url: process.env.REACT_APP_API_ENDPOINT+'/private_api',
-									process: {
-										url: '/upload_video',
-										method: 'POST',
-										headers: {
-											"authorization": localStorage.getItem("token")
-										},
-										withCredentials: false,
-										onload: this.handleServerResponse,
-										onerror: function(response) {
-											return response.data;
-										}
-									}
-								}}
-							/>
-							{this.state.upload_filename != "" ?
+							
+							{this.state.continued == true?
+								<FilePond 
+									allowMultiple={true}
+									name="content"
+									acceptedFileTypes = {["video/mp4"]}
+									server={{
+											url: process.env.REACT_APP_API_ENDPOINT+'/private_api',
+											process: {
+												url: '/upload_video',
+												method: 'POST',
+												headers: {
+													"authorization": localStorage.getItem("token")
+												},
+												withCredentials: false,
+												onload: this.handleServerResponse,
+												onerror: function(response) {
+													return response.data;
+												}
+											}
+									}}
+								/>
+								: null
+							}
+							{this.state.continued == true && this.state.upload_filenames.length != 0 ? 
+								<Button variant="contained" onClick={this.handleSubmitForm} className={classes.button} style={{marginTop: "20px", width: "300px"}}>
+									Submit
+								</Button>: null
+							}
+							{this.state.continued == false ?
 								<FormControl component="fieldset">
 									<FormGroup>
 										<TextField
@@ -179,9 +209,9 @@ class MainToolbar extends Component {
 											margin="normal"
 										/>
 									</FormGroup>
-									<Button variant="contained" onClick={this.handleSubmitForm} className={classes.button} style={{marginTop: "20px", width: "300px"}}>
-        								Submit
-      								</Button>
+									<Button variant="contained" onClick={this.handleSubmitContinue} className={classes.button} style={{marginTop: "20px", width: "300px"}}>
+										Continue
+									</Button>
 								</FormControl> : null
 							}
 						</DialogContentText>
