@@ -48,7 +48,7 @@ class Login extends Component {
 
                     <FuseAnimate animation="transition.slideUpIn" delay={300}>
                         <Typography variant="display2" color="inherit" className="font-light">
-                            Welcome to the Cherrypick!
+                            Welcome to Cherrypick!
                         </Typography>
                     </FuseAnimate>
 
