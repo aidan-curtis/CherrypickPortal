@@ -72,7 +72,6 @@ class Video extends Component {
 	render()
 	{
 		const {classes} = this.props;
-		console.log(this.state.video.videoUri)
 		return (
 			<div className={classes.root} style = {{padding: 50}}>
 				<Grid container spacing={24}>
@@ -80,8 +79,8 @@ class Video extends Component {
 						<Player
 							playsInline
 							ref="player"
-							poster={this.state.video.imageUri}
-							src={this.state.video.videoUri}
+							poster={this.state.video.processedImageUri}
+							src={this.state.video.processedVideoUri}
 						/>
 					</Grid>
 					<Grid item xs={4}>
@@ -90,8 +89,8 @@ class Video extends Component {
 								<Table className={classes.table} style={{tableLayout: 'fixed'}}>
 									<TableHead>
 										<TableRow>
-											<TableCell>Name</TableCell>
-											<TableCell>Timestamp (sec)</TableCell>
+											<TableCell>Start (sec)</TableCell>
+											<TableCell>End (sec)</TableCell>
 										</TableRow>
 									</TableHead>
 									<TableBody>
@@ -101,12 +100,12 @@ class Video extends Component {
 												cell_color = "#eee"
 											}
 											return (
-												<TableRow key={index} style ={{backgroundColor: cell_color}} onClick = {this.changeCurrentTime(segment.timestamp)}>
+												<TableRow key={index} style ={{backgroundColor: cell_color}} onClick = {this.changeCurrentTime(segment.start)}>
 													<TableCell component="th" scope="row" onClick = {()=>{this.setState({selected: index})}}>
-														{segment.name}
+														{segment.start} s
 													</TableCell>
 													<TableCell component="th" scope="row" onClick = {()=>{this.setState({selected: index})}} >
-														{segment.timestamp} s
+														{segment.end} s
 													</TableCell>
 												</TableRow>
 											)

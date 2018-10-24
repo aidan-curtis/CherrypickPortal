@@ -74,7 +74,7 @@ class RegularLoginTab extends Component {
                         className="mb-16"
                         type="text"
                         name="email"
-                        label="Username/Email"
+                        label="Email"
                         validations={{
                             minLength: 4
                         }}
@@ -107,7 +107,7 @@ class RegularLoginTab extends Component {
                         disabled={!canSubmit}
                         value="legacy"
                     >
-                        Login
+                        Log In
                     </Button>
 
                 </Formsy>

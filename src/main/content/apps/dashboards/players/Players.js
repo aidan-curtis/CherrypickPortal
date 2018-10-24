@@ -55,11 +55,13 @@ class Players extends Component {
 				{this.renderRedirect()}
 				<Grid container spacing={24}>
 				{this.props.user.team.Videos.map((video, index)=>
+
 						(<Grid item xs={2}>
 							<Card key = {index} style = {{width: "100%", height: 280}}>
+
 								<CardActionArea>
 									<CardMedia title="Thumb">
-											{(video.imageUri==null || video.imageUri==undefined || video.imageUri == "")? <img src="assets/images/processing.png"/>:<img src={video.imageUri}/> }
+											{(video.processedImageUri==null || video.processedImageUri==undefined || video.processedImageUri == "")? <img src="assets/images/processing.png"/>:<img src={video.processedImageUri}/> }
 									</CardMedia>
 									<CardContent>
 										<Typography gutterBottom variant="headline" component="h2">

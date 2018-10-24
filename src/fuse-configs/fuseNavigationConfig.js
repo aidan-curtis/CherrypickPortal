@@ -20,13 +20,6 @@ export const fuseNavigationConfig = [
                 'type' : 'item',
                 'url'  : '/apps/dashboards/players',
                 'icon' : 'person'
-            },
-            {
-                'id'   : 'calendar',
-                'title': 'Calendar',
-                'type' : 'item',
-                'icon' : 'today',
-                'url'  : '/apps/calendar'
             }
         ]
     }
