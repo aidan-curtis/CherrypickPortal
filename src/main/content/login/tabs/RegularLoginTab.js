@@ -16,7 +16,8 @@ const styles = theme => ({
 
 class RegularLoginTab extends Component {
     state = {
-        canSubmit: false
+        canSubmit: false,
+        loginError: false
     };
 
     form = React.createRef();
@@ -33,18 +34,11 @@ class RegularLoginTab extends Component {
         this.props.submitLogin(model);
     };
 
+    componentDidMount(){
+        this.props.login.error=null
+    }
     componentDidUpdate(prevProps, prevState)
     {
-
-        if ( this.props.login.error && (this.props.login.error.email || this.props.login.error.password) )
-        {
-            this.form.updateInputsWithError({
-                ...this.props.login.error
-            });
-
-            this.props.login.error = null;
-            this.disableButton();
-        }
 
         if ( this.props.user.token !== '' )
         {
@@ -63,6 +57,7 @@ class RegularLoginTab extends Component {
 
         return (
             <div className={classes.root}>
+                {this.props.login.error!=null?<p style={{color: "red", marginBottom: 10}}>The information you entered was incorrect.</p>:null}
                 <Formsy
                     onValidSubmit={this.onSubmit}
                     onValid={this.enableButton}

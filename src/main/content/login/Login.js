@@ -68,7 +68,7 @@ class Login extends Component {
                             <RegularLoginTab/>
 
                             <div className="flex flex-col items-center justify-center pt-32">
-                                <Link className="font-medium mt-8" to="https://cherrypick-analytics.com">Back to Homepage</Link>
+                                <a className="font-medium mt-8" href="https://cherrypick-analytics.com">Back to Homepage</a>
                             </div>
 
                         </CardContent>

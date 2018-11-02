@@ -3,6 +3,7 @@ import {withStyles} from '@material-ui/core/styles/index';
 import classNames from 'classnames';
 import {Avatar, Button, Icon, IconButton, ListItemIcon, ListItemText, MenuItem, Typography, Hidden, Popover} from '@material-ui/core';
 import {connect} from 'react-redux';
+import deburr from 'lodash/deburr';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -18,9 +19,13 @@ import 'filepond/dist/filepond.min.css';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
+import Paper from '@material-ui/core/Paper';
 import FormLabel from '@material-ui/core/FormLabel';
 import axios from 'axios/index';
 import store from 'store';
+import Autosuggest from 'react-autosuggest';
+import match from 'autosuggest-highlight/match';
+import parse from 'autosuggest-highlight/parse';
 
 export const SET_USER_DATA = '[USER] SET DATA';
 
@@ -29,6 +34,8 @@ export const SET_USER_DATA = '[USER] SET DATA';
 
 registerPlugin(FilePondPluginFileValidateType)
 
+const suggestions = [
+];
 
 const styles = theme => ({
 	root     : {
@@ -40,18 +47,96 @@ const styles = theme => ({
 		width          : 1,
 		height         : 64,
 		backgroundColor: theme.palette.divider
+	},
+	suggestionsList:{
+		margin: 0,
+  		padding: 0,
+		listStyleType: 'none'
 	}
+
 });
+
+function getSuggestionValue(suggestion) {
+	return suggestion.label;
+}
+function renderSuggestion(suggestion, { query, isHighlighted }) {
+	const matches = match(suggestion.label, query);
+	const parts = parse(suggestion.label, matches);
+
+	return (
+		<MenuItem selected={isHighlighted} component="div">
+			<div>
+			{parts.map((part, index) => {
+				return part.highlight ? (
+				<span key={String(index)} style={{ fontWeight: 500 }}>
+					{part.text}
+				</span>
+				) : (
+				<strong key={String(index)} style={{ fontWeight: 300 }}>
+					{part.text}
+				</strong>
+				);
+			})}
+			</div>
+		</MenuItem>
+	);
+}
+
+function renderInputComponent(inputProps) {
+	const { classes, inputRef = () => {}, ref, ...other } = inputProps;
+
+	return (
+		<TextField
+			fullWidth
+			InputProps={{
+			inputRef: node => {
+				ref(node);
+				inputRef(node);
+			},
+			classes: {
+				input: classes.input,
+			},
+			}}
+			{...other}
+		/>
+	);
+}
+function getSuggestions(value) {
+  const inputValue = deburr(value.trim()).toLowerCase();
+  const inputLength = inputValue.length;
+  let count = 0;
+
+  return inputLength === 0
+    ? []
+    : suggestions.filter(suggestion => {
+        const keep =
+          count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
+
+        if (keep) {
+          count += 1;
+        }
+
+        return keep;
+      });
+}
+
+
 
 class MainToolbar extends Component {
 	state = {
 		userMenu: null,
 		player_name: "",
 		tournament_name: "",
+		match_name: "",
 		upload_filenames: [],
 		open: false,
-		continued: false
+		continued: false,
+		single: '',
+		popper: '',
+		suggestions: []
 	};
+
+
 
 	refresh(){
 		axios({
@@ -68,8 +153,17 @@ class MainToolbar extends Component {
 			})
 		})
 	}
-	constructor(){
+
+	load_suggestions(props){
+		props.user.team.Videos.forEach(function(video){
+			console.log(video)
+			suggestions.push({"label": video.metadata.tournament})
+		})
+	}
+	constructor(props){
 		super()
+		this.load_suggestions(props)
+		console.log(suggestions)
 		this.refresh()
 	}
 
@@ -143,12 +237,41 @@ class MainToolbar extends Component {
 
 	}
 
+
+	handleSuggestionsFetchRequested = ({ value }) => {
+		this.setState({
+			suggestions: getSuggestions(value),
+		});
+	};
+
+	handleSuggestionsClearRequested = () => {
+		this.setState({
+			suggestions: [],
+		});
+	};
+
+	handleAutosuggestChange = name => (event, { newValue }) => {
+		this.setState({
+			[name]: newValue,
+		});
+	};
+
+
+
 	render()
 	{
 
 		const {classes, user, logout, openChatPanel} = this.props;
 		const {userMenu} = this.state;
-		console.log(user)
+
+		var  autosuggestProps = {
+			renderInputComponent,
+			suggestions: this.state.suggestions,
+			onSuggestionsFetchRequested: this.handleSuggestionsFetchRequested,
+			onSuggestionsClearRequested: this.handleSuggestionsClearRequested,
+			getSuggestionValue,
+			renderSuggestion,
+		};
 		return (
 			<div className={classNames(classes.root, "flex flex-row")}>
 				<Dialog
@@ -194,22 +317,50 @@ class MainToolbar extends Component {
 									<FormGroup>
 										<TextField
 											id=""
-											label="Tournament Name"
+											label="Match Name"
 											style={{width: "300px"}}
-											value={this.state.tournament_name}
-											onChange={this.handleChange('tournament_name')}
+											value={this.state.match_name}
+											onChange={this.handleChange('match_name')}
 											margin="normal"
-
 										/>
+
 										<TextField
 											id="player_name"
 											label="Player Name"
 											value={this.state.player_name}
 											onChange={this.handleChange('player_name')}
+											style={{marginBottom: 25}}
 											margin="normal"
 										/>
+
+
+										<Autosuggest
+											{...autosuggestProps}
+											inputProps={{
+												classes,
+												label: 'Tournament Name',
+												value: this.state.single,
+												onChange: this.handleAutosuggestChange('single'),
+											}}
+											theme={{
+												container: classes.container,
+												suggestionsContainerOpen: classes.suggestionsContainerOpen,
+												suggestionsList: classes.suggestionsList,
+												suggestion: classes.suggestion,
+											}}
+											renderSuggestionsContainer={options => (
+											<Paper {...options.containerProps} square>
+												{options.children}
+											</Paper>
+											)}
+										/>
+        
+
+
+
+			
 									</FormGroup>
-									<Button variant="contained" onClick={this.handleSubmitContinue} className={classes.button} style={{marginTop: "20px", width: "300px"}}>
+									<Button variant="contained" onClick={this.handleSubmitContinue} className={classes.button} style={{marginTop: 35, width: "300px"}}>
 										Continue
 									</Button>
 								</FormControl> : null
