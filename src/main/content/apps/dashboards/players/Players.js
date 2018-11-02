@@ -42,9 +42,16 @@ class Players extends Component {
 
 
 	renderRedirect = () => {
-		if (this.props.user.activeVideo !== null && this.props.user.activeVideo !== undefined && this.state.clicked) {
-			return <Redirect to='/apps/dashboards/video'/>
+		if (this.props.user.activePlayer !== null && this.props.user.activePlayer !== undefined && this.state.clicked) {
+			return <Redirect to='/apps/dashboards/matches' />
 		}
+	}
+
+	get_folders(){
+		return this.props.user.team.Videos.filter(function(item, i, ar){ return ar.map(function(vid){return vid.metadata.playerName}).indexOf(item.metadata.playerName) === i; })
+	}
+	get_num_videos_by_name(name){
+		return this.props.user.team.Videos.filter(function(video){return video.metadata.playerName == name}).length
 	}
 
 	render()
@@ -54,33 +61,23 @@ class Players extends Component {
 			<div className={classes.root} style = {{padding: 50}}>
 				{this.renderRedirect()}
 				<Grid container spacing={24}>
-				{this.props.user.team.Videos.map((video, index)=>
-
-						(<Grid item xs={2}>
-							<Card key = {index} style = {{width: "100%", height: 280}}>
-
-								<CardActionArea>
-									<CardMedia title="Thumb">
-											{(video.processedImageUri==null || video.processedImageUri==undefined || video.processedImageUri == "")? <img src="assets/images/processing.png"/>:<img src={video.processedImageUri}/> }
-									</CardMedia>
-									<CardContent>
-										<Typography gutterBottom variant="headline" component="h2">
-											{video.metadata.playerName}
-										</Typography>
-									</CardContent>
-								</CardActionArea>
-								<CardActions>
-									<Button size="small" color="primary" onClick={() => {
-										this.setState({clicked: true})
-										store.dispatch(this.props.setCurrentVideo(video))
-									}}>
-										View
-									</Button>
-								</CardActions>
+					{this.get_folders().map((video, index)=>
+						(<Grid item xs={4}>
+							<Card key = {index} style = {{width: "100%"}}>
+								<CardContent  onClick={() => {
+									this.setState({clicked: true})
+									store.dispatch(this.props.setCurrentPlayer(video.metadata.playerName))
+								}}>
+									<Typography gutterBottom variant="headline" component="h2">
+										{video.metadata.playerName}
+									</Typography>
+									<Typography gutterBottom variant="subheading" component="h3">
+										{this.get_num_videos_by_name(video.metadata.playerName)} Videos
+									</Typography>
+								</CardContent>
 							</Card>
-						</Grid>)
-					)}
-				</Grid>
+						</Grid>))}
+					</Grid>
 			</div>
 		)
 	};
@@ -89,7 +86,7 @@ class Players extends Component {
 function mapDispatchToProps(dispatch)
 {
 	return bindActionCreators({
-		setCurrentVideo: Actions.setCurrentVideo
+		setCurrentPlayer: Actions.setCurrentPlayer
 	}, dispatch);
 }
 

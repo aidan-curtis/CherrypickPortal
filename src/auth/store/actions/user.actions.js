@@ -9,7 +9,9 @@ import * as Actions from 'store/actions';
 export const SET_USER_DATA = '[USER] SET DATA';
 export const REMOVE_USER_DATA = '[USER] REMOVE DATA';
 export const USER_LOGGED_OUT = '[USER] LOGGED OUT';
-export const SET_CURRENT_VIDEO = '[USER] SET CURREN VIDEO'
+export const SET_CURRENT_VIDEO = '[USER] SET CURRENT VIDEO'
+export const SET_CURRENT_TOURNAMENT = '[USER] SET CURRENT TOURNAMENT'
+export const SET_CURRENT_PLAYER = '[USER] SET CURRENT PLAYER'
 
 
 
@@ -89,6 +91,22 @@ export function setCurrentVideo(value)
 {
 	return {
 		type: SET_CURRENT_VIDEO,
+		payload: value
+	}
+}
+
+export function setCurrentTournament(value)
+{
+	return {
+		type: SET_CURRENT_TOURNAMENT,
+		payload: value
+	}
+}
+
+export function setCurrentPlayer(value)
+{
+	return {
+		type: SET_CURRENT_PLAYER,
 		payload: value
 	}
 }

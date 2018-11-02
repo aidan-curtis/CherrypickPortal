@@ -225,7 +225,7 @@ class MainToolbar extends Component {
 			},
 			data: {
 				"upload_filenames": this.state.upload_filenames,
-				"tournament_name": this.state.tournament_name,
+				"tournament_name": this.state.single,
 				"player_name": this.state.player_name
 			}
 		}).then((response) => {
