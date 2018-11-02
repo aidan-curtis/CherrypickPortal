@@ -133,7 +133,8 @@ class MainToolbar extends Component {
 		continued: false,
 		single: '',
 		popper: '',
-		suggestions: []
+		suggestions: [],
+		num_files:0
 	};
 
 
@@ -193,12 +194,16 @@ class MainToolbar extends Component {
 
 	handleServerResponse = response => {
 		if(JSON.parse(response)["success"]){
+			console.log("dec file")
+
+
 			var upload_filenames = this.state.upload_filenames
 			console.log(JSON.parse(response)["file_info"][0])
 			console.log(JSON.parse(response)["file_info"][0]["location"])
 			upload_filenames.push(JSON.parse(response)["file_info"][0]["location"])
 			this.setState({
-				upload_filenames: upload_filenames
+				upload_filenames: upload_filenames,
+				num_files: this.state.num_files-1
 			})
 		}	
 	}
@@ -304,10 +309,18 @@ class MainToolbar extends Component {
 												}
 											}
 									}}
+									onaddfilestart={(file) => {
+										this.setState({
+											num_files: this.state.num_files+1
+										})
+										// Set current file objects to this.state
+										
+									}}
+					
 								/>
 								: null
 							}
-							{this.state.continued == true && this.state.upload_filenames.length != 0 ? 
+							{this.state.num_files==0 && this.state.continued == true && this.state.upload_filenames.length != 0 ? 
 								<Button variant="contained" onClick={this.handleSubmitForm} className={classes.button} style={{marginTop: "20px", width: "300px"}}>
 									Submit
 								</Button>: null
@@ -323,7 +336,6 @@ class MainToolbar extends Component {
 											onChange={this.handleChange('match_name')}
 											margin="normal"
 										/>
-
 										<TextField
 											id="player_name"
 											label="Player Name"
@@ -332,8 +344,6 @@ class MainToolbar extends Component {
 											style={{marginBottom: 25}}
 											margin="normal"
 										/>
-
-
 										<Autosuggest
 											{...autosuggestProps}
 											inputProps={{
@@ -354,11 +364,6 @@ class MainToolbar extends Component {
 											</Paper>
 											)}
 										/>
-        
-
-
-
-			
 									</FormGroup>
 									<Button variant="contained" onClick={this.handleSubmitContinue} className={classes.button} style={{marginTop: 35, width: "300px"}}>
 										Continue
