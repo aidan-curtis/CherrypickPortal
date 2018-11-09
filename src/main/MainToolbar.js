@@ -37,6 +37,9 @@ registerPlugin(FilePondPluginFileValidateType)
 const suggestions = [
 ];
 
+const suggested_player_names = [
+]
+
 const styles = theme => ({
 	root     : {
 		display   : 'flex',
@@ -50,11 +53,12 @@ const styles = theme => ({
 	},
 	suggestionsList:{
 		margin: 0,
-  		padding: 0,
+		padding: 0,
 		listStyleType: 'none'
 	}
 
 });
+
 
 function getSuggestionValue(suggestion) {
 	return suggestion.label;
@@ -105,19 +109,35 @@ function getSuggestions(value) {
   const inputValue = deburr(value.trim()).toLowerCase();
   const inputLength = inputValue.length;
   let count = 0;
-
   return inputLength === 0
-    ? []
-    : suggestions.filter(suggestion => {
-        const keep =
-          count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
+	? []
+	: suggestions.filter(suggestion => {
+		const keep =
+		  count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
 
-        if (keep) {
-          count += 1;
-        }
+		if (keep) {
+		  count += 1;
+		}
 
-        return keep;
-      });
+		return keep;
+	  });
+}
+function getNameSuggestions(value) {
+	const inputValue = deburr(value.trim()).toLowerCase();
+	const inputLength = inputValue.length;
+	let count = 0;
+	return inputLength === 0
+	? []
+	: suggested_player_names.filter(suggestion => {
+		const keep =
+		  count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
+
+		if (keep) {
+		  count += 1;
+		}
+
+		return keep;
+	});
 }
 
 
@@ -129,9 +149,9 @@ class MainToolbar extends Component {
 		tournament_name: "",
 		match_name: "",
 		upload_filenames: [],
+		suggested_player_names: [],
 		open: false,
 		continued: false,
-		single: '',
 		popper: '',
 		suggestions: [],
 		num_files:0
@@ -157,14 +177,17 @@ class MainToolbar extends Component {
 
 	load_suggestions(props){
 		props.user.team.Videos.forEach(function(video){
-			console.log(video)
-			suggestions.push({"label": video.metadata.tournament})
+			if(suggestions.filter(function(t){return t.label===video.metadata.tournament}).length===0){
+				suggestions.push({"label": video.metadata.tournament})
+			}
+			if(suggested_player_names.filter(function(t){return t.label===video.metadata.playerName}).length===0){
+				suggested_player_names.push({"label": video.metadata.playerName})
+			}
 		})
 	}
 	constructor(props){
 		super()
 		this.load_suggestions(props)
-		console.log(suggestions)
 		this.refresh()
 	}
 
@@ -194,12 +217,7 @@ class MainToolbar extends Component {
 
 	handleServerResponse = response => {
 		if(JSON.parse(response)["success"]){
-			console.log("dec file")
-
-
 			var upload_filenames = this.state.upload_filenames
-			console.log(JSON.parse(response)["file_info"][0])
-			console.log(JSON.parse(response)["file_info"][0]["location"])
 			upload_filenames.push(JSON.parse(response)["file_info"][0]["location"])
 			this.setState({
 				upload_filenames: upload_filenames,
@@ -225,7 +243,7 @@ class MainToolbar extends Component {
 			},
 			data: {
 				"upload_filenames": this.state.upload_filenames,
-				"tournament_name": this.state.single,
+				"tournament_name": this.state.tournament_name,
 				"player_name": this.state.player_name
 			}
 		}).then((response) => {
@@ -245,13 +263,20 @@ class MainToolbar extends Component {
 
 	handleSuggestionsFetchRequested = ({ value }) => {
 		this.setState({
-			suggestions: getSuggestions(value),
+			suggestions: getSuggestions(value)
+		});
+	};
+
+	handlePlayerNameSuggestionsFetchRequested = ({ value }) => {
+		this.setState({
+			suggested_player_names: getNameSuggestions(value)
 		});
 	};
 
 	handleSuggestionsClearRequested = () => {
 		this.setState({
 			suggestions: [],
+			suggested_player_names:[]
 		});
 	};
 
@@ -273,6 +298,14 @@ class MainToolbar extends Component {
 			renderInputComponent,
 			suggestions: this.state.suggestions,
 			onSuggestionsFetchRequested: this.handleSuggestionsFetchRequested,
+			onSuggestionsClearRequested: this.handleSuggestionsClearRequested,
+			getSuggestionValue,
+			renderSuggestion,
+		};
+		var  autosuggestPropsPlayerName = {
+			renderInputComponent,
+			suggestions: this.state.suggested_player_names,
+			onSuggestionsFetchRequested: this.handlePlayerNameSuggestionsFetchRequested,
 			onSuggestionsClearRequested: this.handleSuggestionsClearRequested,
 			getSuggestionValue,
 			renderSuggestion,
@@ -336,21 +369,37 @@ class MainToolbar extends Component {
 											onChange={this.handleChange('match_name')}
 											margin="normal"
 										/>
-										<TextField
-											id="player_name"
-											label="Player Name"
-											value={this.state.player_name}
-											onChange={this.handleChange('player_name')}
-											style={{marginBottom: 25}}
-											margin="normal"
-										/>
+
+										<div style={{marginBottom: 10}}>
+											<Autosuggest
+												{...autosuggestPropsPlayerName}
+												inputProps={{
+													classes,
+													label: 'Player Name',
+													value: this.state.player_name,
+													onChange: this.handleAutosuggestChange('player_name'),
+												}}
+												theme={{
+													container: classes.container,
+													suggestionsContainerOpen: classes.suggestionsContainerOpen,
+													suggestionsList: classes.suggestionsList,
+													suggestion: classes.suggestion,
+												}}
+												renderSuggestionsContainer={options => (
+												<Paper {...options.containerProps} square>
+													{options.children}
+												</Paper>
+												)}
+											/>
+										</div>
+
 										<Autosuggest
 											{...autosuggestProps}
 											inputProps={{
 												classes,
 												label: 'Tournament Name',
-												value: this.state.single,
-												onChange: this.handleAutosuggestChange('single'),
+												value: this.state.tournament_name,
+												onChange: this.handleAutosuggestChange('tournament_name'),
 											}}
 											theme={{
 												container: classes.container,

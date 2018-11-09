@@ -65,27 +65,28 @@ class Matches extends Component {
 						return false
 					}
 				}).map((video, index)=>
-						(<Grid item xs={2}>
-							<Card key = {index} style = {{width: "100%", height: 280}}>
-								<CardActionArea>
-									<CardMedia title="Thumb">
-											{(video.processedImageUri==null || video.processedImageUri==undefined || video.processedImageUri == "")? <img src="assets/images/processing.png"/>:<img src={video.processedImageUri}/> }
-									</CardMedia>
-									<CardContent>
-										<Typography gutterBottom variant="headline" component="h2">
-											{video.metadata.playerName}
-										</Typography>
-									</CardContent>
-								</CardActionArea>
-								<CardActions>
-									<Button size="small" color="primary" onClick={() => {
+						(<Grid item xs={4} onClick={() => {
 										this.setState({clicked: true})
 										store.dispatch(this.props.setCurrentVideo(video))
-									}}>
-										View
-									</Button>
-								</CardActions>
-							</Card>
+									}}  style = {{width: "100%", position: "relative"}}>
+
+									<span style={{	position: "absolute",
+													top: "35%",
+													left: 0,
+													width: "100%",
+													color: "white",
+													textAlign: "center",
+													fontSize: 34}}>{video.metadata.playerName}</span>
+
+									<CardMedia title="Thumb" >
+											{(video.processedImageUri==null || video.processedImageUri==undefined || video.processedImageUri == "")? <img style={{borderRadius: 5 ,overflow: 'hidden'}} src="assets/images/processing.png"/>:<img style={{borderRadius: 5 ,overflow: 'hidden'}} src={video.processedImageUri}/> }
+									</CardMedia>
+									
+											
+										
+			
+								
+				
 						</Grid>)
 					)}
 				</Grid>
