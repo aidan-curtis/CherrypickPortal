@@ -245,7 +245,8 @@ class MainToolbar extends Component {
 			data: {
 				"upload_filenames": this.state.upload_filenames,
 				"tournament_name": this.state.tournament_name,
-				"player_name": this.state.player_name
+				"player_name": this.state.player_name,
+				"match_name": this.state.match_name
 			}
 		}).then((response) => {
 			this.setState({
