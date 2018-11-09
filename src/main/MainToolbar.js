@@ -206,7 +206,8 @@ class MainToolbar extends Component {
 			upload_filenames: [], 
 			continued: false,
 			tournament_name: "",
-			player_name: "",});
+			player_name: "",
+			match_name: ""});
 	};
 
 	handleChange = name => event => {
@@ -252,6 +253,7 @@ class MainToolbar extends Component {
 				upload_filenames: [],
 				tournament_name: "",
 				player_name: "",
+				match_name: "",
 				continued: false
 			})
 			this.refresh()
@@ -326,7 +328,7 @@ class MainToolbar extends Component {
 								<FilePond 
 									allowMultiple={true}
 									name="content"
-									acceptedFileTypes = {["video/mp4"]}
+									acceptedFileTypes = {["video/mp4","video/mov"]}
 									server={{
 											url: process.env.REACT_APP_API_ENDPOINT+'/private_api',
 											process: {
@@ -347,7 +349,6 @@ class MainToolbar extends Component {
 											num_files: this.state.num_files+1
 										})
 										// Set current file objects to this.state
-										
 									}}
 					
 								/>
