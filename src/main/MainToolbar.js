@@ -329,8 +329,7 @@ class MainToolbar extends Component {
 								<FilePond 
 									allowMultiple={true}
 									name="content"
-									acceptedFileTypes = {["video/mp4","video/mov"]}
-									fileValidateTypeLabelExpectedTypesMap = {{'video/mov': '.mov'}}
+									acceptedFileTypes = {["video/mp4","video/quicktime"]}
 									server={{
 											url: process.env.REACT_APP_API_ENDPOINT+'/private_api',
 											process: {
