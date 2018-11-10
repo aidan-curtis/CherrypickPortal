@@ -330,6 +330,7 @@ class MainToolbar extends Component {
 									allowMultiple={true}
 									name="content"
 									acceptedFileTypes = {["video/mp4","video/mov"]}
+									fileValidateTypeLabelExpectedTypesMap: {'video/mov': '.mov'}
 									server={{
 											url: process.env.REACT_APP_API_ENDPOINT+'/private_api',
 											process: {
