@@ -85,7 +85,7 @@ class Matches extends Component {
 													fontSize: 34}}>{video.metadata.matchName}</span>
 
 									<CardMedia title="Thumb" >
-											{(video.processedImageUri==null || video.processedImageUri==undefined || video.processedImageUri == "")? <img style={{borderRadius: 5 ,overflow: 'hidden', backgroundColor: "#A0A0A1", width: "100%", height: 200}} />:<img style={{borderRadius: 5 ,overflow: 'hidden'}} src={video.processedImageUri}/> }
+											{(video.processedImageUri==null || video.processedImageUri==undefined || video.processedImageUri == "")? <img style={{borderRadius: 5 ,overflow: 'hidden', width: "100%"}} src="assets/images/processing.png"/>:<img style={{borderRadius: 5 ,overflow: 'hidden'}} src={video.processedImageUri}/> }
 									</CardMedia>
 						</Grid>)
 					)}
