@@ -72,8 +72,12 @@ class Matches extends Component {
 					}
 				}).map((video, index)=>
 						(<Grid item xs={4} onClick={() => {
-										this.setState({clicked: true})
-										store.dispatch(this.props.setCurrentVideo(video))
+										if((video.processedImageUri==null || video.processedImageUri==undefined || video.processedImageUri == "")){
+
+										} else {
+											this.setState({clicked: true})
+											store.dispatch(this.props.setCurrentVideo(video))
+										}
 									}}  style = {{width: "100%", position: "relative"}}>
 
 									<span style={{	position: "absolute",
