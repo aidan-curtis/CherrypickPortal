@@ -10,6 +10,7 @@ const initialState = {
 	activeVideo: null,
 	activePlayer: null,
 	activeTournament: null,
+	bc_title: "Tournaments",
 	token: ""
 };
 
@@ -43,14 +44,23 @@ const user = function (state = initialState, action) {
 			return {
 				...state,
 				activeTournament: action.payload,
-				activePlayer: null
+				activePlayer: null,
+				activeVideo: null
 		}
 		case Actions.SET_CURRENT_PLAYER:
 			return {
 				...state,
 				activePlayer: action.payload,
-				activeTournament: null
+				activeTournament: null,
+				activeVideo: null
 		}
+		case Actions.SET_BC_TITLE:
+			return{
+				...state,
+				bc_title: action.payload,
+				activePlayer: null,
+				activeTournament: null
+			}
 		default:
 		{
 			return state

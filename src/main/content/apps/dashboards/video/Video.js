@@ -12,7 +12,9 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
-import { Player } from 'video-react';
+import {
+  Player, ControlBar, PlaybackRateMenuButton,ReplayControl,ForwardControl
+} from 'video-react';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
@@ -81,7 +83,13 @@ class Video extends Component {
 							ref="player"
 							poster={this.state.video.processedImageUri}
 							src={this.state.video.processedVideoUri}
-						/>
+						>
+							<ControlBar>
+								<PlaybackRateMenuButton rates={[2, 1, 0.5]} />
+								<ReplayControl seconds={10} order={2.2} />
+								<ForwardControl seconds={10} order={3.2} />
+							</ControlBar>
+						</Player>
 					</Grid>
 					<Grid item xs={4}>
 						<Paper>

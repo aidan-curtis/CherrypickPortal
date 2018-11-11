@@ -35,7 +35,7 @@ function MainNavbarHeader({classes})
     return (
         <div className={classes.root}>
             <div className={classNames(classes.logo, "flex items-center")}>
-                <Typography className="text-16 ml-8 font-regular logo-text" color="inherit">Cherrypick</Typography>
+                <img src="assets/images/logos/cherrypick_full_logo.png" height="50" /> 
             </div>
         </div>
     );

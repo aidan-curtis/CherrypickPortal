@@ -33,6 +33,12 @@ class Matches extends Component {
 	constructor(props)
 	{
 		super(props);
+		if(props.user.activePlayer != null){
+			this.props.setCurrentPlayer(props.user.activePlayer)
+		}
+		if(props.user.activeTournament != null){
+			this.props.setCurrentTournament(props.user.activeTournament)
+		}
 	}
 
 	redirectToTarget = () => {
@@ -81,12 +87,6 @@ class Matches extends Component {
 									<CardMedia title="Thumb" >
 											{(video.processedImageUri==null || video.processedImageUri==undefined || video.processedImageUri == "")? <img style={{borderRadius: 5 ,overflow: 'hidden'}} src="assets/images/processing.png"/>:<img style={{borderRadius: 5 ,overflow: 'hidden'}} src={video.processedImageUri}/> }
 									</CardMedia>
-									
-											
-										
-			
-								
-				
 						</Grid>)
 					)}
 				</Grid>
@@ -98,7 +98,10 @@ class Matches extends Component {
 function mapDispatchToProps(dispatch)
 {
 	return bindActionCreators({
-		setCurrentVideo: Actions.setCurrentVideo
+		setCurrentVideo: Actions.setCurrentVideo,
+		setCurrentPlayer: Actions.setCurrentPlayer,
+		setCurrentTournament: Actions.setCurrentTournament
+
 	}, dispatch);
 }
 

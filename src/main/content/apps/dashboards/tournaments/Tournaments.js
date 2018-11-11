@@ -34,8 +34,12 @@ class Tournaments extends Component {
 	constructor(props)
 	{
 		super(props);
+		this.props.setTournamentFilterPage()
 	}
-
+	componentDidMount(){
+		this.props.setTournamentFilterPage()
+	}
+	
 	redirectToTarget = () => {
 		this.props.history.push(`/apps/dashboards/video`)
 	}
@@ -85,7 +89,8 @@ class Tournaments extends Component {
 function mapDispatchToProps(dispatch)
 {
 	return bindActionCreators({
-		setCurrentTournament: Actions.setCurrentTournament
+		setCurrentTournament: Actions.setCurrentTournament,
+		setTournamentFilterPage: Actions.setTournamentFilterPage
 	}, dispatch);
 }
 

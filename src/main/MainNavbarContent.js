@@ -42,6 +42,7 @@ function MainNavbar({classes, navigation, layoutStyle, user})
 	function UserHeader()
 	{
 		return (
+
 			<AppBar
 				position="static"
 				color="primary"

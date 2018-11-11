@@ -12,7 +12,7 @@ export const USER_LOGGED_OUT = '[USER] LOGGED OUT';
 export const SET_CURRENT_VIDEO = '[USER] SET CURRENT VIDEO'
 export const SET_CURRENT_TOURNAMENT = '[USER] SET CURRENT TOURNAMENT'
 export const SET_CURRENT_PLAYER = '[USER] SET CURRENT PLAYER'
-
+export const SET_BC_TITLE = '[USER] SET CURRENT BREADCRUMB TITLE'
 
 
 /**
@@ -139,6 +139,18 @@ export function logoutUser()
 	}
 }
 
+export function setTournamentFilterPage(){
+	return {
+		type: SET_BC_TITLE,
+		payload: "Tournaments"
+	}
+}
+export function setPlayerFilterPage(){
+	return {
+		type: SET_BC_TITLE,
+		payload: "Players"
+	}
+}
 /**
  * Update User Data
  */

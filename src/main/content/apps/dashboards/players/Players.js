@@ -34,8 +34,12 @@ class Players extends Component {
 	constructor(props)
 	{
 		super(props);
+		this.props.setPlayerFilterPage()
 	}
-
+	componentDidMount(){
+		this.props.setPlayerFilterPage()
+	}
+	
 	redirectToTarget = () => {
 		this.props.history.push(`/apps/dashboards/video`)
 	}
@@ -86,7 +90,8 @@ class Players extends Component {
 function mapDispatchToProps(dispatch)
 {
 	return bindActionCreators({
-		setCurrentPlayer: Actions.setCurrentPlayer
+		setCurrentPlayer: Actions.setCurrentPlayer,
+		setPlayerFilterPage: Actions.setPlayerFilterPage
 	}, dispatch);
 }
 

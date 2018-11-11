@@ -26,6 +26,9 @@ import store from 'store';
 import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
+import { Redirect } from 'react-router-dom'
+
+require('./materialize.css')
 
 export const SET_USER_DATA = '[USER] SET DATA';
 
@@ -113,7 +116,7 @@ function getSuggestions(value) {
 	? []
 	: suggestions.filter(suggestion => {
 		const keep =
-		  count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
+		  count < 5 && ((suggestion.label.slice(0, inputLength).toLowerCase() === inputValue) || inputLength===0);
 
 		if (keep) {
 		  count += 1;
@@ -125,12 +128,15 @@ function getSuggestions(value) {
 function getNameSuggestions(value) {
 	const inputValue = deburr(value.trim()).toLowerCase();
 	const inputLength = inputValue.length;
+	console.log("Getting name suggestions")
+	console.log("input length")
+	console.log(inputLength)
 	let count = 0;
 	return inputLength === 0
 	? []
 	: suggested_player_names.filter(suggestion => {
 		const keep =
-		  count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
+		  count < 5 && (suggestion.label.slice(0, inputLength).toLowerCase() === inputValue || inputLength===0);
 
 		if (keep) {
 		  count += 1;
@@ -154,7 +160,8 @@ class MainToolbar extends Component {
 		continued: false,
 		popper: '',
 		suggestions: [],
-		num_files:0
+		num_files:0,
+		redirect:null
 	};
 
 
@@ -207,7 +214,8 @@ class MainToolbar extends Component {
 			continued: false,
 			tournament_name: "",
 			player_name: "",
-			match_name: ""});
+			match_name: ""
+			});
 	};
 
 	handleChange = name => event => {
@@ -233,6 +241,7 @@ class MainToolbar extends Component {
 			continued: true
 		})
 	}
+
 	handleSubmitForm = () => {
 
 		axios({
@@ -291,6 +300,15 @@ class MainToolbar extends Component {
 
 
 
+	renderRedirect = () => {
+		if(this.state.redirect != null){
+			this.setState({redirect: null})
+			return (<Redirect to={this.state.redirect} />)
+		} else {
+			return null
+		}
+	
+	}
 	render()
 	{
 
@@ -315,6 +333,7 @@ class MainToolbar extends Component {
 		};
 		return (
 			<div className={classNames(classes.root, "flex flex-row")}>
+				{this.renderRedirect()}
 				<Dialog
 					open={this.state.open}
 					onClose={this.handleClose}
@@ -429,7 +448,29 @@ class MainToolbar extends Component {
 							</Button>
 					</DialogActions>
 				</Dialog>
-				<div className="flex flex-1"> </div>
+				<div className="flex flex-1"> 
+					<nav style={{marginLeft: 20}}>
+						{
+							this.props.user.bc_title=="Tournaments" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/tournaments"})}} class="breadcrumb">Tournaments</a>) : null
+						}
+						{
+							this.props.user.bc_title=="Players" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/players"})}} class="breadcrumb">Players</a>): null
+						}
+						{
+							(this.props.user.bc_title=="Tournaments" && this.props.user.activeTournament != null) ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/matches"})}} class="breadcrumb">{this.props.user.activeTournament}</a>) : null
+						}
+						{
+							(this.props.user.bc_title=="Players" && this.props.user.activePlayer != null) ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/matches"})}} class="breadcrumb">{this.props.user.activePlayer}</a>) : null
+						}
+						{
+							(this.props.user.bc_title=="Tournaments" && this.props.user.activeTournament != null && this.props.user.activeVideo != null) ? (<a class="breadcrumb">{this.props.user.activeVideo.metadata.matchName}</a>) : null
+						}
+						{
+							(this.props.user.bc_title=="Players" && this.props.user.activePlayer != null && this.props.user.activeVideo != null) ? (<a class="breadcrumb">{this.props.user.activeVideo.metadata.matchName}</a>) : null
+						}
+						
+					</nav>
+				</div>
 				<div className="flex">
 					<Button className="h-64" onClick={this.uploadVideo}>
 							<Icon className="text-16 ml-12 hidden sm:flex" variant="action">cloud_upload</Icon>
