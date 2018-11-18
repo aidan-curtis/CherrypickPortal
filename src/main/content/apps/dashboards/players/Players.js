@@ -52,10 +52,10 @@ class Players extends Component {
 	}
 
 	get_folders(){
-		return this.props.user.team.Videos.filter(function(item, i, ar){ return ar.map(function(vid){return vid.metadata.playerName}).indexOf(item.metadata.playerName) === i; })
+		return this.props.user.team.Videos.filter(function(item, i, ar){ return ar.map(function(vid){return vid.metadata.playerName1}).indexOf(item.metadata.playerName1) === i; })
 	}
 	get_num_videos_by_name(name){
-		return this.props.user.team.Videos.filter(function(video){return video.metadata.playerName == name}).length
+		return this.props.user.team.Videos.filter(function(video){return video.metadata.playerName1 == name}).length
 	}
 
 	render()
@@ -70,13 +70,13 @@ class Players extends Component {
 							<Card key = {index} style = {{width: "100%"}}>
 								<CardContent  onClick={() => {
 									this.setState({clicked: true})
-									store.dispatch(this.props.setCurrentPlayer(video.metadata.playerName))
+									store.dispatch(this.props.setCurrentPlayer(video.metadata.playerName1))
 								}}>
 									<Typography gutterBottom variant="headline" component="h2">
-										{video.metadata.playerName}
+										{video.metadata.playerName1}
 									</Typography>
 									<Typography gutterBottom variant="subheading" component="h3">
-										{this.get_num_videos_by_name(video.metadata.playerName)} Videos
+										{this.get_num_videos_by_name(video.metadata.playerName1)} Videos
 									</Typography>
 								</CardContent>
 							</Card>

@@ -19,6 +19,11 @@ import 'filepond/dist/filepond.min.css';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
+
+import AppBar from '@material-ui/core/AppBar';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+
 import Paper from '@material-ui/core/Paper';
 import FormLabel from '@material-ui/core/FormLabel';
 import axios from 'axios/index';
@@ -79,7 +84,7 @@ function renderSuggestion(suggestion, { query, isHighlighted }) {
 					{part.text}
 				</span>
 				) : (
-				<strong key={String(index)} style={{ fontWeight: 300 }}>
+				<strong key={String(index)} style={{ fontWeight: 310 }}>
 					{part.text}
 				</strong>
 				);
@@ -112,9 +117,12 @@ function getSuggestions(value) {
   const inputValue = deburr(value.trim()).toLowerCase();
   const inputLength = inputValue.length;
   let count = 0;
+  console.log("undefined?")
+  console.log(inputLength)
   return inputLength === 0
 	? []
 	: suggestions.filter(suggestion => {
+
 		const keep =
 		  count < 5 && ((suggestion.label.slice(0, inputLength).toLowerCase() === inputValue) || inputLength===0);
 
@@ -135,14 +143,18 @@ function getNameSuggestions(value) {
 	return inputLength === 0
 	? []
 	: suggested_player_names.filter(suggestion => {
-		const keep =
-		  count < 5 && (suggestion.label.slice(0, inputLength).toLowerCase() === inputValue || inputLength===0);
+		if(suggestion.label == undefined){
+			return false
+		} else {
+			const keep =
+					  count < 5 && (suggestion.label.slice(0, inputLength).toLowerCase() === inputValue || inputLength===0);
+			if (keep) {
+			  count += 1;
+			}
 
-		if (keep) {
-		  count += 1;
+			return keep;
 		}
-
-		return keep;
+		
 	});
 }
 
@@ -151,7 +163,8 @@ function getNameSuggestions(value) {
 class MainToolbar extends Component {
 	state = {
 		userMenu: null,
-		player_name: "",
+		player_name_1: "",
+		player_name_2: "",
 		tournament_name: "",
 		match_name: "",
 		upload_filenames: [],
@@ -161,7 +174,18 @@ class MainToolbar extends Component {
 		popper: '',
 		suggestions: [],
 		num_files:0,
-		redirect:null
+		redirect:null,
+		value: 0
+	};
+
+
+
+	handleChangeSlider = (event, value) => {
+		this.setState({ value });
+	};
+
+	handleChangeIndex = index => {
+		this.setState({ value: index });
 	};
 
 
@@ -213,7 +237,8 @@ class MainToolbar extends Component {
 			upload_filenames: [], 
 			continued: false,
 			tournament_name: "",
-			player_name: "",
+			player_name_1: "",
+			player_name_2: "",
 			match_name: ""
 			});
 	};
@@ -254,7 +279,8 @@ class MainToolbar extends Component {
 			data: {
 				"upload_filenames": this.state.upload_filenames,
 				"tournament_name": this.state.tournament_name,
-				"player_name": this.state.player_name,
+				"player_name_1": this.state.player_name_1,
+				"player_name_2": this.state.player_name_2,
 				"match_name": this.state.match_name
 			}
 		}).then((response) => {
@@ -262,7 +288,8 @@ class MainToolbar extends Component {
 				open: false,
 				upload_filenames: [],
 				tournament_name: "",
-				player_name: "",
+				player_name_1: "",
+				player_name_2: "",
 				match_name: "",
 				continued: false
 			})
@@ -334,16 +361,22 @@ class MainToolbar extends Component {
 		return (
 			<div className={classNames(classes.root, "flex flex-row")}>
 				{this.renderRedirect()}
+
+
+
+
+
 				<Dialog
 					open={this.state.open}
 					onClose={this.handleClose}
 					aria-labelledby="alert-dialog-title"
 					aria-describedby="alert-dialog-description"
 				>
+					
+
 					<DialogTitle id="alert-dialog-title">{ this.state.upload_filenames.continued==false? "What match are you uploading?": "Upload the videos for that match"}</DialogTitle>
 					<DialogContent>
 						<DialogContentText id="alert-dialog-description">
-							
 							{this.state.continued == true?
 								<FilePond 
 									allowMultiple={true}
@@ -375,17 +408,30 @@ class MainToolbar extends Component {
 								: null
 							}
 							{this.state.num_files==0 && this.state.continued == true && this.state.upload_filenames.length != 0 ? 
-								<Button variant="contained" onClick={this.handleSubmitForm} className={classes.button} style={{marginTop: "20px", width: "300px"}}>
+								<Button variant="contained" onClick={this.handleSubmitForm} className={classes.button} style={{marginTop: "20px", width: "310px"}}>
 									Submit
 								</Button>: null
 							}
 							{this.state.continued == false ?
+
 								<FormControl component="fieldset">
 									<FormGroup>
+										<AppBar position="static" color="default">
+											<Tabs
+											value={this.state.value}
+											onChange={this.handleChangeSlider}
+											indicatorColor="primary"
+											textColor="primary"
+											fullWidth
+											>
+												<Tab label="Singles" />
+												<Tab label="Doubles" />
+											</Tabs>
+										</AppBar>
+
 										<TextField
 											id=""
 											label="Match Name"
-											style={{width: "300px"}}
 											value={this.state.match_name}
 											onChange={this.handleChange('match_name')}
 											margin="normal"
@@ -397,8 +443,8 @@ class MainToolbar extends Component {
 												inputProps={{
 													classes,
 													label: 'Player Name',
-													value: this.state.player_name,
-													onChange: this.handleAutosuggestChange('player_name'),
+													value: this.state.player_name_1,
+													onChange: this.handleAutosuggestChange('player_name_1'),
 												}}
 												theme={{
 													container: classes.container,
@@ -413,6 +459,30 @@ class MainToolbar extends Component {
 												)}
 											/>
 										</div>
+										{ this.state.value == 1 ?
+											<div style={{marginBottom: 10}}>
+												<Autosuggest
+													{...autosuggestPropsPlayerName}
+													inputProps={{
+														classes,
+														label: 'Player Name',
+														value: this.state.player_name_2,
+														onChange: this.handleAutosuggestChange('player_name_2'),
+													}}
+													theme={{
+														container: classes.container,
+														suggestionsContainerOpen: classes.suggestionsContainerOpen,
+														suggestionsList: classes.suggestionsList,
+														suggestion: classes.suggestion,
+													}}
+													renderSuggestionsContainer={options => (
+													<Paper {...options.containerProps} square>
+														{options.children}
+													</Paper>
+													)}
+												/>
+											</div>:null
+										}
 
 										<Autosuggest
 											{...autosuggestProps}
@@ -435,7 +505,7 @@ class MainToolbar extends Component {
 											)}
 										/>
 									</FormGroup>
-									<Button variant="contained" onClick={this.handleSubmitContinue} className={classes.button} style={{marginTop: 35, width: "300px"}}>
+									<Button variant="contained" onClick={this.handleSubmitContinue} className={classes.button} style={{marginTop: 35, width: "320px"}}>
 										Continue
 									</Button>
 								</FormControl> : null
@@ -478,7 +548,7 @@ class MainToolbar extends Component {
 								&nbsp; Upload Video
 							</Typography>
 					</Button>
-					<FuseAnimate delay={300}>
+					<FuseAnimate delay={310}>
 						<Button className="h-64" onClick={this.userMenuClick}>
 							{user.team.imageUri ?
 								(
