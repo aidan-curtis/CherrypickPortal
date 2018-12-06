@@ -88,6 +88,7 @@ class Matches extends Component {
 													textAlign: "center",
 													fontSize: 34}}>{video.metadata.matchName}</span>
 
+
 									<CardMedia title="Thumb" >
 											{(video.processedImageUri==null || video.processedImageUri==undefined || video.processedImageUri == "")? <img style={{borderRadius: 5 ,overflow: 'hidden', width: "100%"}} src="assets/images/processing.png"/>:<img style={{borderRadius: 5 ,overflow: 'hidden'}} src={video.processedImageUri}/> }
 									</CardMedia>

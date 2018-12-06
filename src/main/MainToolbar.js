@@ -18,8 +18,10 @@ import { FilePond, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
+import FormGroup from '@material-ui/core/FormGroup';
+import Checkbox from '@material-ui/core/Checkbox';
 import AppBar from '@material-ui/core/AppBar';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
@@ -175,7 +177,8 @@ class MainToolbar extends Component {
 		suggestions: [],
 		num_files:0,
 		redirect:null,
-		value: 0
+		value: 0,
+		segment_video: true
 	};
 
 
@@ -504,8 +507,26 @@ class MainToolbar extends Component {
 											</Paper>
 											)}
 										/>
+										<FormControlLabel
+										style={{marginTop: 20}}
+										control={
+											<Checkbox
+												checked={this.state.segment_video}
+												onChange={this.handleChange('segment_video')}
+												value="checkedG"
+												classes={{
+													root: classes.root,
+													checked: classes.checked,
+												}}
+												style={{width: 50}}
+											/>
+										}
+										label="Segment Match"
+									/>
 									</FormGroup>
-									<Button variant="contained" onClick={this.handleSubmitContinue} className={classes.button} style={{marginTop: 35, width: "320px"}}>
+									
+
+									<Button variant="contained" onClick={this.handleSubmitContinue} className={classes.button} style={{marginTop: 20, width: "320px"}}>
 										Continue
 									</Button>
 								</FormControl> : null

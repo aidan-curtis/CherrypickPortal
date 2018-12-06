@@ -6,12 +6,12 @@ import {bindActionCreators} from 'redux';
 import {Typography} from '@material-ui/core';
 import {Chart} from 'react-chartjs-2';
 import {FuseAnimate} from '@fuse';
+import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
 import {
   Player, ControlBar, PlaybackRateMenuButton,ReplayControl,ForwardControl
 } from 'video-react';
@@ -90,6 +90,10 @@ class Video extends Component {
 								<ForwardControl seconds={10} order={3.2} />
 							</ControlBar>
 						</Player>
+	
+						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} href={this.state.video.signedProcessedVideoUri} >Download</Button>
+
+
 					</Grid>
 					<Grid item xs={4}>
 						<Paper>
