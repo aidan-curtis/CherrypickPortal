@@ -119,8 +119,6 @@ function getSuggestions(value) {
   const inputValue = deburr(value.trim()).toLowerCase();
   const inputLength = inputValue.length;
   let count = 0;
-  console.log("undefined?")
-  console.log(inputLength)
   return inputLength === 0
 	? []
 	: suggestions.filter(suggestion => {
@@ -138,9 +136,6 @@ function getSuggestions(value) {
 function getNameSuggestions(value) {
 	const inputValue = deburr(value.trim()).toLowerCase();
 	const inputLength = inputValue.length;
-	console.log("Getting name suggestions")
-	console.log("input length")
-	console.log(inputLength)
 	let count = 0;
 	return inputLength === 0
 	? []
@@ -210,12 +205,16 @@ class MainToolbar extends Component {
 	}
 
 	load_suggestions(props){
+		console.log(props.user)
 		props.user.team.Videos.forEach(function(video){
 			if(suggestions.filter(function(t){return t.label===video.metadata.tournament}).length===0){
 				suggestions.push({"label": video.metadata.tournament})
 			}
-			if(suggested_player_names.filter(function(t){return t.label===video.metadata.playerName}).length===0){
-				suggested_player_names.push({"label": video.metadata.playerName})
+			if(suggested_player_names.filter(function(t){return (t.label===video.metadata.playerName1) }).length===0){
+				suggested_player_names.push({"label": video.metadata.playerName1})
+			}
+			if(suggested_player_names.filter(function(t){return (t.label===video.metadata.playerName2) }).length===0){
+				suggested_player_names.push({"label": video.metadata.playerName2})
 			}
 		})
 	}
@@ -234,7 +233,8 @@ class MainToolbar extends Component {
 	userMenuClose = () => {
 		this.setState({userMenu: null});
 	};
-	handleClose = () => {
+	handleClose = () => {};
+	handleRealClose = () => {
 		this.setState({
 			open: false, 
 			upload_filenames: [], 
@@ -243,8 +243,9 @@ class MainToolbar extends Component {
 			player_name_1: "",
 			player_name_2: "",
 			match_name: ""
-			});
+		});
 	};
+
 
 	handleChange = name => event => {
 		this.setState({
@@ -284,7 +285,8 @@ class MainToolbar extends Component {
 				"tournament_name": this.state.tournament_name,
 				"player_name_1": this.state.player_name_1,
 				"player_name_2": this.state.player_name_2,
-				"match_name": this.state.match_name
+				"match_name": this.state.match_name,
+				"process_game": this.state.checkedG
 			}
 		}).then((response) => {
 			this.setState({
@@ -534,7 +536,7 @@ class MainToolbar extends Component {
 						</DialogContentText>
 					</DialogContent>
 					<DialogActions>
-							<Button onClick={this.handleClose} color="primary" autoFocus>
+							<Button onClick={this.handleRealClose} color="primary" autoFocus>
 								Close
 							</Button>
 					</DialogActions>

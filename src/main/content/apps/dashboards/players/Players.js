@@ -52,10 +52,11 @@ class Players extends Component {
 	}
 
 	get_folders(){
-		return this.props.user.team.Videos.filter(function(item, i, ar){ return ar.map(function(vid){return vid.metadata.playerName1}).indexOf(item.metadata.playerName1) === i; })
+		var pnames = this.props.user.team.Videos.map(function(vid){return vid.metadata.playerName1}).concat(this.props.user.team.Videos.map(function(vid){return vid.metadata.playerName2}).filter(function(name){return name!=undefined && name!=""}))
+		return pnames.filter(function(item, i, ar){ return pnames.indexOf(item) === i; })
 	}
 	get_num_videos_by_name(name){
-		return this.props.user.team.Videos.filter(function(video){return video.metadata.playerName1 == name}).length
+		return this.props.user.team.Videos.filter(function(video){return (video.metadata.playerName1 == name || video.metadata.playerName2 == name)}).length
 	}
 
 	render()
@@ -65,18 +66,18 @@ class Players extends Component {
 			<div className={classes.root} style = {{padding: 50}}>
 				{this.renderRedirect()}
 				<Grid container spacing={24}>
-					{this.get_folders().map((video, index)=>
+					{this.get_folders().map((pname, index)=>
 						(<Grid item xs={4}>
 							<Card key = {index} style = {{width: "100%"}}>
 								<CardContent  onClick={() => {
 									this.setState({clicked: true})
-									store.dispatch(this.props.setCurrentPlayer(video.metadata.playerName1))
+									store.dispatch(this.props.setCurrentPlayer(pname))
 								}}>
 									<Typography gutterBottom variant="headline" component="h2">
-										{video.metadata.playerName1}
+										{pname}
 									</Typography>
 									<Typography gutterBottom variant="subheading" component="h3">
-										{this.get_num_videos_by_name(video.metadata.playerName1)} Videos
+										{this.get_num_videos_by_name(pname)} Videos
 									</Typography>
 								</CardContent>
 							</Card>

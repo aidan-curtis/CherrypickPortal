@@ -62,7 +62,7 @@ class Matches extends Component {
 				<Grid container spacing={24}>
 				{props.user.team.Videos.filter(function(video){
 					if(props.user.activePlayer != null){
-						return video.metadata.playerName == props.user.activePlayer
+						return (video.metadata.playerName1 == props.user.activePlayer || video.metadata.playerName2 == props.user.activePlayer)
 					}
 					else if(props.user.activeTournament !=null){
 						return video.metadata.tournament == props.user.activeTournament

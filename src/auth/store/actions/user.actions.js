@@ -130,11 +130,14 @@ export function logoutUser()
 		pathname: '/'
 	});
 
+	localStorage.setItem("token", undefined)
+
 	return (dispatch, getState) => {
 		const user = getState().auth.user;
 		dispatch(setDefaultSettings(FuseDefaultSettings));
 		dispatch({
-			type: USER_LOGGED_OUT
+			type: USER_LOGGED_OUT,
+			user: null,
 		})
 	}
 }
