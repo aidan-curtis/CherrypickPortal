@@ -102,7 +102,7 @@ class Video extends Component {
 									<TableHead>
 										<TableRow>
 											<TableCell>Start (sec)</TableCell>
-											<TableCell>End (sec)</TableCell>
+											<TableCell>Stop (sec)</TableCell>
 										</TableRow>
 									</TableHead>
 									<TableBody>
@@ -117,7 +117,7 @@ class Video extends Component {
 														{segment.start} s
 													</TableCell>
 													<TableCell component="th" scope="row" onClick = {()=>{this.setState({selected: index})}} >
-														{segment.end} s
+														{segment.stop} s
 													</TableCell>
 												</TableRow>
 											)

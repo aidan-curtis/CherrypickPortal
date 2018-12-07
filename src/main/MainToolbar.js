@@ -19,13 +19,14 @@ import 'filepond/dist/filepond.min.css';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-
+import Card from '@material-ui/core/Card';
 import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
 import AppBar from '@material-ui/core/AppBar';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-
+import ReactDOM from 'react-dom';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Paper from '@material-ui/core/Paper';
 import FormLabel from '@material-ui/core/FormLabel';
 import axios from 'axios/index';
@@ -49,6 +50,42 @@ const suggestions = [
 
 const suggested_player_names = [
 ]
+
+
+// a little function to help us with reordering the result
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
+
+const grid = 6;
+
+const getItemStyle = (isDragging, draggableStyle) => ({
+  // some basic styles to make the items look a bit nicer
+  userSelect: 'none',
+  padding: grid * 2,
+  margin: `0 0 ${grid+2}px 0`,
+
+  // change background colour if dragging
+  background: 'white',
+  borderRadius: "3px",
+   boxShadow: "0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 0px 0px 0 rgba(0, 0, 0, 0.19)",
+
+
+  // styles we need to apply on draggables
+  ...draggableStyle,
+});
+
+const getListStyle = isDraggingOver => ({
+  background: 'white',
+  padding: grid,
+  width: "100%",
+});
+
 
 const styles = theme => ({
 	root     : {
@@ -98,7 +135,6 @@ function renderSuggestion(suggestion, { query, isHighlighted }) {
 
 function renderInputComponent(inputProps) {
 	const { classes, inputRef = () => {}, ref, ...other } = inputProps;
-
 	return (
 		<TextField
 			fullWidth
@@ -157,6 +193,7 @@ function getNameSuggestions(value) {
 
 
 
+
 class MainToolbar extends Component {
 	state = {
 		userMenu: null,
@@ -165,9 +202,10 @@ class MainToolbar extends Component {
 		tournament_name: "",
 		match_name: "",
 		upload_filenames: [],
+		sortable_filenames: [],
 		suggested_player_names: [],
 		open: false,
-		continued: false,
+		continued: 0,
 		popper: '',
 		suggestions: [],
 		num_files:0,
@@ -228,23 +266,29 @@ class MainToolbar extends Component {
 		this.setState({userMenu: event.currentTarget});
 	};
 	uploadVideo = event => {
-		this.setState({open: true, continued: false, upload_filenames: []})
+		this.setState({open: true, continued: 0, upload_filenames: []})
 	};
 	userMenuClose = () => {
 		this.setState({userMenu: null});
 	};
+
 	handleClose = () => {};
 	handleRealClose = () => {
 		this.setState({
 			open: false, 
 			upload_filenames: [], 
-			continued: false,
+			continued: 0,
 			tournament_name: "",
 			player_name_1: "",
 			player_name_2: "",
 			match_name: ""
 		});
 	};
+
+
+  handleCheckChange = name => event => {
+    this.setState({ [name]: event.target.checked });
+  };
 
 
 	handleChange = name => event => {
@@ -254,9 +298,12 @@ class MainToolbar extends Component {
 	};
 
 	handleServerResponse = response => {
+
 		if(JSON.parse(response)["success"]){
+			console.log("response from server")
+			console.log(response)
 			var upload_filenames = this.state.upload_filenames
-			upload_filenames.push(JSON.parse(response)["file_info"][0]["location"])
+			upload_filenames.push(JSON.parse(response)["file_info"][0])
 			this.setState({
 				upload_filenames: upload_filenames,
 				num_files: this.state.num_files-1
@@ -267,7 +314,13 @@ class MainToolbar extends Component {
 
 	handleSubmitContinue = () => {
 		this.setState({
-			continued: true
+			continued: 1
+		})
+	}
+
+	handleSecondSubmitContinue = () => {
+		this.setState({
+			continued: 2
 		})
 	}
 
@@ -281,12 +334,12 @@ class MainToolbar extends Component {
 				"authorization": localStorage.token
 			},
 			data: {
-				"upload_filenames": this.state.upload_filenames,
+				"upload_filenames": this.state.upload_filenames.map(function(fn){return fn["location"]}),
 				"tournament_name": this.state.tournament_name,
 				"player_name_1": this.state.player_name_1,
 				"player_name_2": this.state.player_name_2,
 				"match_name": this.state.match_name,
-				"process_game": this.state.checkedG
+				"process_video": this.state.segment_video
 			}
 		}).then((response) => {
 			this.setState({
@@ -296,7 +349,7 @@ class MainToolbar extends Component {
 				player_name_1: "",
 				player_name_2: "",
 				match_name: "",
-				continued: false
+				continued: 0
 			})
 			this.refresh()
 		})
@@ -329,6 +382,25 @@ class MainToolbar extends Component {
 			[name]: newValue,
 		});
 	};
+
+	onDragEnd = (result) => {
+		// dropped outside the list
+		if (!result.destination) {
+			return;
+		}
+
+		const upload_filenames = reorder(
+			this.state.upload_filenames,
+			result.source.index,
+			result.destination.index
+		);
+
+		this.setState({
+			upload_filenames,
+		});
+
+		console.log(upload_filenames)
+	}
 
 
 
@@ -363,13 +435,15 @@ class MainToolbar extends Component {
 			getSuggestionValue,
 			renderSuggestion,
 		};
+
+		var instructions = [
+			"What match are you uploading?",
+			"Upload the videos for that match",
+			"Please put your videos in order."
+		]
 		return (
 			<div className={classNames(classes.root, "flex flex-row")}>
 				{this.renderRedirect()}
-
-
-
-
 
 				<Dialog
 					open={this.state.open}
@@ -377,12 +451,10 @@ class MainToolbar extends Component {
 					aria-labelledby="alert-dialog-title"
 					aria-describedby="alert-dialog-description"
 				>
-					
-
-					<DialogTitle id="alert-dialog-title">{ this.state.upload_filenames.continued==false? "What match are you uploading?": "Upload the videos for that match"}</DialogTitle>
+					<DialogTitle id="alert-dialog-title">{instructions[this.state.continued]}</DialogTitle>
 					<DialogContent>
 						<DialogContentText id="alert-dialog-description">
-							{this.state.continued == true?
+							{this.state.continued == 1?
 								<FilePond 
 									allowMultiple={true}
 									name="content"
@@ -412,12 +484,12 @@ class MainToolbar extends Component {
 								/>
 								: null
 							}
-							{this.state.num_files==0 && this.state.continued == true && this.state.upload_filenames.length != 0 ? 
-								<Button variant="contained" onClick={this.handleSubmitForm} className={classes.button} style={{marginTop: "20px", width: "310px"}}>
+							{this.state.num_files==0 && this.state.continued == 1 && this.state.upload_filenames.length != 0 ? 
+								<Button variant="contained" onClick={this.handleSecondSubmitContinue} className={classes.button} style={{marginTop: "20px", width: "310px"}}>
 									Submit
 								</Button>: null
 							}
-							{this.state.continued == false ?
+							{this.state.continued == 0 ?
 
 								<FormControl component="fieldset">
 									<FormGroup>
@@ -514,8 +586,8 @@ class MainToolbar extends Component {
 										control={
 											<Checkbox
 												checked={this.state.segment_video}
-												onChange={this.handleChange('segment_video')}
-												value="checkedG"
+												onChange={this.handleCheckChange('segment_video')}
+												value="segment_video"
 												classes={{
 													root: classes.root,
 													checked: classes.checked,
@@ -532,6 +604,50 @@ class MainToolbar extends Component {
 										Continue
 									</Button>
 								</FormControl> : null
+							} 
+
+
+
+							{
+								this.state.continued == 2 ? 
+								<FormControl>
+									<DragDropContext onDragEnd={this.onDragEnd}  style={{width: "100%"}}>
+										<Droppable droppableId="droppable" style={{width: "100%"}}>
+										{(provided, snapshot) => (
+											<div
+												ref={provided.innerRef}
+												style={getListStyle(snapshot.isDraggingOver)}
+											>
+												{this.state.upload_filenames.map(function(fn){return {
+													id: `item-${fn['location']}`,
+													content: `${fn["originalname"]}`,
+												}}).map((item, index) => (
+													<Draggable key={item.id} draggableId={item.id} index={index}>
+														{(provided, snapshot) => (
+															<div
+																ref={provided.innerRef}
+																{...provided.draggableProps}
+																{...provided.dragHandleProps}
+																style={getItemStyle(
+																snapshot.isDragging,
+																provided.draggableProps.style
+																)}
+															>
+																{item.content}
+															
+															</div>
+														)}
+													</Draggable>
+												))}
+												{provided.placeholder}
+											</div>
+										)}
+										</Droppable>
+									</DragDropContext>
+									<Button variant="contained" onClick={this.handleSubmitForm} className={classes.button} style={{marginTop: 20, width: "320px"}}>
+											Continue
+									</Button>
+								</FormControl>:null
 							}
 						</DialogContentText>
 					</DialogContent>
