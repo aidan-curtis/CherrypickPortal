@@ -38,19 +38,45 @@ class Video extends Component {
 	{
 		super(props);
 		this.state = {
-			video: this.props.user.activeVideo
+			video: this.props.user.activeVideo,
+			current_segment : 0
 		}
 	}
 
 	state = {
-		selected: -1
+		selected: -1,
+		current_segment : 0
 	}
 
 	handleStateChange(state, prevState) {
 		// copy player state to this component's state
-		this.setState({
-		  player: state
-		});
+		console.log(this.state.current_segment)
+		console.log(this.state.video.Segments.length)
+		if(this.state.current_segment < this.state.video.Segments.length){
+
+			if(state.currentTime < this.state.video.Segments[this.state.current_segment].start ){
+				this.refs.player.seek(this.state.video.Segments[this.state.current_segment].start);
+			}
+			if(state.currentTime > this.state.video.Segments[this.state.current_segment].stop ){
+				if(this.state.current_segment+1 < this.state.video.Segments.length){
+					this.refs.player.seek(this.state.video.Segments[this.state.current_segment].start);
+				}
+
+				this.setState({
+					current_segment: this.state.current_segment+1
+				})
+				
+			}
+			this.setState({
+				player: state
+			});
+			this.refs.player.play()
+		} else {
+			console.log("pause")
+			this.refs.player.pause()
+		}
+
+
 	}
 
 
@@ -63,9 +89,9 @@ class Video extends Component {
 
 	changeCurrentTime(seconds) {
 		return () => {
-		  const { player } = this.refs.player.getState();
-		  const currentTime = player.currentTime;
-		  this.refs.player.seek(seconds);
+			const { player } = this.refs.player.getState();
+			const currentTime = player.currentTime;
+			this.refs.player.seek(seconds);
 		};
 	}
 
