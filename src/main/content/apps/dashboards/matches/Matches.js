@@ -86,7 +86,7 @@ class Matches extends Component {
 													width: "100%",
 													color: "white",
 													textAlign: "center",
-													fontSize: 34}}>{video.metadata.matchName}</span>
+													fontSize: 24}}>{video.metadata.matchName}</span>
 
 
 									<CardMedia title="Thumb" >
