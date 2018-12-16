@@ -4,15 +4,9 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom'
 import {bindActionCreators} from 'redux';
 import {Typography} from '@material-ui/core';
-import {Chart} from 'react-chartjs-2';
-import {FuseAnimate} from '@fuse';
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import { Redirect } from 'react-router-dom'
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import store from 'store'
 import * as Actions from 'auth/store/actions';
@@ -52,11 +46,11 @@ class Players extends Component {
 	}
 
 	get_folders(){
-		var pnames = this.props.user.team.Videos.map(function(vid){return vid.metadata.playerName1}).concat(this.props.user.team.Videos.map(function(vid){return vid.metadata.playerName2}).filter(function(name){return name!=undefined && name!=""}))
+		var pnames = this.props.user.team.Videos.map(function(vid){return vid.metadata.playerName1}).concat(this.props.user.team.Videos.map(function(vid){return vid.metadata.playerName2}).filter(function(name){return name !== undefined && name !== ""}))
 		return pnames.filter(function(item, i, ar){ return pnames.indexOf(item) === i; })
 	}
 	get_num_videos_by_name(name){
-		return this.props.user.team.Videos.filter(function(video){return (video.metadata.playerName1 == name || video.metadata.playerName2 == name)}).length
+		return this.props.user.team.Videos.filter(function(video){return (video.metadata.playerName1 === name || video.metadata.playerName2 === name)}).length
 	}
 
 	render()
@@ -69,7 +63,7 @@ class Players extends Component {
 					{this.get_folders().map((pname, index)=>
 						(<Grid item xs={4}>
 							<Card key = {index} style = {{width: "100%"}}>
-								<CardContent  onClick={() => {
+								<CardContent  onClick = {() => {
 									this.setState({clicked: true})
 									store.dispatch(this.props.setCurrentPlayer(pname))
 								}}>

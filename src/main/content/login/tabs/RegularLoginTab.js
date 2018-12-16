@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Formsy from 'formsy-react';
 import {TextFieldFormsy} from '@fuse';
-import {withStyles, Button, Divider, Typography} from '@material-ui/core';
+import {withStyles, Button} from '@material-ui/core';
 import {bindActionCreators} from 'redux';
 import * as Actions from 'auth/store/actions';
 import {withRouter} from 'react-router-dom';

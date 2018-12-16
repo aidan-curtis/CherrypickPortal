@@ -3,15 +3,7 @@ import {withStyles} from '@material-ui/core/styles';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom'
 import {bindActionCreators} from 'redux';
-import {Typography} from '@material-ui/core';
-import {Chart} from 'react-chartjs-2';
-import {FuseAnimate} from '@fuse';
 import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import {
   Player, ControlBar, PlaybackRateMenuButton,ReplayControl,ForwardControl
 } from 'video-react';
@@ -50,8 +42,7 @@ class Video extends Component {
 
 	handleStateChange(state, prevState) {
 		// copy player state to this component's state
-		console.log(this.state.current_segment)
-		console.log(this.state.video.Segments.length)
+		console.log(this.refs.player)
 		if(this.state.current_segment < this.state.video.Segments.length){
 
 			if(state.currentTime < this.state.video.Segments[this.state.current_segment].start ){
@@ -61,11 +52,9 @@ class Video extends Component {
 				if(this.state.current_segment+1 < this.state.video.Segments.length){
 					this.refs.player.seek(this.state.video.Segments[this.state.current_segment].start);
 				}
-
 				this.setState({
 					current_segment: this.state.current_segment+1
 				})
-				
 			}
 			this.setState({
 				player: state
@@ -89,8 +78,6 @@ class Video extends Component {
 
 	changeCurrentTime(seconds) {
 		return () => {
-			const { player } = this.refs.player.getState();
-			const currentTime = player.currentTime;
 			this.refs.player.seek(seconds);
 		};
 	}

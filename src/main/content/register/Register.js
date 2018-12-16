@@ -1,10 +1,9 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import * as Actions from 'auth/store/actions/index';
 import {bindActionCreators} from 'redux';
 import {Link, withRouter} from 'react-router-dom';
 import {withStyles} from '@material-ui/core/styles/index';
-import {Card, CardContent, Icon, Tab, Tabs, Typography} from '@material-ui/core';
+import {Card, CardContent,  Typography} from '@material-ui/core';
 import classNames from 'classnames';
 import {FuseAnimate} from '@fuse';
 import RegularRegisterTab from './tabs/RegularRegisterTab';
@@ -71,7 +70,6 @@ class Register extends Component {
     render()
     {
         const {classes} = this.props;
-        const {tabValue} = this.state;
 
         return (
             <div className={classNames(classes.root, "flex flex-col flex-1 flex-no-shrink p-24 md:flex-row md:p-0")}>

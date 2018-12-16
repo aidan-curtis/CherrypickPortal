@@ -1,5 +1,3 @@
-import {authRoles} from 'auth';
-
 export const fuseNavigationConfig = [
     {
         'id'      : 'applications',

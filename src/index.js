@@ -17,14 +17,9 @@ import {FuseLayout, FuseTheme, FuseAuthorization} from '@fuse';
 import MainToolbar from './main/MainToolbar';
 import MainNavbarContent from './main/MainNavbarContent';
 import MainNavbarHeader from './main/MainNavbarHeader';
-import MainFooter from './main/MainFooter';
 import jssExtend from 'jss-extend'
-import SettingsPanel from 'main/SettingsPanel';
 import {Auth} from 'auth';
 import { PersistGate } from 'redux-persist/integration/react'
-import {applyMiddleware, compose, createStore} from 'redux';
-import reducers from 'store/reducers';
-import thunk from 'redux-thunk';
 import store from 'store';
 import { persistStore } from 'redux-persist'
 

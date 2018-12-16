@@ -4,15 +4,9 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom'
 import {bindActionCreators} from 'redux';
 import {Typography} from '@material-ui/core';
-import {Chart} from 'react-chartjs-2';
-import {FuseAnimate} from '@fuse';
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import { Redirect } from 'react-router-dom'
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import store from 'store'
 import * as Actions from 'auth/store/actions';
@@ -54,7 +48,7 @@ class Tournaments extends Component {
 		return this.props.user.team.Videos.filter(function(item, i, ar){ return ar.map(function(vid){return vid.metadata.tournament}).indexOf(item.metadata.tournament) === i; })
 	}
 	get_num_videos_by_name(name){
-		return this.props.user.team.Videos.filter(function(video){return video.metadata.tournament == name}).length
+		return this.props.user.team.Videos.filter(function(video){return video.metadata.tournament === name}).length
 	}
 
 	render()
@@ -65,7 +59,7 @@ class Tournaments extends Component {
 				{this.renderRedirect()}
 				<Grid container spacing={24}>
 					{this.get_folders().map((video, index)=>
-						(<Grid item xs={4}>
+						(<Grid key={index} item xs={4}>
 							<Card key = {index} style = {{width: "100%"}}>
 								<CardContent  onClick={() => {
 									this.setState({clicked: true})

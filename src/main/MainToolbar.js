@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {withStyles} from '@material-ui/core/styles/index';
 import classNames from 'classnames';
-import {Avatar, Button, Icon, IconButton, ListItemIcon, ListItemText, MenuItem, Typography, Hidden, Popover} from '@material-ui/core';
+import {Avatar, Button, Icon, ListItemIcon, ListItemText, MenuItem, Typography, Popover} from '@material-ui/core';
 import {connect} from 'react-redux';
 import deburr from 'lodash/deburr';
 import Dialog from '@material-ui/core/Dialog';
@@ -11,24 +11,20 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import * as authActions from 'auth/store/actions';
 import {bindActionCreators} from 'redux';
-import {FuseShortcuts, FuseAnimate} from '@fuse';
-import {Link} from 'react-router-dom';
+import {FuseAnimate} from '@fuse';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import { FilePond, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Card from '@material-ui/core/Card';
 import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
 import AppBar from '@material-ui/core/AppBar';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import ReactDOM from 'react-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Paper from '@material-ui/core/Paper';
-import FormLabel from '@material-ui/core/FormLabel';
 import axios from 'axios/index';
 import store from 'store';
 import Autosuggest from 'react-autosuggest';
@@ -160,7 +156,7 @@ function getSuggestions(value) {
 	: suggestions.filter(suggestion => {
 
 		const keep =
-		  count < 5 && ((suggestion.label.slice(0, inputLength).toLowerCase() === inputValue) || inputLength===0);
+		  count < 5 && ((suggestion.label.slice(0, inputLength).toLowerCase() === inputValue) || inputLength === 0);
 
 		if (keep) {
 		  count += 1;
@@ -176,11 +172,11 @@ function getNameSuggestions(value) {
 	return inputLength === 0
 	? []
 	: suggested_player_names.filter(suggestion => {
-		if(suggestion.label == undefined){
+		if(suggestion.label === undefined){
 			return false
 		} else {
 			const keep =
-					  count < 5 && (suggestion.label.slice(0, inputLength).toLowerCase() === inputValue || inputLength===0);
+					  count < 5 && (suggestion.label.slice(0, inputLength).toLowerCase() === inputValue || inputLength === 0);
 			if (keep) {
 			  count += 1;
 			}
@@ -242,16 +238,15 @@ class MainToolbar extends Component {
 		})
 	}
 
-	load_suggestions(props){
-		console.log(props.user)
+	load_suggestions(props) {
 		props.user.team.Videos.forEach(function(video){
-			if(suggestions.filter(function(t){return t.label===video.metadata.tournament}).length===0){
+			if(suggestions.filter(function(t){return t.label === video.metadata.tournament}).length === 0){
 				suggestions.push({"label": video.metadata.tournament})
 			}
-			if(suggested_player_names.filter(function(t){return (t.label===video.metadata.playerName1) }).length===0){
+			if(suggested_player_names.filter(function(t){return (t.label === video.metadata.playerName1) }).length === 0){
 				suggested_player_names.push({"label": video.metadata.playerName1})
 			}
-			if(suggested_player_names.filter(function(t){return (t.label===video.metadata.playerName2) }).length===0){
+			if(suggested_player_names.filter(function(t){return (t.label === video.metadata.playerName2) }).length === 0){
 				suggested_player_names.push({"label": video.metadata.playerName2})
 			}
 		})
@@ -298,10 +293,7 @@ class MainToolbar extends Component {
 	};
 
 	handleServerResponse = response => {
-
 		if(JSON.parse(response)["success"]){
-			console.log("response from server")
-			console.log(response)
 			var upload_filenames = this.state.upload_filenames
 			upload_filenames.push(JSON.parse(response)["file_info"][0])
 			this.setState({
@@ -405,7 +397,7 @@ class MainToolbar extends Component {
 
 
 	renderRedirect = () => {
-		if(this.state.redirect != null){
+		if(this.state.redirect !== null){
 			this.setState({redirect: null})
 			return (<Redirect to={this.state.redirect} />)
 		} else {
@@ -416,7 +408,7 @@ class MainToolbar extends Component {
 	render()
 	{
 
-		const {classes, user, logout, openChatPanel} = this.props;
+		const {classes, user, logout} = this.props;
 		const {userMenu} = this.state;
 
 		var  autosuggestProps = {
@@ -454,7 +446,7 @@ class MainToolbar extends Component {
 					<DialogTitle id="alert-dialog-title">{instructions[this.state.continued]}</DialogTitle>
 					<DialogContent>
 						<DialogContentText id="alert-dialog-description">
-							{this.state.continued == 1?
+							{this.state.continued === 1?
 								<FilePond 
 									allowMultiple={true}
 									name="content"
@@ -484,12 +476,12 @@ class MainToolbar extends Component {
 								/>
 								: null
 							}
-							{this.state.num_files==0 && this.state.continued == 1 && this.state.upload_filenames.length != 0 ? 
+							{this.state.num_files === 0 && this.state.continued === 1 && this.state.upload_filenames.length !== 0 ? 
 								<Button variant="contained" onClick={this.handleSecondSubmitContinue} className={classes.button} style={{marginTop: "20px", width: "310px"}}>
 									Submit
 								</Button>: null
 							}
-							{this.state.continued == 0 ?
+							{this.state.continued === 0 ?
 
 								<FormControl component="fieldset">
 									<FormGroup>
@@ -536,7 +528,7 @@ class MainToolbar extends Component {
 												)}
 											/>
 										</div>
-										{ this.state.value == 1 ?
+										{ this.state.value === 1 ?
 											<div style={{marginBottom: 10}}>
 												<Autosuggest
 													{...autosuggestPropsPlayerName}
@@ -609,7 +601,7 @@ class MainToolbar extends Component {
 
 
 							{
-								this.state.continued == 2 ? 
+								this.state.continued === 2 ? 
 								<FormControl>
 									<DragDropContext onDragEnd={this.onDragEnd}  style={{width: "100%"}}>
 										<Droppable droppableId="droppable" style={{width: "100%"}}>
@@ -660,22 +652,22 @@ class MainToolbar extends Component {
 				<div className="flex flex-1"> 
 					<nav style={{marginLeft: 20}}>
 						{
-							this.props.user.bc_title=="Tournaments" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/tournaments"})}} class="breadcrumb">Tournaments</a>) : null
+							this.props.user.bc_title === "Tournaments" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/tournaments"})}} className="breadcrumb">Tournaments</a>) : null
 						}
 						{
-							this.props.user.bc_title=="Players" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/players"})}} class="breadcrumb">Players</a>): null
+							this.props.user.bc_title === "Players" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/players"})}} className="breadcrumb">Players</a>): null
 						}
 						{
-							(this.props.user.bc_title=="Tournaments" && this.props.user.activeTournament != null) ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/matches"})}} class="breadcrumb">{this.props.user.activeTournament}</a>) : null
+							(this.props.user.bc_title === "Tournaments" && this.props.user.activeTournament !== null) ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/matches"})}} className="breadcrumb">{this.props.user.activeTournament}</a>) : null
 						}
 						{
-							(this.props.user.bc_title=="Players" && this.props.user.activePlayer != null) ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/matches"})}} class="breadcrumb">{this.props.user.activePlayer}</a>) : null
+							(this.props.user.bc_title === "Players" && this.props.user.activePlayer !== null) ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/matches"})}} className="breadcrumb">{this.props.user.activePlayer}</a>) : null
 						}
 						{
-							(this.props.user.bc_title=="Tournaments" && this.props.user.activeTournament != null && this.props.user.activeVideo != null) ? (<a class="breadcrumb">{this.props.user.activeVideo.metadata.matchName}</a>) : null
+							(this.props.user.bc_title === "Tournaments" && this.props.user.activeTournament !== null && this.props.user.activeVideo !== null) ? (<a className="breadcrumb">{this.props.user.activeVideo.metadata.matchName}</a>) : null
 						}
 						{
-							(this.props.user.bc_title=="Players" && this.props.user.activePlayer != null && this.props.user.activeVideo != null) ? (<a class="breadcrumb">{this.props.user.activeVideo.metadata.matchName}</a>) : null
+							(this.props.user.bc_title === "Players" && this.props.user.activePlayer !== null && this.props.user.activeVideo !== null) ? (<a className="breadcrumb">{this.props.user.activeVideo.metadata.matchName}</a>) : null
 						}
 						
 					</nav>

@@ -2,8 +2,6 @@ import history from 'history.js';
 import {setDefaultSettings} from 'store/actions/fuse';
 import {FuseDefaultSettings} from '@fuse';
 import _ from 'lodash';
-import store from 'store';
-import * as Actions from 'store/actions';
 
 
 export const SET_USER_DATA = '[USER] SET DATA';
@@ -133,7 +131,6 @@ export function logoutUser()
 	localStorage.setItem("token", undefined)
 
 	return (dispatch, getState) => {
-		const user = getState().auth.user;
 		dispatch(setDefaultSettings(FuseDefaultSettings));
 		dispatch({
 			type: USER_LOGGED_OUT,

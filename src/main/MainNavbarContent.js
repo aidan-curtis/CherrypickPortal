@@ -6,9 +6,6 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
 
-import {Button} from '@material-ui/core';
-
-
 const styles = theme => ({
 	root  : {
 		'& .user': {

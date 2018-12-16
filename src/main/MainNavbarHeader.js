@@ -2,7 +2,6 @@ import React from 'react';
 import {withStyles} from '@material-ui/core/styles/index';
 import {withRouter} from 'react-router-dom';
 import classNames from 'classnames';
-import {Typography} from '@material-ui/core';
 
 const styles = theme => ({
     root      : {
@@ -35,7 +34,7 @@ function MainNavbarHeader({classes})
     return (
         <div className={classes.root}>
             <div className={classNames(classes.logo, "flex items-center")}>
-                <img src="assets/images/logos/cherrypick_full_logo.png" height="50" /> 
+                <img alt = "logo" src="assets/images/logos/cherrypick_full_logo.png" height="50" /> 
             </div>
         </div>
     );

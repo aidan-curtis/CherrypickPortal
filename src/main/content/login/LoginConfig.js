@@ -1,5 +1,4 @@
 import Login from './Login';
-import {authRoles} from 'auth';
 
 export const LoginConfig = {
     settings: {

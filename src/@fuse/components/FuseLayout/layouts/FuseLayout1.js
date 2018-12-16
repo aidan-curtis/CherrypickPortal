@@ -7,7 +7,6 @@ import {connect} from 'react-redux';
 import * as Actions from 'store/actions';
 import {AppBar, Hidden, Icon, IconButton, Toolbar, Drawer, MuiThemeProvider} from '@material-ui/core';
 import {FuseScrollbars, FuseMessage, FuseThemes} from '@fuse';
-import {Button} from '@material-ui/core';
 import classNames from 'classnames';
 import _ from 'lodash';
 
