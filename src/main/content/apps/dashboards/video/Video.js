@@ -42,7 +42,6 @@ class Video extends Component {
 
 	handleStateChange(state, prevState) {
 		// copy player state to this component's state
-		console.log(this.refs.player)
 		if(this.state.current_segment < this.state.video.Segments.length){
 
 			if(state.currentTime < this.state.video.Segments[this.state.current_segment].start ){
@@ -87,6 +86,7 @@ class Video extends Component {
 	render()
 	{
 		const {classes} = this.props;
+		console.log(this.state.video.Segments)
 		return (
 			<div className={classes.root} style = {{padding: 50}}>
 				<Grid container spacing={24}>
