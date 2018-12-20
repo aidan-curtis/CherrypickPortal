@@ -3,9 +3,18 @@ import {TournamentsConfig} from './dashboards/tournaments/TournamentsConfig';
 import {VideoConfig} from './dashboards/video/VideoConfig';
 import {MatchesConfig} from './dashboards/matches/MatchesConfig';
 
+import {TaggedConfig} from './dashboards/tagged/TaggedConfig';
+import {TagVideoConfig} from './dashboards/tagvideo/TagVideoConfig';
+import {UntaggedConfig} from './dashboards/untagged/UntaggedConfig';
+import {ProcessingConfig} from './dashboards/processing/ProcessingConfig';
+
 export const appsConfigs = [
 	PlayersConfig,
 	TournamentsConfig,
 	VideoConfig,
-	MatchesConfig
+	MatchesConfig,
+	TaggedConfig,
+	UntaggedConfig,
+	ProcessingConfig,
+	TagVideoConfig
 ];

@@ -26,43 +26,42 @@ import { persistStore } from 'redux-persist'
 require('dotenv').config({ path: './.env' })
 
 const jss = create({
-    ...jssPreset(),
-    plugins: [...jssPreset().plugins, jssExtend()]
+	...jssPreset(),
+	plugins: [...jssPreset().plugins, jssExtend()]
 });
 
 jss.options.insertionPoint = document.getElementById('jss-insertion-point');
 const generateClassName = createGenerateClassName();
-
 const persistor = persistStore(store)
 
 ReactDOM.render(
-    <JssProvider jss={jss} generateClassName={generateClassName}>
-        <Provider store={store}>
-              <PersistGate loading={null} persistor={persistor}>
-            <Auth>
-                <Router history={history}>
-                    <FuseAuthorization routes={routes}>
-                        <FuseTheme>
-                            <FuseLayout
-                                routes={routes}
-                                toolbar={
-                                    <MainToolbar/>
-                                }
-                                navbarHeader={
-                                    <MainNavbarHeader/>
-                                }
-                                navbarContent={
-                                    <MainNavbarContent/>
-                                }
-                            >
-                            </FuseLayout>
-                        </FuseTheme>
-                    </FuseAuthorization>
-                </Router>
-            </Auth>
-            </PersistGate>
-        </Provider>
-    </JssProvider>
-    , document.getElementById('root'));
+	<JssProvider jss={jss} generateClassName={generateClassName}>
+		<Provider store={store}>
+			<PersistGate loading={null} persistor={persistor}>
+				<Auth>
+					<Router history={history}>
+						<FuseAuthorization routes={routes}>
+							<FuseTheme>
+								<FuseLayout
+									routes={routes}
+									toolbar={
+										<MainToolbar/>
+									}
+									navbarHeader={
+										<MainNavbarHeader/>
+									}
+									navbarContent={
+										<MainNavbarContent/>
+									}
+								>
+								</FuseLayout>
+							</FuseTheme>
+						</FuseAuthorization>
+					</Router>
+				</Auth>
+			</PersistGate>
+		</Provider>
+	</JssProvider>
+	, document.getElementById('root'));
 
 registerServiceWorker();

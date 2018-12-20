@@ -8,7 +8,7 @@ export const MatchesConfig = {
 	},
 	routes  : [
 		{
-			path     : '/apps/dashboards/matches',
+			path     : '/apps/dashboards/matches/:type/:name',
 			component: Matches
 		}
 	]

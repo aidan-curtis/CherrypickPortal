@@ -15,7 +15,7 @@ const styles = theme => ({
 	}
 });
 
-class Matches extends Component {
+class Processing extends Component {
 
 	state = {
 		clicked: false
@@ -40,7 +40,7 @@ class Matches extends Component {
 
 
 	renderRedirect = () => {
-		var link = '/apps/dashboards/video/'+this.state.vid+"/"+this.state.vname
+		var link = '/apps/dashboards/tagvideo/processing/'+this.state.vid+'/'+this.state.vname
 		if (this.state.clicked) {
 			return <Redirect to={link}/>
 		}
@@ -55,21 +55,15 @@ class Matches extends Component {
 				{this.renderRedirect()}
 				<Grid container spacing={24}>
 				{props.user.team.Videos.filter((video)=>{
-					if(this.state.type == 'player'){
-						return (video.metadata.playerName1 === this.state.name || video.metadata.playerName2 === this.state.name)
-					}
-					else if(this.state.type == 'tournament'){
-						return video.metadata.tournament === this.state.name
-					}
-					else{
-						return false
-					}
+					return video.state == "processing"	
 				}).map((video, index)=>
 						(<Grid key={index} item xs={4} onClick={() => {
 										if((video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === "")){
 
 										} else {
-											this.setState({clicked: true, vid: video._id, vname: video.metadata.matchName})
+											this.setState({clicked: true,
+														   vid: video._id,
+														   vname: video.metadata.matchName})
 								
 										}
 									}}  style = {{width: "100%", position: "relative"}}>
@@ -81,9 +75,6 @@ class Matches extends Component {
 													color: "white",
 													textAlign: "center",
 													fontSize: 24}}>{video.metadata.matchName}</span>
-
-
-						
 									{(video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === "")? <img alt="processing" style={{borderRadius: 5 ,overflow: 'hidden', width: "100%"}} src="assets/images/processing.png"/>:<img alt="thumbnail" style={{borderRadius: 5 ,overflow: 'hidden'}} src={video.processedImageUri}/> }
 					
 						</Grid>)
@@ -111,4 +102,4 @@ function mapStateToProps({auth})
 	}
 }
 
-export default withStyles(styles, {withTheme: true})(withRouter(connect(mapStateToProps, mapDispatchToProps)(Matches)));
+export default withStyles(styles, {withTheme: true})(withRouter(connect(mapStateToProps, mapDispatchToProps)(Processing)));

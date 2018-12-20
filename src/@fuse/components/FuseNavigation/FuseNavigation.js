@@ -22,7 +22,6 @@ class FuseNavigation extends Component {
     render()
     {
         const {navigation, layout} = this.props;
-
         const verticalNav = (
             <List className="whitespace-no-wrap">
                 {

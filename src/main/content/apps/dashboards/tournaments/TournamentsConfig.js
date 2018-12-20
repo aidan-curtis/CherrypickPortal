@@ -8,7 +8,7 @@ export const TournamentsConfig = {
     },
     routes  : [
         {
-            path     : '/apps/dashboards/tournaments',
+            path     : '/apps/dashboards/tournaments/:type',
             component: Tournaments
         }
     ]

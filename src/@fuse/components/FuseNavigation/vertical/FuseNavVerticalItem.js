@@ -51,7 +51,7 @@ function FuseNavVerticalItem({item, classes, nestedLevel, userRole, navbarCloseM
 
     let paddingValue = 40 + (nestedLevel * 16);
     const listItemPadding = nestedLevel > 0 ? 'pl-' + (paddingValue > 80 ? 80 : paddingValue) : 'pl-24';
-
+    console.log(item)
     return (
         <ListItem
             button

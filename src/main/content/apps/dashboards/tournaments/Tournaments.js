@@ -40,8 +40,9 @@ class Tournaments extends Component {
 
 
 	renderRedirect = () => {
-		if (this.props.user.activeTournament !== null && this.props.user.activeTournament !== undefined && this.state.clicked) {
-			return <Redirect to='/apps/dashboards/matches' />
+		var link = '/apps/dashboards/matches/tournament/'+this.state.tname
+		if (this.state.clicked) {
+			return <Redirect to={link}/>
 		}
 	}
 	get_folders(){
@@ -62,8 +63,8 @@ class Tournaments extends Component {
 						(<Grid key={index} item xs={4}>
 							<Card key = {index} style = {{width: "100%"}}>
 								<CardContent  onClick={() => {
-									this.setState({clicked: true})
-									store.dispatch(this.props.setCurrentTournament(video.metadata.tournament))
+									this.setState({clicked: true,
+												   tname: video.metadata.tournament})
 								}}>
 									<Typography gutterBottom variant="headline" component="h2">
 										{video.metadata.tournament}

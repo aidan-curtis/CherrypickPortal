@@ -20,6 +20,11 @@ const defaultProps = {};
 
 function FuseNavVerticalGroup({item, nestedLevel, userRole})
 {
+
+
+
+
+
     if ( item.auth && (!item.auth.includes(userRole) || (userRole !== 'guest' && item.auth.length === 1 && item.auth.includes('guest'))) )
     {
         return null;
@@ -27,6 +32,7 @@ function FuseNavVerticalGroup({item, nestedLevel, userRole})
 
     let paddingValue = 40 + (nestedLevel * 16);
     const listItemPadding = nestedLevel > 0 ? 'pl-' + (paddingValue > 80 ? 80 : paddingValue) : 'pl-24';
+
 
     return (
         <React.Fragment>
@@ -39,20 +45,20 @@ function FuseNavVerticalGroup({item, nestedLevel, userRole})
 
             {item.children && (
                 <React.Fragment>
-                    {
+                    {   
                         item.children.map((item) => (
 
                             <React.Fragment key={item.id}>
 
-                                {item.type === 'group' && (
+                                {item.type === 'group' && userRole.team.role === item.role &&(
                                     <NavVerticalGroup item={item} nestedLevel={nestedLevel}/>
                                 )}
 
-                                {item.type === 'collapse' && (
+                                {item.type === 'collapse' && userRole.team.role === item.role &&(
                                     <FuseNavVerticalCollapse item={item} nestedLevel={nestedLevel}/>
                                 )}
 
-                                {item.type === 'item' && (
+                                {item.type === 'item' && userRole.team.role === item.role && (
                                     <FuseNavVerticalItem item={item} nestedLevel={nestedLevel}/>
                                 )}
 
@@ -68,7 +74,7 @@ function FuseNavVerticalGroup({item, nestedLevel, userRole})
 function mapStateToProps({auth})
 {
     return {
-        userRole: auth.user.role
+        userRole: auth.user
     }
 }
 

@@ -42,7 +42,12 @@ class RegularLoginTab extends Component {
 
         if ( this.props.user.token !== '' )
         {
-            const pathname = this.props.location.state && this.props.location.state.redirectUrl ? this.props.location.state.redirectUrl : '/apps/dashboards/tournaments';
+            var pathname = ""
+            if(this.props.user.team.role == "team"){
+                pathname = this.props.location.state && this.props.location.state.redirectUrl ? this.props.location.state.redirectUrl : '/apps/dashboards/tournaments/tournament';
+            } else {
+                pathname = this.props.location.state && this.props.location.state.redirectUrl ? this.props.location.state.redirectUrl : '/apps/dashboards/untagged';                
+            }
             this.props.history.push({
                 pathname
             });

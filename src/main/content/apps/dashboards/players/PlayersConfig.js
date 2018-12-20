@@ -8,7 +8,7 @@ export const PlayersConfig = {
 	},
 	routes  : [
 		{
-			path     : '/apps/dashboards/players',
+			path     : '/apps/dashboards/players/:type',
 			component: Players
 		}
 	]

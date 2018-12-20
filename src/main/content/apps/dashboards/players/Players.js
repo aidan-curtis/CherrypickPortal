@@ -40,8 +40,9 @@ class Players extends Component {
 
 
 	renderRedirect = () => {
-		if (this.props.user.activePlayer !== null && this.props.user.activePlayer !== undefined && this.state.clicked) {
-			return <Redirect to='/apps/dashboards/matches' />
+		var link = '/apps/dashboards/matches/player/'+this.state.pname
+		if (this.state.clicked) {
+			return <Redirect to={link}/>
 		}
 	}
 
@@ -64,8 +65,10 @@ class Players extends Component {
 						(<Grid item xs={4}>
 							<Card key = {index} style = {{width: "100%"}}>
 								<CardContent  onClick = {() => {
-									this.setState({clicked: true})
-									store.dispatch(this.props.setCurrentPlayer(pname))
+									this.setState({
+										clicked: true,
+										pname: pname
+									})
 								}}>
 									<Typography gutterBottom variant="headline" component="h2">
 										{pname}

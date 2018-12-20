@@ -220,8 +220,6 @@ class MainToolbar extends Component {
 		this.setState({ value: index });
 	};
 
-
-
 	refresh(){
 		axios({
 			method: "GET",
@@ -281,9 +279,9 @@ class MainToolbar extends Component {
 	};
 
 
-  handleCheckChange = name => event => {
-    this.setState({ [name]: event.target.checked });
-  };
+	handleCheckChange = name => event => {
+		this.setState({ [name]: event.target.checked });
+	};
 
 
 	handleChange = name => event => {
@@ -407,6 +405,7 @@ class MainToolbar extends Component {
 	}
 	render()
 	{
+		
 
 		const {classes, user, logout} = this.props;
 		const {userMenu} = this.state;
@@ -433,6 +432,8 @@ class MainToolbar extends Component {
 			"Upload the videos for that match",
 			"Please put your videos in order."
 		]
+		var link = window.location.href.split("/")
+		var d_idx = link.indexOf("dashboards")
 		return (
 			<div className={classNames(classes.root, "flex flex-row")}>
 				{this.renderRedirect()}
@@ -644,31 +645,40 @@ class MainToolbar extends Component {
 						</DialogContentText>
 					</DialogContent>
 					<DialogActions>
-							<Button onClick={this.handleRealClose} color="primary" autoFocus>
-								Close
-							</Button>
+						<Button onClick={this.handleRealClose} color="primary" autoFocus>
+							Close
+						</Button>
 					</DialogActions>
 				</Dialog>
 				<div className="flex flex-1"> 
 					<nav style={{marginLeft: 20}}>
 						{
-							this.props.user.bc_title === "Tournaments" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/tournaments"})}} className="breadcrumb">Tournaments</a>) : null
+							 link[d_idx+2] === "tournament"? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/tournaments/tournament"})}} className="breadcrumb">Tournaments</a>) : null
 						}
 						{
-							this.props.user.bc_title === "Players" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/players"})}} className="breadcrumb">Players</a>): null
+							 link[d_idx+2] === "player" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/players/player"})}} className="breadcrumb">Players</a>): null
 						}
 						{
-							(this.props.user.bc_title === "Tournaments" && this.props.user.activeTournament !== null) ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/matches"})}} className="breadcrumb">{this.props.user.activeTournament}</a>) : null
+							 link[d_idx+2] === "untagged" || link[d_idx+1] === "untagged" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/untagged"})}} className="breadcrumb">Untagged</a>): null
+						}
+						{	
+							 link[d_idx+2] === "tagged" || link[d_idx+1] === "tagged"  ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/tagged"})}} className="breadcrumb">Tagged</a>): null
 						}
 						{
-							(this.props.user.bc_title === "Players" && this.props.user.activePlayer !== null) ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/matches"})}} className="breadcrumb">{this.props.user.activePlayer}</a>) : null
+							 link[d_idx+2] === "processing" || link[d_idx+1] === "processing"  ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/processing"})}} className="breadcrumb">Processing</a>): null
 						}
 						{
-							(this.props.user.bc_title === "Tournaments" && this.props.user.activeTournament !== null && this.props.user.activeVideo !== null) ? (<a className="breadcrumb">{this.props.user.activeVideo.metadata.matchName}</a>) : null
+							 link.length>d_idx+3 && link[d_idx+1] !== "tagvideo" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/matches/"+link[d_idx+2]+"/"+link[d_idx+3]})}} className="breadcrumb">{decodeURIComponent(link[d_idx+3])}</a>) : null
 						}
 						{
-							(this.props.user.bc_title === "Players" && this.props.user.activePlayer !== null && this.props.user.activeVideo !== null) ? (<a className="breadcrumb">{this.props.user.activeVideo.metadata.matchName}</a>) : null
+							 link.length>d_idx+4 && link[d_idx+1] !== "tagvideo" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/matches/"+link[d_idx+2]+"/"+link[d_idx+3]+"/"+link[d_idx+4]})}} className="breadcrumb">{decodeURIComponent(link[d_idx+4])}</a>) : null
 						}
+						{
+							 link.length>d_idx+4 && link[d_idx+1] === "tagvideo" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/matches/"+link[d_idx+2]+"/"+link[d_idx+3]+"/"+link[d_idx+4]})}} className="breadcrumb">{decodeURIComponent(link[d_idx+4])}</a>) : null
+						}
+						
+						
+						
 						
 					</nav>
 				</div>
@@ -749,10 +759,11 @@ function mapDispatchToProps(dispatch)
 	}, dispatch);
 }
 
-function mapStateToProps({auth})
+function mapStateToProps({auth, location})
 {
 	return {
-		user: auth.user
+		user: auth.user,
+		location: location
 	}
 }
 
