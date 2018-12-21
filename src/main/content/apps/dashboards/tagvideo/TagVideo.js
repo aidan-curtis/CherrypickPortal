@@ -25,25 +25,26 @@ const styles = theme => ({
 
 class TagVideo extends Component {
 
-
-
-
 	handleKeyPress = (event) => {
-		if(event.key == 's'){
+		if(event.key === 's') {
 			var temp_segments = this.state.segments
 			if(this.state.segment_index%2==0){
 				temp_segments[this.state.segment_index/2]['start'] = parseInt(this.state.player.currentTime)
 			} else {
 				temp_segments[parseInt(this.state.segment_index/2)]['stop'] = parseInt(this.state.player.currentTime)
 			}
-
 			if((this.state.segment_index+1)/2 === this.state.segments.length ){
-					temp_segments.push({})
+				temp_segments.push({})
 			}
 			this.setState({segments: temp_segments, segment_index: this.state.segment_index+1})
-
-
-	 	}
+		}
+		else if(event.key === 'a') {
+			if(this.state.segment_index > 0){
+				this.setState({
+					segment_index: this.state.segment_index-1
+				})
+			}
+		}
 	}
 
 
