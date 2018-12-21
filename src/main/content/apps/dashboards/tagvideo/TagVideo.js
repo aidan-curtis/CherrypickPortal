@@ -45,6 +45,13 @@ class TagVideo extends Component {
 				})
 			}
 		}
+		else if(event.key === 'd') {
+			if((this.state.segment_index+1)/2 < this.state.segments.length){
+				this.setState({
+					segment_index: this.state.segment_index+1
+				})
+			}
+		}
 	}
 
 
@@ -104,7 +111,7 @@ class TagVideo extends Component {
 							src={this.state.video.processedVideoUri}
 						>
 							<ControlBar>
-								<PlaybackRateMenuButton rates={[0.5, 1, 1.5]} />
+								<PlaybackRateMenuButton rates={[1, 2, 3]} />
 								<ReplayControl seconds={10} order={2.2} />
 								<ForwardControl seconds={10} order={3.2} />
 							</ControlBar>
