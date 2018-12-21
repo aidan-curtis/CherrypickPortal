@@ -104,7 +104,7 @@ class TagVideo extends Component {
 							src={this.state.video.processedVideoUri}
 						>
 							<ControlBar>
-								<PlaybackRateMenuButton rates={[2, 1, 0.5]} />
+								<PlaybackRateMenuButton rates={[0.5, 1, 1.5]} />
 								<ReplayControl seconds={10} order={2.2} />
 								<ForwardControl seconds={10} order={3.2} />
 							</ControlBar>
