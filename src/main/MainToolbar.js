@@ -671,10 +671,10 @@ class MainToolbar extends Component {
 							 link.length>d_idx+3 && link[d_idx+1] !== "tagvideo" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/matches/"+link[d_idx+2]+"/"+link[d_idx+3]})}} className="breadcrumb">{decodeURIComponent(link[d_idx+3])}</a>) : null
 						}
 						{
-							 link.length>d_idx+4 && link[d_idx+1] !== "tagvideo" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/matches/"+link[d_idx+2]+"/"+link[d_idx+3]+"/"+link[d_idx+4]})}} className="breadcrumb">{decodeURIComponent(link[d_idx+4])}</a>) : null
+							 link.length>d_idx+4 && link[d_idx+1] !== "tagvideo" ? (<a className="breadcrumb">{decodeURIComponent(link[d_idx+4])}</a>) : null
 						}
 						{
-							 link.length>d_idx+4 && link[d_idx+1] === "tagvideo" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/matches/"+link[d_idx+2]+"/"+link[d_idx+3]+"/"+link[d_idx+4]})}} className="breadcrumb">{decodeURIComponent(link[d_idx+4])}</a>) : null
+							 link.length>d_idx+4 && link[d_idx+1] === "tagvideo" ? (<a className="breadcrumb">{decodeURIComponent(link[d_idx+4])}</a>) : null
 						}
 						
 						

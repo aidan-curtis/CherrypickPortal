@@ -40,7 +40,7 @@ class Matches extends Component {
 
 
 	renderRedirect = () => {
-		var link = '/apps/dashboards/video/'+this.state.vid+"/"+this.state.vname
+		var link = '/apps/dashboards/video/'+this.state['type']+'/'+this.state['name']+'/'+this.state.vname+"/"+this.state.vid
 		if (this.state.clicked) {
 			return <Redirect to={link}/>
 		}

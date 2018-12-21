@@ -23,8 +23,8 @@ function FuseNavVerticalGroup({item, nestedLevel, userRole})
 
 
 
-
-
+    console.log("Fusenav v group")
+    console.log(userRole)
     if ( item.auth && (!item.auth.includes(userRole) || (userRole !== 'guest' && item.auth.length === 1 && item.auth.includes('guest'))) )
     {
         return null;

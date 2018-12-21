@@ -30,7 +30,9 @@ class Video extends Component {
 	{
 		super(props);
 		this.state = {
-			video: this.props.user.activeVideo,
+			video: this.props.user.team.Videos.filter((video)=>{
+				return video._id === this.props.match.params.videoid
+			})[0],
 			current_segment : 0
 		}
 	}
