@@ -13,6 +13,7 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
+import axios from 'axios/index';
 import TableRow from '@material-ui/core/TableRow';
 
 
@@ -87,13 +88,33 @@ class TagVideo extends Component {
 	}
 
 
+
+
 	changeCurrentTime(seconds) {
 		return () => {
 			this.refs.player.seek(seconds);
 		};
 	}
 
-
+	submitTimestamps(){
+		var cloneSegments = this.state.segments.slice();
+		cloneSegments.splice(-1,1)
+		axios({
+			method: "POST",
+			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/process_video",
+			responseType: 'json',
+			headers: {
+				"authorization": localStorage.token
+			},
+			data: {
+				"videoId": this.state.video._id,
+				"timestamps": JSON.stringify(cloneSegments)
+			}
+		}).then((response) => {
+			console.log("Response from uploading timestamps")
+			console.log(response)
+		})
+	}
 
 	render()
 	{
@@ -115,7 +136,7 @@ class TagVideo extends Component {
 							</ControlBar>
 						</Player>
 	
-						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} href={this.state.video.signedProcessedVideoUri} >Submit Timestamps</Button>
+						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick = {()=>{this.submitTimestamps()}} >Submit Timestamps</Button>
 
 
 					</Grid>
