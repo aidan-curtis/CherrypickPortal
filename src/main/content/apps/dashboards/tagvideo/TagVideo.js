@@ -67,8 +67,6 @@ class TagVideo extends Component {
 			segment_index: 0,
 			segments: [{}]
 		}
-
-
 	}
 
 	handleStateChange(state, prevState) {

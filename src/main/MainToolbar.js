@@ -325,6 +325,7 @@ class MainToolbar extends Component {
 			},
 			data: {
 				"upload_filenames": this.state.upload_filenames.map(function(fn){return fn["location"]}),
+				"upload_keys": this.state.upload_filenames.map(function(fn){return fn["key"]}),
 				"tournament_name": this.state.tournament_name,
 				"player_name_1": this.state.player_name_1,
 				"player_name_2": this.state.player_name_2,

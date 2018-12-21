@@ -66,25 +66,25 @@ class Matches extends Component {
 					}
 				}).map((video, index)=>
 						(<Grid key={index} item xs={4} onClick={() => {
-										if((video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === "")){
+								if((video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === "")){
 
-										} else {
-											this.setState({clicked: true, vid: video._id, vname: video.metadata.matchName})
-								
-										}
-									}}  style = {{width: "100%", position: "relative"}}>
-
-									<span style={{	position: "absolute",
-													top: "40%",
-													left: 0,
-													width: "100%",
-													color: "white",
-													textAlign: "center",
-													fontSize: 24}}>{video.metadata.matchName}</span>
-
-
+								} else {
+									this.setState({clicked: true, vid: video._id, vname: video.metadata.matchName})
 						
-									{(video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === "")? <img alt="processing" style={{borderRadius: 5 ,overflow: 'hidden', width: "100%"}} src="assets/images/processing.png"/>:<img alt="thumbnail" style={{borderRadius: 5 ,overflow: 'hidden'}} src={video.processedImageUri}/> }
+								}
+							}}  style = {{width: "100%", position: "relative"}}>
+
+							<span style={{	position: "absolute",
+											top: "40%",
+											left: 0,
+											width: "100%",
+											color: "white",
+											textAlign: "center",
+											fontSize: 24}}>{video.metadata.matchName}</span>
+
+
+				
+							{(video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === "")? <img alt="processing" style={{borderRadius: 5 ,overflow: 'hidden', width: "100%"}} src="assets/images/processing.png"/>:<img alt="thumbnail" style={{borderRadius: 5 ,overflow: 'hidden'}} src={video.processedImageUri}/> }
 					
 						</Grid>)
 					)}
