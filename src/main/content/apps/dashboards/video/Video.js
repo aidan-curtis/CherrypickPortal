@@ -116,8 +116,8 @@ class Video extends Component {
 								<Table className={classes.table} style={{tableLayout: 'fixed'}}>
 									<TableHead>
 										<TableRow>
-											<TableCell>Start (sec)</TableCell>
-											<TableCell>Stop (sec)</TableCell>
+											<TableCell>Point 1</TableCell>
+											<TableCell>Point 2</TableCell>
 										</TableRow>
 									</TableHead>
 									<TableBody>
