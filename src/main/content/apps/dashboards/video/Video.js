@@ -44,26 +44,28 @@ class Video extends Component {
 
 	handleStateChange(state, prevState) {
 		// copy player state to this component's state
-		if(this.state.current_segment < this.state.video.Segments.length){
+		if(!this.refs.player.paused){
+			if(this.state.current_segment < this.state.video.Segments.length){
 
-			if(state.currentTime < this.state.video.Segments[this.state.current_segment].start ){
-				this.refs.player.seek(this.state.video.Segments[this.state.current_segment].start);
-			}
-			if(state.currentTime > this.state.video.Segments[this.state.current_segment].stop ){
-				if(this.state.current_segment+1 < this.state.video.Segments.length){
+				if(state.currentTime < this.state.video.Segments[this.state.current_segment].start ){
 					this.refs.player.seek(this.state.video.Segments[this.state.current_segment].start);
 				}
+				if(state.currentTime > this.state.video.Segments[this.state.current_segment].stop ){
+					if(this.state.current_segment+1 < this.state.video.Segments.length){
+						this.refs.player.seek(this.state.video.Segments[this.state.current_segment].start);
+					}
+					this.setState({
+						current_segment: this.state.current_segment+1
+					})
+				}
 				this.setState({
-					current_segment: this.state.current_segment+1
-				})
+					player: state
+				});
+				this.refs.player.play()
+			} else {
+				console.log("pause")
+				this.refs.player.pause()
 			}
-			this.setState({
-				player: state
-			});
-			this.refs.player.play()
-		} else {
-			console.log("pause")
-			this.refs.player.pause()
 		}
 
 
