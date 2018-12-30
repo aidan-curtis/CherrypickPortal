@@ -44,6 +44,7 @@ class Video extends Component {
 
 	handleStateChange(state, prevState) {
 		// copy player state to this component's state
+		console.log(!this.refs.player.paused)
 		if(!this.refs.player.paused){
 			if(this.state.current_segment < this.state.video.Segments.length){
 
