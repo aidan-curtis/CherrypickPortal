@@ -5,7 +5,7 @@ import {withRouter} from 'react-router-dom'
 import {bindActionCreators} from 'redux';
 import Button from '@material-ui/core/Button';
 import {
-  Player, ControlBar, PlaybackRateMenuButton,ReplayControl,ForwardControl
+  Player, ControlBar, PlaybackRateMenuButton,ReplayControl,ForwardControl, LoadingSpinner
 } from 'video-react';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -102,6 +102,7 @@ class Video extends Component {
 							poster={this.state.video.processedImageUri}
 							src={this.state.video.processedVideoUri}
 						>
+						    <LoadingSpinner />
 							<ControlBar>
 								<PlaybackRateMenuButton rates={[0.5, 1, 1.5]} />
 								<ReplayControl seconds={10} order={2.2} />

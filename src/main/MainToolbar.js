@@ -447,10 +447,11 @@ class MainToolbar extends Component {
 				>
 					<DialogTitle id="alert-dialog-title">{instructions[this.state.continued]}</DialogTitle>
 					<DialogContent>
-						<DialogContentText id="alert-dialog-description">
+						<DialogContentText id="alert-dialog-description" style={{ width: "420px"}}>
 							{this.state.continued === 1?
 								<FilePond 
 									allowMultiple={true}
+
 									name="content"
 									acceptedFileTypes = {["video/mp4","video/quicktime"]}
 									server={{
@@ -479,7 +480,7 @@ class MainToolbar extends Component {
 								: null
 							}
 							{this.state.num_files === 0 && this.state.continued === 1 && this.state.upload_filenames.length !== 0 ? 
-								<Button variant="contained" onClick={this.handleSecondSubmitContinue} className={classes.button} style={{marginTop: "20px", width: "310px"}}>
+								<Button variant="contained" onClick={this.handleSecondSubmitContinue} className={classes.button} style={{marginTop: "20px", width: "410px"}}>
 									Submit
 								</Button>: null
 							}
@@ -575,8 +576,9 @@ class MainToolbar extends Component {
 											</Paper>
 											)}
 										/>
-										<FormControlLabel
+									<FormControlLabel
 										style={{marginTop: 20}}
+										hidden
 										control={
 											<Checkbox
 												checked={this.state.segment_video}
@@ -594,7 +596,7 @@ class MainToolbar extends Component {
 									</FormGroup>
 									
 
-									<Button variant="contained" onClick={this.handleSubmitContinue} className={classes.button} style={{marginTop: 20, width: "320px"}}>
+									<Button variant="contained" onClick={this.handleSubmitContinue} className={classes.button} style={{marginTop: 20, width: "420px"}}>
 										Continue
 									</Button>
 								</FormControl> : null
@@ -638,7 +640,7 @@ class MainToolbar extends Component {
 										)}
 										</Droppable>
 									</DragDropContext>
-									<Button variant="contained" onClick={this.handleSubmitForm} className={classes.button} style={{marginTop: 20, width: "320px"}}>
+									<Button variant="contained" onClick={this.handleSubmitForm} className={classes.button} style={{marginTop: 20, width: "420px"}}>
 											Continue
 									</Button>
 								</FormControl>:null
