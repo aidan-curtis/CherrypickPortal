@@ -40,8 +40,13 @@ class RegularLoginTab extends Component {
     componentDidUpdate(prevProps, prevState)
     {
 
+        console.log("Login")
+        console.log(this.props.user.token)
+        console.log(localStorage.token)
+
         if ( this.props.user.token !== '' )
         {
+            console.log("passed")
             var pathname = ""
             if(this.props.user.team.role == "team"){
                 pathname = this.props.location.state && this.props.location.state.redirectUrl ? this.props.location.state.redirectUrl : '/apps/dashboards/tournaments/tournament';

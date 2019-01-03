@@ -221,12 +221,15 @@ class MainToolbar extends Component {
 	};
 
 	refresh(){
+		console.log("Toolbar")
+		console.log(this.props.user.token)
+		console.log(localStorage.token)
 		axios({
 			method: "GET",
 			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/get_team",
 			responseType: 'json',
 			headers: {
-				"authorization": localStorage.token
+				"authorization": this.props.user.token
 			}
 		}).then((response) => {
 			store.dispatch({
@@ -251,6 +254,7 @@ class MainToolbar extends Component {
 	}
 	constructor(props){
 		super()
+		this.props = props
 		this.load_suggestions(props)
 		this.refresh()
 	}
@@ -315,7 +319,6 @@ class MainToolbar extends Component {
 	}
 
 	handleSubmitForm = () => {
-
 		axios({
 			method: "POST",
 			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/create_video",

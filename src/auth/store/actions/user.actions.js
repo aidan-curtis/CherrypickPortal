@@ -22,7 +22,7 @@ export function setUserData(user)
 		/*
 			Set User Settings
 		 */
-		dispatch(setDefaultSettings(user));
+		// dispatch(setDefaultSettings(user));
 
 		/*
 			Store token for authorization
