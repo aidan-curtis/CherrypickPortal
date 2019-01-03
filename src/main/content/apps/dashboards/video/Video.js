@@ -120,8 +120,7 @@ class Video extends Component {
 								<Table className={classes.table} style={{tableLayout: 'fixed'}}>
 									<TableHead>
 										<TableRow>
-											<TableCell>Point 1</TableCell>
-											<TableCell>Point 2</TableCell>
+											<TableCell>Points</TableCell>
 										</TableRow>
 									</TableHead>
 									<TableBody>
@@ -133,11 +132,9 @@ class Video extends Component {
 											return (
 												<TableRow key={index} style ={{backgroundColor: cell_color}} onClick = {this.changeCurrentTime(segment.start)}>
 													<TableCell component="th" scope="row" onClick = {()=>{this.setState({selected: index})}}>
-														{segment.start} s
+														Point {index+1}
 													</TableCell>
-													<TableCell component="th" scope="row" onClick = {()=>{this.setState({selected: index})}} >
-														{segment.stop} s
-													</TableCell>
+				
 												</TableRow>
 											)
 										})}
