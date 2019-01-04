@@ -116,7 +116,7 @@ class Video extends Component {
 					</Grid>
 					<Grid item xs={4}>
 						<Paper>
-							<div style={{ overflow: 'auto', height: 'calc(100vh - 130px)' }}>
+							<div style={{ overflow: 'auto', height: 'calc(100vh - 170px)' }}>
 								<Table className={classes.table} style={{tableLayout: 'fixed'}}>
 									<TableHead>
 										<TableRow>

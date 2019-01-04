@@ -563,7 +563,7 @@ class MainToolbar extends Component {
 											{...autosuggestProps}
 											inputProps={{
 												classes,
-												label: 'Tournament Name',
+												label: 'Dual Match Name',
 												value: this.state.tournament_name,
 												onChange: this.handleAutosuggestChange('tournament_name'),
 											}}
@@ -659,7 +659,7 @@ class MainToolbar extends Component {
 				<div className="flex flex-1"> 
 					<nav style={{marginLeft: 20}}>
 						{
-							 link[d_idx+2] === "tournament"? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/tournaments/tournament"})}} className="breadcrumb">Tournaments</a>) : null
+							 link[d_idx+2] === "tournament"? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/tournaments/tournament"})}} className="breadcrumb">Dual Matches</a>) : null
 						}
 						{
 							 link[d_idx+2] === "player" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/players/player"})}} className="breadcrumb">Players</a>): null

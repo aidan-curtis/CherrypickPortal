@@ -7,7 +7,7 @@ export const fuseNavigationConfig = [
         'children': [
             {
                 'id'   : 'tournaments',
-                'title': 'Tournaments',
+                'title': 'Dual Matches',
                 'type' : 'item',
                 'url'  : '/apps/dashboards/tournaments/tournament',
                 'icon' : 'dashboard',
@@ -20,6 +20,14 @@ export const fuseNavigationConfig = [
                 'url'  : '/apps/dashboards/players/player',
                 'icon' : 'person',
                 'role' : 'team'
+            },
+            {
+                'id'   : 'processing',
+                'title': 'Processing',
+                'type' : 'item',
+                'url'  : '/apps/dashboards/processing',
+                'icon' : 'hourglass_empty',
+                'role' : 'tagger'
             },
             {
                 'id'   : 'untagged',
@@ -36,16 +44,7 @@ export const fuseNavigationConfig = [
                 'url'  : '/apps/dashboards/tagged',
                 'icon' : 'check',
                 'role' : 'tagger'
-            },            
-            {
-                'id'   : 'processing',
-                'title': 'Processing',
-                'type' : 'item',
-                'url'  : '/apps/dashboards/processing',
-                'icon' : 'hourglass_empty',
-                'role' : 'tagger'
-            },
-            
+            }
         ]
     }
 ];
