@@ -38,6 +38,8 @@ class TagVideo extends Component {
 				temp_segments.push({})
 			}
 			this.setState({segments: temp_segments, segment_index: this.state.segment_index+1})
+			this.state.tagEnd.scrollIntoView({ behavior: "smooth" });
+
 		}
 		else if(event.key === 'a') {
 			if(this.state.segment_index > 0){
@@ -52,11 +54,11 @@ class TagVideo extends Component {
 					segment_index: this.state.segment_index+1
 				})
 			}
+			this.state.tagEnd.scrollIntoView({ behavior: "smooth" });
 		}
 	}
 
 
-	state = {video:  null}
 	constructor(props)
 	{
 		super(props);
@@ -66,7 +68,8 @@ class TagVideo extends Component {
 			})[0],
 			current_segment : 0,
 			segment_index: 0,
-			segments: [{}]
+			segments: [{}],
+			submit_timestamps: "Submit Timestamps"
 		}
 	}
 
@@ -86,9 +89,6 @@ class TagVideo extends Component {
 		document.addEventListener("keydown", this.handleKeyPress.bind(this));
 
 	}
-
-
-
 
 	changeCurrentTime(seconds) {
 		return () => {
@@ -111,9 +111,23 @@ class TagVideo extends Component {
 				"timestamps": JSON.stringify(cloneSegments)
 			}
 		}).then((response) => {
-			console.log("Response from uploading timestamps")
+			
+			this.setState({
+				submit_timestamps:"Submitted"
+			})
 			console.log(response)
 		})
+	}
+	lpad(number, digits) {
+		return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
+	}
+
+	get_time(time_string){
+		if(time_string == undefined){
+			return ""
+		} else{
+			return this.lpad(Math.floor(time_string/60.0), 2)+":"+this.lpad(time_string%60, 2)
+		}
 	}
 
 	render()
@@ -136,9 +150,7 @@ class TagVideo extends Component {
 							</ControlBar>
 						</Player>
 	
-						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick = {()=>{this.submitTimestamps()}} >Submit Timestamps</Button>
-
-
+						<Button type="submit" disabled={this.state.submit_timestamps=="Submitted"} variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick = {()=>{this.submitTimestamps()}} >{this.state.submit_timestamps}</Button>
 					</Grid>
 					<Grid item xs={4}>
 						<Paper>
@@ -146,8 +158,8 @@ class TagVideo extends Component {
 								<Table className={classes.table} style={{tableLayout: 'fixed'}}>
 									<TableHead>
 										<TableRow>
-											<TableCell>Point 1</TableCell>
-											<TableCell>Point 2</TableCell>
+											<TableCell>Start</TableCell>
+											<TableCell>Stop</TableCell>
 										</TableRow>
 									</TableHead>
 									<TableBody>
@@ -163,14 +175,21 @@ class TagVideo extends Component {
 											return (
 												<TableRow key={index}  onClick = {this.changeCurrentTime(segment.start)}>
 													<TableCell style ={{backgroundColor: cell_color_start}} component="th" scope="row" onClick = {()=>{this.setState({segment_index: index*2})}}>
-														{segment.start}
+														{ this.get_time(segment.start)}
 													</TableCell>
 													<TableCell style ={{backgroundColor: cell_color_stop}} component="th" scope="row" onClick = {()=>{this.setState({segment_index: index*2+1})}} >
-														{segment.stop}
+														{this.get_time(segment.stop)}
 													</TableCell>
 												</TableRow>
 											)
 										})}
+										<div ref={(el) => { 
+											if(this.state.tagEnd == undefined){
+												this.setState({
+													tagEnd: el
+												})
+											}
+										}}></div>
 									</TableBody>
 								</Table>
 							</div>

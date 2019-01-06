@@ -10,6 +10,8 @@ import { Redirect } from 'react-router-dom'
 import Grid from '@material-ui/core/Grid';
 import store from 'store'
 import * as Actions from 'auth/store/actions';
+import axios from 'axios/index';
+export const SET_USER_DATA = '[USER] SET DATA';
 
 
 const styles = theme => ({
@@ -29,6 +31,25 @@ class Tournaments extends Component {
 	{
 		super(props);
 		this.props.setTournamentFilterPage()
+
+		var token = this.props.user.token
+		if(token == "" || token == undefined){
+			token = localStorage.token
+		}
+		axios({
+			method: "GET",
+			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/get_team",
+			responseType: 'json',
+			headers: {
+				"authorization": token
+			}
+		}).then((response) => {
+			store.dispatch({
+				type   : SET_USER_DATA,
+				payload: response.data
+			})
+		})
+		
 	}
 	componentDidMount(){
 		this.props.setTournamentFilterPage()

@@ -7,7 +7,8 @@ import { Redirect } from 'react-router-dom'
 import Grid from '@material-ui/core/Grid';
 import store from 'store'
 import * as Actions from 'auth/store/actions';
-
+import axios from 'axios/index';
+export const SET_USER_DATA = '[USER] SET DATA';
 
 const styles = theme => ({
 	root: {
@@ -32,6 +33,23 @@ class Untagged extends Component {
 		}
 		this.state['type'] = props.match.params.type
 		this.state['name'] = props.match.params.name
+		var token = this.props.user.token
+		if(token == "" || token == undefined){
+			token = localStorage.token
+		}
+		axios({
+			method: "GET",
+			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/get_team",
+			responseType: 'json',
+			headers: {
+				"authorization": token
+			}
+		}).then((response) => {
+			store.dispatch({
+				type   : SET_USER_DATA,
+				payload: response.data
+			})
+		})
 	}
 
 	redirectToTarget = () => {

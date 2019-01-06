@@ -221,26 +221,35 @@ class MainToolbar extends Component {
 	};
 
 	refresh(){
-		console.log("Toolbar")
-		console.log(this.props.user.token)
-		console.log(localStorage.token)
+		var token = this.props.user.token
+		if(token == "" || token == undefined){
+			token = localStorage.token
+		}
+		if(token == "" || token == undefined){
+			//This person does not have a token. redirect to login
+			this.setState({redirect: "/login"})
+		}
+
 		axios({
 			method: "GET",
 			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/get_team",
 			responseType: 'json',
 			headers: {
-				"authorization": this.props.user.token
+				"authorization": token
 			}
 		}).then((response) => {
+			this.props.user.team = response.data.team
 			store.dispatch({
 				type   : SET_USER_DATA,
 				payload: response.data
 			})
+			this.load_suggestions()
 		})
 	}
 
-	load_suggestions(props) {
-		props.user.team.Videos.forEach(function(video){
+	load_suggestions() {
+		this.props.user.team.Videos.forEach(function(video){
+			console.log(video)
 			if(suggestions.filter(function(t){return t.label === video.metadata.tournament}).length === 0){
 				suggestions.push({"label": video.metadata.tournament})
 			}
@@ -255,7 +264,7 @@ class MainToolbar extends Component {
 	constructor(props){
 		super()
 		this.props = props
-		this.load_suggestions(props)
+		this.load_suggestions()
 		this.refresh()
 	}
 
@@ -434,7 +443,7 @@ class MainToolbar extends Component {
 		var instructions = [
 			"What match are you uploading?",
 			"Upload the videos for that match",
-			"Please put your videos in order."
+			"Order your videos from top to bottom."
 		]
 		var link = window.location.href.split("/")
 		var d_idx = link.indexOf("dashboards")
@@ -493,11 +502,11 @@ class MainToolbar extends Component {
 									<FormGroup>
 										<AppBar position="static" color="default">
 											<Tabs
-											value={this.state.value}
-											onChange={this.handleChangeSlider}
-											indicatorColor="primary"
-											textColor="primary"
-											fullWidth
+												value={this.state.value}
+												onChange={this.handleChangeSlider}
+												indicatorColor="primary"
+												textColor="primary"
+												fullWidth
 											>
 												<Tab label="Singles" />
 												<Tab label="Doubles" />

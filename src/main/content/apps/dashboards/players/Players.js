@@ -10,7 +10,8 @@ import { Redirect } from 'react-router-dom'
 import Grid from '@material-ui/core/Grid';
 import store from 'store'
 import * as Actions from 'auth/store/actions';
-
+import axios from 'axios/index';
+export const SET_USER_DATA = '[USER] SET DATA';
 
 const styles = theme => ({
 	root: {

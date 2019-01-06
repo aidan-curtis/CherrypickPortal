@@ -14,8 +14,21 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-
-
+import {Popover} from '@material-ui/core';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import axios from 'axios/index';
+import AppBar from '@material-ui/core/AppBar';
+import Tab from '@material-ui/core/Tab';
+import TextField from '@material-ui/core/TextField';
+import Autosuggest from 'react-autosuggest';
+import store from 'store';
+export const SET_USER_DATA = '[USER] SET DATA';
 
 const styles = theme => ({
 	root: {
@@ -24,6 +37,18 @@ const styles = theme => ({
 });
 
 class Video extends Component {
+
+
+	handleKeyPress = (event) => {
+		if(event.key === ' ') {
+			if(this.state.player.paused){
+				this.refs.player.play()
+			} else {
+				this.refs.player.pause()
+			}
+		}
+	}
+
 
 	state = {video:  null}
 	constructor(props)
@@ -34,7 +59,10 @@ class Video extends Component {
 				return video._id === this.props.match.params.videoid
 			})[0],
 			current_segment : 0
+		
 		}
+
+
 	}
 
 	state = {
@@ -44,7 +72,6 @@ class Video extends Component {
 
 	handleStateChange(state, prevState) {
 		// copy player state to this component's state
-		
 		if(!state.paused){
 			if(this.state.current_segment < this.state.video.Segments.length){
 
@@ -64,12 +91,9 @@ class Video extends Component {
 				});
 				this.refs.player.play()
 			} else {
-				console.log("pause")
 				this.refs.player.pause()
 			}
 		}
-
-
 	}
 
 
@@ -80,20 +104,123 @@ class Video extends Component {
 	}
 
 
-	changeCurrentTime(seconds) {
+	changeCurrentTime(seconds, index) {
+		this.setState({
+			current_segment: index,
+			currentTime: seconds
+		})
+		this.refs.player.seek(seconds);
 		return () => {
-			this.refs.player.seek(seconds);
+			
 		};
 	}
 
+	handleChange = name => event => {
+		this.setState({
+			video: {
+				...this.state.video,
+				metadata:{
+					...this.state.video.metadata,
+					[name]: event.target.value
+				}
+			}
+		});
+	};
+
+	editVideoMetadata(){
+
+	}
+
+
+	handleSubmitContinue = () => {
+		var token = this.props.user.token
+		if(token == "" || token == undefined){
+			token = localStorage.token
+		}
+		
+		axios({
+			method: "POST",
+			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/update_video_metadata",
+			responseType: 'json',
+			headers: {
+				"authorization": token
+			},
+			data: {
+				"videoId": this.state.video._id,
+				"tournament": this.state.video.metadata.tournament,
+				"playerName1": this.state.video.metadata.playerName1,
+				"playerName2": this.state.video.metadata.playerName2,
+				"matchName": this.state.video.metadata.matchName
+			}
+		}).then((response) => {	
+			this.setState({
+				editOpen: false
+			})		
+		})
+	}
 
 
 	render()
 	{
 		const {classes} = this.props;
-		console.log(this.state.video.Segments)
 		return (
 			<div className={classes.root} style = {{padding: 50}}>
+
+
+				<Dialog
+					open={this.state.editOpen}
+					onClose={this.handleClose}
+					aria-labelledby="alert-dialog-title"
+					aria-describedby="alert-dialog-description"
+				>
+					<DialogTitle id="alert-dialog-title">Testing instructions</DialogTitle>
+					<DialogContent>
+
+						<FormControl component="fieldset">
+							<FormGroup>
+								<TextField
+									id=""
+									label="Match Name"
+									value={this.state.video.metadata.matchName}
+									onChange={this.handleChange('matchName')}
+									margin="normal"
+								/>
+								<TextField
+									id=""
+									label="Player 1 Name"
+									value={this.state.video.metadata.playerName1}
+									onChange={this.handleChange('playerName1')}
+									margin="normal"
+								/>
+								<TextField
+									id=""
+									label="Player 2 Name"
+									value={this.state.video.metadata.playerName2}
+									onChange={this.handleChange('playerName2')}
+									margin="normal"
+								/>
+								<TextField
+									id=""
+									label="Dual Match Name"
+									value={this.state.video.metadata.tournament}
+									onChange={this.handleChange('tournament')}
+									margin="normal"
+								/>
+
+								<Button variant="contained" onClick={this.handleSubmitContinue} className={classes.button} style={{marginTop: 20, width: "420px"}}>
+									Submit
+								</Button>
+							</FormGroup>
+						</FormControl>
+
+					</DialogContent>
+					<DialogActions>
+						<Button onClick={this.handleRealClose} color="primary" autoFocus>
+							Close
+						</Button>
+					</DialogActions>
+				</Dialog>
+
 				<Grid container spacing={24}>
 					<Grid item xs={8}>
 						<Player
@@ -105,13 +232,12 @@ class Video extends Component {
 						    <LoadingSpinner />
 							<ControlBar>
 								<PlaybackRateMenuButton rates={[0.5, 1, 1.5]} />
-								<ReplayControl seconds={10} order={2.2} />
+								<ReplayControl seconds={10} order={2.2} onClick={()=>{console.log("replay")}} />
 								<ForwardControl seconds={10} order={3.2} />
 							</ControlBar>
 						</Player>
-	
-						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} href={this.state.video.signedProcessedVideoUri} >Download</Button>
-
+						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} href={this.state.video.signedProcessedVideoUri}>Download</Button>
+						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick={()=>{this.setState({editOpen: true})}} >Edit Video Metadata</Button>
 
 					</Grid>
 					<Grid item xs={4}>
@@ -126,15 +252,14 @@ class Video extends Component {
 									<TableBody>
 										{this.state.video.Segments.map((segment, index)=>{
 											var cell_color = "#fff"
-											if(this.state.selected===index){
+											if(Math.floor(this.state.current_segment)===index){
 												cell_color = "#eee"
 											}
 											return (
-												<TableRow key={index} style ={{backgroundColor: cell_color}} onClick = {this.changeCurrentTime(segment.start)}>
+												<TableRow key={index} style ={{backgroundColor: cell_color}} onClick = {()=>{this.changeCurrentTime(segment.start, index)}}>
 													<TableCell component="th" scope="row" onClick = {()=>{this.setState({selected: index})}}>
 														Point {index+1}
 													</TableCell>
-				
 												</TableRow>
 											)
 										})}
