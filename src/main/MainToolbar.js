@@ -249,7 +249,6 @@ class MainToolbar extends Component {
 
 	load_suggestions() {
 		this.props.user.team.Videos.forEach(function(video){
-			console.log(video)
 			if(suggestions.filter(function(t){return t.label === video.metadata.tournament}).length === 0){
 				suggestions.push({"label": video.metadata.tournament})
 			}
@@ -667,6 +666,9 @@ class MainToolbar extends Component {
 				</Dialog>
 				<div className="flex flex-1"> 
 					<nav style={{marginLeft: 20}}>
+						{
+							 link[d_idx+1] === "account_information"? (<a className="breadcrumb">Account Information</a>) : null							
+						}
 						{
 							 link[d_idx+2] === "tournament"? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/tournaments/tournament"})}} className="breadcrumb">Dual Matches</a>) : null
 						}

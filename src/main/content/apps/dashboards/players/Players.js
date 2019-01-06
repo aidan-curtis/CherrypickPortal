@@ -30,6 +30,24 @@ class Players extends Component {
 	{
 		super(props);
 		this.props.setPlayerFilterPage()
+
+		var token = this.props.user.token
+		if(token == "" || token == undefined){
+			token = localStorage.token
+		}
+		axios({
+			method: "GET",
+			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/get_team",
+			responseType: 'json',
+			headers: {
+				"authorization": token
+			}
+		}).then((response) => {
+			store.dispatch({
+				type   : SET_USER_DATA,
+				payload: response.data
+			})
+		})
 	}
 	componentDidMount(){
 		this.props.setPlayerFilterPage()
