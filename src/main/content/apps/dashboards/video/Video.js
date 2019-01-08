@@ -24,6 +24,8 @@ import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import axios from 'axios/index';
 import AppBar from '@material-ui/core/AppBar';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Tab from '@material-ui/core/Tab';
 import TextField from '@material-ui/core/TextField';
 import Autosuggest from 'react-autosuggest';
@@ -58,21 +60,17 @@ class Video extends Component {
 			video: this.props.user.team.Videos.filter((video)=>{
 				return video._id === this.props.match.params.videoid
 			})[0],
-			current_segment : 0
-		
+			current_segment : 0,
+			spliced: false
 		}
 
 
 	}
 
-	state = {
-		selected: -1,
-		current_segment : 0
-	}
-
+	
 	handleStateChange(state, prevState) {
 		// copy player state to this component's state
-		if(!state.paused){
+		if(!state.paused && this.state.video.Segments.length>0){
 			if(this.state.current_segment < this.state.video.Segments.length){
 
 				if(state.currentTime < this.state.video.Segments[this.state.current_segment].start ){
@@ -96,6 +94,11 @@ class Video extends Component {
 		}
 	}
 
+	editClose = () => {
+		this.setState({editOpen: null});
+	};
+
+
 
 	componentDidMount() {
 		// subscribe state change
@@ -115,6 +118,13 @@ class Video extends Component {
 		};
 	}
 
+	handleSwitchChange = name => event => {
+		if(this.state.video.splicedVideoUri != undefined && this.state.video.splicedVideoUri != null){
+			this.setState({ [name]: event.target.checked });
+		}
+	};
+
+
 	handleChange = name => event => {
 		this.setState({
 			video: {
@@ -127,9 +137,7 @@ class Video extends Component {
 		});
 	};
 
-	editVideoMetadata(){
 
-	}
 
 
 	handleSubmitContinue = () => {
@@ -165,7 +173,18 @@ class Video extends Component {
 		const {classes} = this.props;
 		return (
 			<div className={classes.root} style = {{padding: 50}}>
-
+				<div style={{height: 50}}>
+				<FormControlLabel
+					control={
+						<Switch
+							checked={this.state.spliced}
+							onChange={this.handleSwitchChange('spliced')}
+							value="spliced"
+						/>
+					}
+					label={this.state.spliced?"Spliced":"Segmented"}
+        		/>
+				</div>
 
 				<Dialog
 					open={this.state.editOpen}
@@ -215,32 +234,32 @@ class Video extends Component {
 
 					</DialogContent>
 					<DialogActions>
-						<Button onClick={this.handleRealClose} color="primary" autoFocus>
+						<Button onClick={this.editClose} color="primary" autoFocus>
 							Close
 						</Button>
 					</DialogActions>
 				</Dialog>
 
 				<Grid container spacing={24}>
-					<Grid item xs={8}>
+					<Grid item xs={this.state.spliced?12:8}>
 						<Player
 							playsInline
 							ref="player"
 							poster={this.state.video.processedImageUri}
-							src={this.state.video.processedVideoUri}
+							src={this.state.spliced? this.state.video.splicedVideoUri: this.state.video.processedVideoUri}
 						>
-						    <LoadingSpinner />
+							<LoadingSpinner />
 							<ControlBar>
 								<PlaybackRateMenuButton rates={[0.5, 1, 1.5]} />
 								<ReplayControl seconds={10} order={2.2} onClick={()=>{console.log("replay")}} />
 								<ForwardControl seconds={10} order={3.2} />
 							</ControlBar>
 						</Player>
-						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} href={this.state.video.signedProcessedVideoUri}>Download</Button>
-						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick={()=>{this.setState({editOpen: true})}} >Edit Video Metadata</Button>
+						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} href={this.state.video.signedProcessedVideoUri}>{this.state.spliced?"Download Spliced":"Download Full"}</Button>
+						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick={()=>{this.setState({editOpen: true})}} >Edit Match Info</Button>
 
 					</Grid>
-					<Grid item xs={4}>
+					<Grid item xs={this.state.spliced?0:4} hidden={this.state.spliced}>
 						<Paper>
 							<div style={{ overflow: 'auto', height: 'calc(100vh - 170px)' }}>
 								<Table className={classes.table} style={{tableLayout: 'fixed'}}>

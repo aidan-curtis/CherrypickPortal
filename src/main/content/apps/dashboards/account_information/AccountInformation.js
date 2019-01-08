@@ -43,6 +43,7 @@ class AccountInformation extends Component {
 	{
 		const {classes} = this.props;
 		var props = this.props;
+		var num_tagged = this.props.user.team.Videos.filter(function(video){return video.state=="tagged"}).length
 		return (
 			<div className={classes.root} style = {{padding: 50}}>
 				<Card style={{width: "100%", height: "100px"}}>
@@ -55,12 +56,12 @@ class AccountInformation extends Component {
 
 						<Typography className={classes.title} color="textSecondary" gutterBottom>
 
-							Games Tagged: {this.props.user.team.Videos.filter(function(video){return video.state=="tagged"}).length}
+							Matches Tagged: {num_tagged}
 
 						</Typography>
 						<Typography className={classes.title} color="textSecondary" gutterBottom>
 
-							Games Remaining: Unlimited
+							Matches Remaining: {this.props.user.team.tagCap - num_tagged}
 
 						</Typography>
 						

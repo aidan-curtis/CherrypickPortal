@@ -50,9 +50,16 @@ class Matches extends Component {
 	{
 		const {classes} = this.props;
 		var props = this.props;
+
 		return (
 			<div className={classes.root} style = {{padding: 50}}>
+
 				{this.renderRedirect()}
+				<div style={{height: 50}}>
+					<p style={{fontSize: 18}}>
+						<span style={{ backgroundColor: "red", display: "inline-block"}}>&nbsp;&nbsp;</span>&nbsp;= Tagged
+					</p>
+				</div>
 				<Grid container spacing={24}>
 				{props.user.team.Videos.filter((video)=>{
 					if(this.state.type == 'player'){
@@ -83,8 +90,10 @@ class Matches extends Component {
 											fontSize: 24}}>{video.metadata.matchName}</span>
 
 
-				
-							{(video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === "")? <img alt="processing" style={{borderRadius: 5 ,overflow: 'hidden', width: "100%"}} src="assets/images/processing.png"/>:<img alt="thumbnail" style={{borderRadius: 5 ,overflow: 'hidden'}} src={video.processedImageUri}/> }
+							
+							{
+								(video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === "")? <img alt="processing" style={{borderRadius: 5 ,overflow: 'hidden', width: "100%"}} src="assets/images/processing.png"/>:<img alt="thumbnail" style={{borderRadius: 5 ,overflow: 'hidden', borderColor: "red", borderStyle: "solid", borderWidth: video.state == "tagged"?"5px":"0px"}} src={video.processedImageUri}/> 
+							}
 					
 						</Grid>)
 					)}

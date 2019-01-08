@@ -10,7 +10,7 @@ export const fuseNavigationConfig = [
 				'title': 'Account Information',
 				'type' : 'item',
 				'url'  : '/apps/dashboards/account_information',
-				'icon' : 'dashboard',
+				'icon' : 'settings',
 				'role' : 'team'
 			},
 			{
