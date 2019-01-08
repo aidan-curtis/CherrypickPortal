@@ -64,6 +64,29 @@ class Video extends Component {
 			spliced: false
 		}
 
+		var token = this.props.user.token
+		if(token == "" || token == undefined){
+			token = localStorage.token
+		}
+
+		axios({
+			method: "POST",
+			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/get_signed_url_for_key",
+			responseType: 'json',
+			headers: {
+				"authorization": token
+			},
+			data: {
+				"merged_key": this.state.video.processedVideoKey,
+				"spliced_key": this.state.video.splicedVideoKey
+			}
+		}).then((response) => {	
+			this.setState({
+				"signed_merged_url": response.data.signed_merged_url,
+				"signed_spliced_url": response.data.signed_spliced_url,
+			})		
+		})
+
 
 	}
 
@@ -255,7 +278,7 @@ class Video extends Component {
 								<ForwardControl seconds={10} order={3.2} />
 							</ControlBar>
 						</Player>
-						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} href={this.state.video.signedProcessedVideoUri}>{this.state.spliced?"Download Spliced":"Download Full"}</Button>
+						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} href={this.state.spliced?this.state.signed_spliced_url:this.state.signed_merged_url}>{this.state.spliced?"Download Spliced":"Download Full"}</Button>
 						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick={()=>{this.setState({editOpen: true})}} >Edit Match Info</Button>
 
 					</Grid>
