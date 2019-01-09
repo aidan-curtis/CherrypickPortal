@@ -286,7 +286,8 @@ class MainToolbar extends Component {
 			tournament_name: "",
 			player_name_1: "",
 			player_name_2: "",
-			match_name: ""
+			match_name: "",
+			num_files:0
 		});
 	};
 
@@ -351,7 +352,8 @@ class MainToolbar extends Component {
 				player_name_1: "",
 				player_name_2: "",
 				match_name: "",
-				continued: 0
+				continued: 0,
+				num_files:0
 			})
 			this.refresh()
 		})
