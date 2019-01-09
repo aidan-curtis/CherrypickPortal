@@ -486,8 +486,12 @@ class MainToolbar extends Component {
 										this.setState({
 											num_files: this.state.num_files+1
 										})
-										// Set current file objects to this.state
 									}}
+									onremovefile={(file) => {
+										this.setState({
+											num_files: this.state.num_files-1
+										})
+									}}	
 					
 								/>
 								: null
