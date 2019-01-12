@@ -61,7 +61,7 @@ class Video extends Component {
 				return video._id === this.props.match.params.videoid
 			})[0],
 			current_segment : 0,
-			spliced: false
+			spliced: true
 		}
 
 		var token = this.props.user.token
