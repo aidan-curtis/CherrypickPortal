@@ -69,6 +69,14 @@ class Video extends Component {
 			token = localStorage.token
 		}
 
+
+		//Build up the segments for spliced points
+		var spliced_points = [0]
+		for (var i = 0 ; i< this.state.video.Segments.length; i+=1){
+			spliced_points.push(parseFloat(spliced_points[i])+parseFloat(this.state.video.Segments[i].stop)-parseFloat(this.state.video.Segments[i].start))
+		}
+		this.state["spliced_points"] = spliced_points
+
 		axios({
 			method: "POST",
 			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/get_signed_url_for_key",
@@ -90,31 +98,47 @@ class Video extends Component {
 
 	}
 
-	
-	handleStateChange(state, prevState) {
-		// copy player state to this component's state
-		if(!state.paused && this.state.video.Segments.length>0){
-			if(this.state.current_segment < this.state.video.Segments.length){
 
-				if(state.currentTime < this.state.video.Segments[this.state.current_segment].start ){
-					this.refs.player.seek(this.state.video.Segments[this.state.current_segment].start);
-				}
-				if(state.currentTime > this.state.video.Segments[this.state.current_segment].stop ){
-					if(this.state.current_segment+1 < this.state.video.Segments.length){
-						this.refs.player.seek(this.state.video.Segments[this.state.current_segment].start);
-					}
-					this.setState({
-						current_segment: this.state.current_segment+1
-					})
-				}
+	handleSegmentsStateChange(state, prevState){
+		for (var i=0; i<this.state.spliced_points.length; i+=1){
+			if(state.currentTime<this.state.spliced_points[i]){
 				this.setState({
-					player: state
-				});
-				this.refs.player.play()
-			} else {
-				this.refs.player.pause()
+					current_segment: i-1
+				})
+				break;
 			}
 		}
+	}
+
+	handleStateChange(state, prevState) {
+
+		if(this.state.spliced){
+			this.handleSegmentsStateChange(state, prevState)
+		} else {
+			// copy player state to this component's state
+			if(!state.paused && this.state.video.Segments.length>0){
+				if(this.state.current_segment < this.state.video.Segments.length){
+					if(state.currentTime < this.state.video.Segments[this.state.current_segment].start ){
+						this.refs.player.seek(this.state.video.Segments[this.state.current_segment].start);
+					}
+					if(state.currentTime > this.state.video.Segments[this.state.current_segment].stop ){
+						if(this.state.current_segment+1 < this.state.video.Segments.length){
+							this.refs.player.seek(this.state.video.Segments[this.state.current_segment].start);
+						}
+						this.setState({
+							current_segment: this.state.current_segment+1
+						})
+					}
+					this.setState({
+						player: state
+					});
+					this.refs.player.play()
+				} else {
+					this.refs.player.pause()
+				}
+			}
+		}
+
 	}
 
 	editClose = () => {
@@ -132,13 +156,14 @@ class Video extends Component {
 
 	changeCurrentTime(seconds, index) {
 		this.setState({
-			current_segment: index,
-			currentTime: seconds
+			current_segment: index
 		})
-		this.refs.player.seek(seconds);
-		return () => {
-			
-		};
+		if(this.state.spliced){
+			this.refs.player.seek(this.state.spliced_points[index]);
+		} else{
+			this.refs.player.seek(seconds);
+		}
+		return () => {};
 	}
 
 	handleSwitchChange = name => event => {
@@ -195,8 +220,9 @@ class Video extends Component {
 	{
 		const {classes} = this.props;
 		return (
-			<div className={classes.root} style = {{padding: 50}}>
+			<div className={classes.root} style = {{padding: 50, marginTop:-40}}>
 				<div style={{height: 50}}>
+				Full&nbsp;&nbsp;
 				<FormControlLabel
 					control={
 						<Switch
@@ -205,7 +231,7 @@ class Video extends Component {
 							value="spliced"
 						/>
 					}
-					label={this.state.spliced?"Spliced":"Segmented"}
+					label="Segmented"
         		/>
 				</div>
 
@@ -264,7 +290,7 @@ class Video extends Component {
 				</Dialog>
 
 				<Grid container spacing={24}>
-					<Grid item xs={this.state.spliced?12:8}>
+					<Grid item xs={8}>
 						<Player
 							playsInline
 							ref="player"
@@ -282,9 +308,9 @@ class Video extends Component {
 						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick={()=>{this.setState({editOpen: true})}} >Edit Match Info</Button>
 
 					</Grid>
-					<Grid item xs={this.state.spliced?0:4} hidden={this.state.spliced}>
+					<Grid item xs={4}>
 						<Paper>
-							<div style={{ overflow: 'auto', height: 'calc(100vh - 170px)' }}>
+							<div style={{ overflow: 'auto', height: 'calc(100vh - 220px)' }}>
 								<Table className={classes.table} style={{tableLayout: 'fixed'}}>
 									<TableHead>
 										<TableRow>
