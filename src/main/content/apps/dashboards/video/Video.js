@@ -69,12 +69,22 @@ class Video extends Component {
 			token = localStorage.token
 		}
 
+		var debug_sum = 0
+		for (var i = 0 ; i< this.state.video.Segments.length; i+=1){
+			debug_sum+=parseFloat(this.state.video.Segments[i].stop)-parseFloat(this.state.video.Segments[i].start)
+		}
+		console.log("debug_sum")
+		console.log(debug_sum)
 
 		//Build up the segments for spliced points
 		var spliced_points = [0]
+
+
+
 		for (var i = 0 ; i< this.state.video.Segments.length; i+=1){
 			spliced_points.push(parseFloat(spliced_points[i])+parseFloat(this.state.video.Segments[i].stop)-parseFloat(this.state.video.Segments[i].start))
 		}
+
 		this.state["spliced_points"] = spliced_points
 
 		axios({
@@ -113,9 +123,10 @@ class Video extends Component {
 	handleStateChange(state, prevState) {
 
 		if(this.state.spliced){
-			this.handleSegmentsStateChange(state, prevState)
-		} else {
-			// copy player state to this component's state
+			// if(this.state.video.state == "tagged"){
+			// 	this.handleSegmentsStateChange(state, prevState)
+			// } else {
+				// copy player state to this component's state
 			if(!state.paused && this.state.video.Segments.length>0){
 				if(this.state.current_segment < this.state.video.Segments.length){
 					if(state.currentTime < this.state.video.Segments[this.state.current_segment].start ){
@@ -137,7 +148,9 @@ class Video extends Component {
 					this.refs.player.pause()
 				}
 			}
-		}
+			// }
+
+		} 
 
 	}
 
@@ -290,12 +303,13 @@ class Video extends Component {
 				</Dialog>
 
 				<Grid container spacing={24}>
-					<Grid item xs={8}>
+					<Grid item xs={this.state.spliced?8:12}>
 						<Player
 							playsInline
 							ref="player"
 							poster={this.state.video.processedImageUri}
-							src={this.state.spliced? this.state.video.splicedVideoUri: this.state.video.processedVideoUri}
+							// src={this.state.spliced? this.state.video.splicedVideoUri: this.state.video.processedVideoUri}
+							src={this.state.video.processedVideoUri}
 						>
 							<LoadingSpinner />
 							<ControlBar>
@@ -304,11 +318,11 @@ class Video extends Component {
 								<ForwardControl seconds={10} order={3.2} />
 							</ControlBar>
 						</Player>
-						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} href={this.state.spliced?this.state.signed_spliced_url:this.state.signed_merged_url}>{this.state.spliced?"Download Spliced":"Download Full"}</Button>
+						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} href={this.state.spliced?this.state.signed_spliced_url:this.state.signed_merged_url}>{this.state.spliced?"Download Segmented":"Download Full"}</Button>
 						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick={()=>{this.setState({editOpen: true})}} >Edit Match Info</Button>
 
 					</Grid>
-					<Grid item xs={4}>
+					<Grid item xs={this.state.spliced?4:0} hidden = {!this.state.spliced}>
 						<Paper>
 							<div style={{ overflow: 'auto', height: 'calc(100vh - 220px)' }}>
 								<Table className={classes.table} style={{tableLayout: 'fixed'}}>
