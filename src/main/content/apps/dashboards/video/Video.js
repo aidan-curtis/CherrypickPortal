@@ -123,32 +123,32 @@ class Video extends Component {
 	handleStateChange(state, prevState) {
 
 		if(this.state.spliced){
-			// if(this.state.video.state == "tagged"){
-			// 	this.handleSegmentsStateChange(state, prevState)
-			// } else {
-				// copy player state to this component's state
-			if(!state.paused && this.state.video.Segments.length>0){
-				if(this.state.current_segment < this.state.video.Segments.length){
-					if(state.currentTime < this.state.video.Segments[this.state.current_segment].start ){
-						this.refs.player.seek(this.state.video.Segments[this.state.current_segment].start);
-					}
-					if(state.currentTime > this.state.video.Segments[this.state.current_segment].stop ){
-						if(this.state.current_segment+1 < this.state.video.Segments.length){
+			if(this.state.signed_spliced_url != undefined){
+				this.handleSegmentsStateChange(state, prevState)
+			} else {
+				//copy player state to this component's state
+				if(!state.paused && this.state.video.Segments.length>0){
+					if(this.state.current_segment < this.state.video.Segments.length){
+						if(state.currentTime < this.state.video.Segments[this.state.current_segment].start ){
 							this.refs.player.seek(this.state.video.Segments[this.state.current_segment].start);
 						}
+						if(state.currentTime > this.state.video.Segments[this.state.current_segment].stop ){
+							if(this.state.current_segment+1 < this.state.video.Segments.length){
+								this.refs.player.seek(this.state.video.Segments[this.state.current_segment].start);
+							}
+							this.setState({
+								current_segment: this.state.current_segment+1
+							})
+						}
 						this.setState({
-							current_segment: this.state.current_segment+1
-						})
+							player: state
+						});
+						this.refs.player.play()
+					} else {
+						this.refs.player.pause()
 					}
-					this.setState({
-						player: state
-					});
-					this.refs.player.play()
-				} else {
-					this.refs.player.pause()
 				}
 			}
-			// }
 
 		} 
 
@@ -180,9 +180,7 @@ class Video extends Component {
 	}
 
 	handleSwitchChange = name => event => {
-		if(this.state.video.splicedVideoUri != undefined && this.state.video.splicedVideoUri != null){
-			this.setState({ [name]: event.target.checked });
-		}
+		this.setState({ [name]: event.target.checked });
 	};
 
 
@@ -309,7 +307,7 @@ class Video extends Component {
 							ref="player"
 							poster={this.state.video.processedImageUri}
 							// src={this.state.spliced? this.state.video.splicedVideoUri: this.state.video.processedVideoUri}
-							src={this.state.video.processedVideoUri}
+							src={this.state.signed_spliced_url==undefined?this.state.video.processedVideoUri:this.state.signed_spliced_url}
 						>
 							<LoadingSpinner />
 							<ControlBar>
@@ -318,7 +316,7 @@ class Video extends Component {
 								<ForwardControl seconds={10} order={3.2} />
 							</ControlBar>
 						</Player>
-						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} href={this.state.spliced?this.state.signed_spliced_url:this.state.signed_merged_url}>{this.state.spliced?"Download Segmented":"Download Full"}</Button>
+						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} href={this.state.spliced?this.state.signed_spliced_url:this.state.signed_spliced_url==undefined?this.state.signed_merged_url:this.state.signed_spliced_url}>{this.state.spliced?"Download Segmented":"Download Full"}</Button>
 						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick={()=>{this.setState({editOpen: true})}} >Edit Match Info</Button>
 
 					</Grid>
