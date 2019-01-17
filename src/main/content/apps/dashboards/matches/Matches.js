@@ -55,9 +55,9 @@ class Matches extends Component {
 			<div className={classes.root} style = {{padding: 50}}>
 
 				{this.renderRedirect()}
-				<div style={{height: 50}}>
+				<div style={{height: 50, float: "right"}}>
 					<p style={{fontSize: 18}}>
-						<span style={{ backgroundColor: "red", display: "inline-block"}}>&nbsp;&nbsp;</span>&nbsp;= Tagged
+						<div style={{ backgroundColor: "red", width: 16, height: 16, display : 'inline-block', borderRadius: 8 }}></div>&nbsp; = Segmentation Finished
 					</p>
 				</div>
 				<Grid container spacing={24}>

@@ -91,9 +91,9 @@ class TagVideo extends Component {
 	}
 
 	changeCurrentTime(seconds) {
-		return () => {
-			this.refs.player.seek(seconds);
-		};
+		
+		this.refs.player.seek(seconds);
+		
 	}
 
 	submitTimestamps(){
@@ -173,11 +173,17 @@ class TagVideo extends Component {
 												cell_color_stop = "#eee"
 											}
 											return (
-												<TableRow key={index}  onClick = {this.changeCurrentTime(segment.start)}>
-													<TableCell style ={{backgroundColor: cell_color_start}} component="th" scope="row" onClick = {()=>{this.setState({segment_index: index*2})}}>
+												<TableRow key={index} >
+													<TableCell style ={{backgroundColor: cell_color_start}} component="th" scope="row" onClick = {()=>{
+														this.setState({segment_index: index*2})
+														this.changeCurrentTime(segment.start)
+													}}>
 														{ this.get_time(segment.start)}
 													</TableCell>
-													<TableCell style ={{backgroundColor: cell_color_stop}} component="th" scope="row" onClick = {()=>{this.setState({segment_index: index*2+1})}} >
+													<TableCell style ={{backgroundColor: cell_color_stop}} component="th" scope="row" onClick = {()=>{
+														this.setState({segment_index: index*2+1})
+														this.changeCurrentTime(segment.stop)
+													}} >
 														{this.get_time(segment.stop)}
 													</TableCell>
 												</TableRow>
