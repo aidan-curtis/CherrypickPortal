@@ -53,8 +53,17 @@ class TagVideo extends Component {
 				this.setState({
 					segment_index: this.state.segment_index+1
 				})
+				this.state.tagEnd.scrollIntoView({ behavior: "smooth" });
 			}
-			this.state.tagEnd.scrollIntoView({ behavior: "smooth" });
+		}
+		if(event.key === 'd' || event.key === 'a'){
+			//Seek tag in video player
+			if(Math.floor(this.state.segment_index/2) != this.state.segment_index/2){
+				this.refs.player.seek(this.state.segments[Math.floor(this.state.segment_index/2)]["stop"]);
+			}
+			else {
+				this.refs.player.seek(this.state.segments[Math.floor(this.state.segment_index/2)]["start"]);
+			}
 		}
 	}
 
@@ -149,8 +158,6 @@ class TagVideo extends Component {
 								<ForwardControl seconds={10} order={3.2} />
 							</ControlBar>
 						</Player>
-	
-						<Button type="submit" disabled={this.state.submit_timestamps=="Submitted"} variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick = {()=>{this.submitTimestamps()}} >{this.state.submit_timestamps}</Button>
 					</Grid>
 					<Grid item xs={4}>
 						<Paper>

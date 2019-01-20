@@ -29,8 +29,11 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Tab from '@material-ui/core/Tab';
 import TextField from '@material-ui/core/TextField';
 import Autosuggest from 'react-autosuggest';
+import { Redirect } from 'react-router-dom'
+
 import store from 'store';
 export const SET_USER_DATA = '[USER] SET DATA';
+
 
 const styles = theme => ({
 	root: {
@@ -61,8 +64,11 @@ class Video extends Component {
 				return video._id === this.props.match.params.videoid
 			})[0],
 			current_segment : 0,
-			spliced: true
+			spliced: true,
+			link: window.location.href.split("/")
 		}
+		this.state.d_index =  this.state.link.indexOf("dashboards")
+
 
 		var token = this.props.user.token
 		if(token == "" || token == undefined){
@@ -96,7 +102,8 @@ class Video extends Component {
 			},
 			data: {
 				"merged_key": this.state.video.processedVideoKey,
-				"spliced_key": this.state.video.splicedVideoKey
+				"spliced_key": this.state.video.splicedVideoKey,
+				"matchName": this.state.video.metadata.matchName
 			}
 		}).then((response) => {	
 			this.setState({
@@ -220,18 +227,26 @@ class Video extends Component {
 				"matchName": this.state.video.metadata.matchName
 			}
 		}).then((response) => {	
+
 			this.setState({
-				editOpen: false
+				editOpen: false,
+				new_link: '/apps/dashboards/video/'+this.state.link[this.state.d_index+2] +'/'+this.state.video.metadata.playerName1+'/'+this.state.video.metadata.matchName+"/"+this.state.video._id
 			})		
 		})
 	}
 
+	renderRedirect = () => {
+		if (this.state.new_link) {
+			return <Redirect to={this.state.new_link}/>
+		}
+	}
 
 	render()
 	{
 		const {classes} = this.props;
 		return (
 			<div className={classes.root} style = {{padding: 50, marginTop:-40}}>
+				{this.renderRedirect()}
 				<div style={{height: 50}}>
 				Full&nbsp;&nbsp;
 				<FormControlLabel
@@ -271,13 +286,14 @@ class Video extends Component {
 									onChange={this.handleChange('playerName1')}
 									margin="normal"
 								/>
+								{this.state.video.metadata.playerName2 == ""?null:
 								<TextField
 									id=""
 									label="Player 2 Name"
 									value={this.state.video.metadata.playerName2}
 									onChange={this.handleChange('playerName2')}
 									margin="normal"
-								/>
+								/>}
 								<TextField
 									id=""
 									label="Dual Match Name"
@@ -307,7 +323,7 @@ class Video extends Component {
 							ref="player"
 							poster={this.state.video.processedImageUri}
 							// src={this.state.spliced? this.state.video.splicedVideoUri: this.state.video.processedVideoUri}
-							src={this.state.signed_spliced_url==undefined?this.state.video.processedVideoUri:this.state.signed_spliced_url}
+							src={(!this.state.spliced || this.state.signed_spliced_url==undefined)?this.state.video.processedVideoUri:this.state.video.splicedVideoUri}
 						>
 							<LoadingSpinner />
 							<ControlBar>
@@ -316,7 +332,7 @@ class Video extends Component {
 								<ForwardControl seconds={10} order={3.2} />
 							</ControlBar>
 						</Player>
-						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} href={this.state.spliced?this.state.signed_spliced_url:this.state.signed_spliced_url==undefined?this.state.signed_merged_url:this.state.signed_spliced_url}>{this.state.spliced?"Download Segmented":"Download Full"}</Button>
+						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} href={(!this.state.spliced || this.state.signed_spliced_url==undefined)?this.state.signed_merged_url:this.state.signed_spliced_url}>{this.state.spliced?"Download Segmented":"Download Full"}</Button>
 						<Button type="submit" variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick={()=>{this.setState({editOpen: true})}} >Edit Match Info</Button>
 
 					</Grid>
