@@ -83,17 +83,16 @@ class Video extends Component {
 		}
 
 		var debug_sum = 0
-		if(this.state.video.Segments != undefined){
-			for (var i = 0 ; i < this.state.video.Segments.length; i+=1){
-				debug_sum+=parseFloat(this.state.video.Segments[i].stop)-parseFloat(this.state.video.Segments[i].start)
-			}
+		for (var i = 0 ; i < this.state.video.Segments.length; i+=1){
+			debug_sum+=parseFloat(this.state.video.Segments[i].stop)-parseFloat(this.state.video.Segments[i].start)
 		}
 
 		//Build up the segments for spliced points
 		var spliced_points = [0]
-
-		for (var i = 0 ; i< this.state.video.Segments.length; i+=1){
-			spliced_points.push(parseFloat(spliced_points[i])+parseFloat(this.state.video.Segments[i].stop)-parseFloat(this.state.video.Segments[i].start))
+		if(this.state.video.Segments != undefined){
+			for (var i = 0 ; i< this.state.video.Segments.length; i+=1){
+				spliced_points.push(parseFloat(spliced_points[i])+parseFloat(this.state.video.Segments[i].stop)-parseFloat(this.state.video.Segments[i].start))
+			}
 		}
 
 		this.state["spliced_points"] = spliced_points
