@@ -56,7 +56,7 @@ class TagVideo extends Component {
 				this.state.tagEnd.scrollIntoView({ behavior: "smooth" });
 			}
 		}
-		if(event.key === 'd' || event.key === 'a' && this.refs.player != undefined){
+		if((event.key === 'd' || event.key === 'a') && this.refs.player != undefined){
 			//Seek tag in video player
 			if(Math.floor(this.state.segment_index/2) != this.state.segment_index/2){
 				this.refs.player.seek(this.state.segments[Math.floor(this.state.segment_index/2)]["stop"]);
