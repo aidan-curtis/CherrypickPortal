@@ -706,7 +706,7 @@ class MainToolbar extends Component {
 					</nav>
 				</div>
 				<div className="flex">
-					<Button className="h-64" onClick={this.uploadVideo}>
+					<Button className="h-64" onClick={this.uploadVideo} hidden={user.team.role!="team"}>
 							<Icon className="text-16 ml-12 hidden sm:flex" variant="action">cloud_upload</Icon>
 							<Typography component="span" className="normal-case font-500 flex">
 								&nbsp; Upload Video

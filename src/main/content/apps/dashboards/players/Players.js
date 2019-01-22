@@ -59,8 +59,11 @@ class Players extends Component {
 
 
 	renderRedirect = () => {
-		var link = '/apps/dashboards/matches/player/'+this.state.pname
+		//Need to remove slashes if player name has slash
+
 		if (this.state.clicked) {
+			var pname = this.state.pname.replace(/\//g, "%2F")
+			var link = '/apps/dashboards/matches/player/'+pname
 			return <Redirect to={link}/>
 		}
 	}

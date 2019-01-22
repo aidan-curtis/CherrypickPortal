@@ -40,8 +40,12 @@ class Matches extends Component {
 
 
 	renderRedirect = () => {
-		var link = '/apps/dashboards/video/'+this.state['type']+'/'+this.state['name']+'/'+this.state.vname+"/"+this.state.vid
+
 		if (this.state.clicked) {
+			// Need to replace slashes because urls are parsed by slash
+			var encoded_vname = this.state.vname.replace(/\//g, "%2F")
+			var encoded_name = this.state['name'].replace(/\//g, "%2F")
+			var link = '/apps/dashboards/video/'+this.state['type']+'/'+encoded_name+'/'+encoded_vname+"/"+this.state.vid
 			return <Redirect to={link}/>
 		}
 	}

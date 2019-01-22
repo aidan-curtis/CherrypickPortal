@@ -58,8 +58,11 @@ class Processing extends Component {
 
 
 	renderRedirect = () => {
-		var link = '/apps/dashboards/tagvideo/processing/'+this.state.vid+'/'+this.state.vname
+		//Need to replace slashes in vname
+
 		if (this.state.clicked) {
+			var vname = this.state.vname.replace(/\//g, "%2F")
+			var link = '/apps/dashboards/tagvideo/processing/'+this.state.vid+'/'+vname
 			return <Redirect to={link}/>
 		}
 	}
