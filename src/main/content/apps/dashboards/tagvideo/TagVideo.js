@@ -15,6 +15,11 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import axios from 'axios/index';
 import TableRow from '@material-ui/core/TableRow';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 
 
@@ -105,6 +110,13 @@ class TagVideo extends Component {
 		
 	}
 
+
+	handleDialogClose = () => {
+		this.setState({
+			error_open: false
+		})
+	}
+
 	submitTimestamps(){
 		var cloneSegments = this.state.segments.slice();
 		cloneSegments.splice(-1,1)
@@ -120,11 +132,17 @@ class TagVideo extends Component {
 				"timestamps": JSON.stringify(cloneSegments)
 			}
 		}).then((response) => {
-			
-			this.setState({
-				submit_timestamps:"Submitted"
-			})
-			console.log(response)
+			if(response.data.success === true){
+				this.setState({
+					submit_timestamps:"Submitted"
+				})
+				console.log(response)
+			} else {
+				this.setState({
+					error_open: true,
+					error_message:  response.data.message
+				})
+			}
 		})
 	}
 	lpad(number, digits) {
@@ -144,6 +162,17 @@ class TagVideo extends Component {
 		const {classes} = this.props;
 		return (
 			<div className={classes.root} style = {{padding: 50}}  >
+				<Dialog
+					open={this.state.error_open}
+					onClose={this.handleDialogClose}
+					aria-labelledby="alert-dialog-title"
+					aria-describedby="alert-dialog-description"
+				>
+					<DialogTitle id="alert-dialog-title">{this.state.error_message}</DialogTitle>
+					<Button variant="contained" onClick={this.handleDialogClose} className={classes.button} style={{marginTop: 20}}>
+						Close
+					</Button>
+				</Dialog>
 				<Grid container spacing={24}>
 					<Grid item xs={8}>
 						<Player

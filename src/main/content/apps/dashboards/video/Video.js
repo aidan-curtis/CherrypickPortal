@@ -289,7 +289,7 @@ class Video extends Component {
 				>
 					<DialogTitle id="alert-dialog-title">We are currently working on splicing this video. Please come back in a little while</DialogTitle>
 					<Button variant="contained" onClick={this.handleDialogClose} className={classes.button} style={{marginTop: 20}}>
-						Continue
+						Close
 					</Button>
 				</Dialog>
 				<div style={{height: 50}}>
