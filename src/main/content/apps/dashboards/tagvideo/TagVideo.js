@@ -158,6 +158,7 @@ class TagVideo extends Component {
 								<ForwardControl seconds={10} order={3.2} />
 							</ControlBar>
 						</Player>
+						<Button type="submit" disabled={this.state.submit_timestamps=="Submitted"} variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick = {()=>{this.submitTimestamps()}} >{this.state.submit_timestamps}</Button>
 					</Grid>
 					<Grid item xs={4}>
 						<Paper>
