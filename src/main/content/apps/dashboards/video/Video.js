@@ -82,10 +82,7 @@ class Video extends Component {
 			token = localStorage.token
 		}
 
-		var debug_sum = 0
-		for (var i = 0 ; i < this.state.video.Segments.length; i+=1){
-			debug_sum+=parseFloat(this.state.video.Segments[i].stop)-parseFloat(this.state.video.Segments[i].start)
-		}
+		
 
 		//Build up the segments for spliced points
 		var spliced_points = [0]
