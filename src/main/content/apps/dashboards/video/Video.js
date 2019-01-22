@@ -83,8 +83,10 @@ class Video extends Component {
 		}
 
 		var debug_sum = 0
-		for (var i = 0 ; i< this.state.video.Segments.length; i+=1){
-			debug_sum+=parseFloat(this.state.video.Segments[i].stop)-parseFloat(this.state.video.Segments[i].start)
+		if(this.state.video.Segments != undefined){
+			for (var i = 0 ; i < this.state.video.Segments.length; i+=1){
+				debug_sum+=parseFloat(this.state.video.Segments[i].stop)-parseFloat(this.state.video.Segments[i].start)
+			}
 		}
 
 		//Build up the segments for spliced points
