@@ -31,8 +31,8 @@ class Processing extends Component {
 		if(props.user.activeTournament != null){
 			this.props.setCurrentTournament(props.user.activeTournament)
 		}
-		this.state['type'] = props.match.params.type
-		this.state['name'] = props.match.params.name
+		this.state['type'] = decodeURIComponent(props.match.params.type)
+		this.state['name'] = decodeURIComponent(props.match.params.name)
 		var token = this.props.user.token
 		if(token == "" || token == undefined){
 			token = localStorage.token
