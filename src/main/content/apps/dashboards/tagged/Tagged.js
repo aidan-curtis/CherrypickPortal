@@ -61,7 +61,7 @@ class Tagged extends Component {
 	renderRedirect = () => {
 
 		if (this.state.clicked) {
-			var vname = this.state.vname.replace(/\//g, "%2F")
+			var vname = encodeURIComponent(this.state.vname)
 			var link = '/apps/dashboards/tagvideo/tagged/'+this.state.vid+'/'+vname
 			return <Redirect to={link}/>
 		}

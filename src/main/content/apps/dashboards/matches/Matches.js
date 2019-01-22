@@ -43,8 +43,8 @@ class Matches extends Component {
 
 		if (this.state.clicked) {
 			// Need to replace slashes because urls are parsed by slash
-			var encoded_vname = this.state.vname.replace(/\//g, "%2F")
-			var encoded_name = this.state['name'].replace(/\//g, "%2F")
+			var encoded_vname = encodeURIComponent(this.state.vname)
+			var encoded_name = encodeURIComponent(this.state['name'])
 			var link = '/apps/dashboards/video/'+this.state['type']+'/'+encoded_name+'/'+encoded_vname+"/"+this.state.vid
 			return <Redirect to={link}/>
 		}

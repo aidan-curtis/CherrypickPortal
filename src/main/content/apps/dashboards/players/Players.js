@@ -62,7 +62,7 @@ class Players extends Component {
 		//Need to remove slashes if player name has slash
 
 		if (this.state.clicked) {
-			var pname = this.state.pname.replace(/\//g, "%2F")
+			var pname = encodeURIComponent(this.state.pname)
 			var link = '/apps/dashboards/matches/player/'+pname
 			return <Redirect to={link}/>
 		}

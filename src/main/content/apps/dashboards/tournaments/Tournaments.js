@@ -62,7 +62,7 @@ class Tournaments extends Component {
 
 	renderRedirect = () => {
 		if (this.state.clicked) {
-			var tname = this.state.tname.replace(/\//g, "%2F")
+			var tname = encodeURIComponent(this.state.tname)
 			var link = '/apps/dashboards/matches/tournament/'+tname
 			return <Redirect to={link}/>
 		}
