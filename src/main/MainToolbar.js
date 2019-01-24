@@ -14,7 +14,7 @@ import {bindActionCreators} from 'redux';
 import {FuseAnimate} from '@fuse';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import { FilePond, registerPlugin } from 'react-filepond';
-import 'filepond/dist/filepond.min.css';
+import '../styles/filepond.css';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -61,25 +61,25 @@ const reorder = (list, startIndex, endIndex) => {
 const grid = 6;
 
 const getItemStyle = (isDragging, draggableStyle) => ({
-  // some basic styles to make the items look a bit nicer
-  userSelect: 'none',
-  padding: grid * 2,
-  margin: `0 0 ${grid+2}px 0`,
+	// some basic styles to make the items look a bit nicer
+	userSelect: 'none',
+	padding: grid * 2,
+	margin: `0 0 ${grid+2}px 0`,
 
-  // change background colour if dragging
-  background: 'white',
-  borderRadius: "3px",
-   boxShadow: "0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 0px 0px 0 rgba(0, 0, 0, 0.19)",
+	// change background colour if dragging
+	background: 'white',
+	borderRadius: "3px",
+	boxShadow: "0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 0px 0px 0 rgba(0, 0, 0, 0.19)",
 
 
-  // styles we need to apply on draggables
-  ...draggableStyle,
+	// styles we need to apply on draggables
+	...draggableStyle,
 });
 
 const getListStyle = isDraggingOver => ({
-  background: 'white',
-  padding: grid,
-  width: "100%",
+	background: 'white',
+	padding: grid,
+	width: "100%",
 });
 
 
@@ -465,6 +465,7 @@ class MainToolbar extends Component {
 								<FilePond 
 									allowMultiple={true}
 									name="content"
+									style = {{fontSize: 50}}
 									acceptedFileTypes = {["video/mp4","video/quicktime"]}
 									server={{
 											url: process.env.REACT_APP_API_ENDPOINT+'/private_api',
