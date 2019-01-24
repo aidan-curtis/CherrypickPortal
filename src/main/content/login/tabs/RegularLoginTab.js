@@ -79,7 +79,7 @@ class RegularLoginTab extends Component {
                         className="mb-16"
                         type="text"
                         name="email"
-                        label="Email"
+                        label="Username"
                         validations={{
                             minLength: 4
                         }}

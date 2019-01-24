@@ -94,20 +94,14 @@ class TagVideo extends Component {
 		});
 	}
 
-
-
-
 	componentDidMount() {
 		// subscribe state change
 		this.refs.player.subscribeToStateChange(this.handleStateChange.bind(this));
 		document.addEventListener("keydown", this.handleKeyPress.bind(this));
-
 	}
 
 	changeCurrentTime(seconds) {
-		
 		this.refs.player.seek(seconds);
-		
 	}
 
 
@@ -182,7 +176,7 @@ class TagVideo extends Component {
 							src={this.state.video.processedVideoUri}
 						>
 							<ControlBar>
-								<PlaybackRateMenuButton rates={[1, 2, 3]} />
+								<PlaybackRateMenuButton rates={[1, 2, 3, 4]} />
 								<ReplayControl seconds={10} order={2.2} />
 								<ForwardControl seconds={10} order={3.2} />
 							</ControlBar>

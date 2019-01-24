@@ -6,6 +6,14 @@ import {bindActionCreators} from 'redux';
 import { Redirect } from 'react-router-dom'
 import Grid from '@material-ui/core/Grid';
 import store from 'store'
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import Tooltip from '@material-ui/core/Tooltip';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
+import TableRow from '@material-ui/core/TableRow';
 import * as Actions from 'auth/store/actions';
 import axios from 'axios/index';
 export const SET_USER_DATA = '[USER] SET DATA';
@@ -19,8 +27,27 @@ const styles = theme => ({
 class Processing extends Component {
 
 	state = {
-		clicked: false
+		clicked: false,
+		orderBy: "",
+		order: "asc"
+
 	}
+
+
+	handleRequestSort = (event, property) => {
+		const orderBy = property;
+		let order = 'desc';
+
+		if (this.state.orderBy === property && this.state.order === 'desc') {
+			order = 'asc';
+		}
+
+		this.setState({ order, orderBy });
+	};
+
+	createSortHandler = property => event => {
+		this.handleRequestSort(event, property);
+	};
 
 	constructor(props)
 	{
@@ -71,38 +98,92 @@ class Processing extends Component {
 	{
 		const {classes} = this.props;
 		var props = this.props;
+		const rows = [
+			{ id: 'match_name', label: 'Match Name' },
+			{ id: 'tournament', label: 'Opponent\'s Team Name' },
+			{ id: 'match_type', label: 'Match Type' },
+			{ id: 'player1_name', label: 'Player 1 Name' },
+			{ id: 'player2_name', label: 'Player 2 Name' },
+			{ id: 'state', label: 'Tagging State' },
+		];
 		return (
-			<div className={classes.root} style = {{padding: 50}}>
+
+		<div style={{padding: 50}}>
+			<Paper className={classes.root} >
 				{this.renderRedirect()}
 				<Grid container spacing={24}>
-				{props.user.team.Videos.filter((video)=>{
-					return video.state == "processing"	
-				}).map((video, index)=>
-						(<Grid key={index} item xs={4} onClick={() => {
-										if((video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === "")){
-
-										} else {
-											this.setState({clicked: true,
-														   vid: video._id,
-														   vname: video.metadata.matchName})
-								
+					<Table className={classes.table} aria-labelledby="tableTitle">
+						<TableHead>
+							<TableRow>
+								{rows.map(
+									row => (
+										<TableCell
+											key={row.id}
+											align={'left'}
+											padding={'default'}
+											sortDirection={this.state.orderBy === row.id ? this.state.order : false}
+										>
+											<Tooltip
+												title="Sort"
+												placement={row.numeric ? 'bottom-end' : 'bottom-start'}
+												enterDelay={300}
+											>
+												<TableSortLabel
+													active={this.state.orderBy === row.id}
+													direction={this.state.order}
+													onClick={this.createSortHandler(row.id)}
+												>
+													{row.label}
+												</TableSortLabel>
+											</Tooltip>
+										</TableCell>
+										),
+									this,
+								)}
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{props.user.team.Videos.filter((video)=>{
+								return video.state == "processing"	
+							}).map((video, index)=>
+								(
+									<TableRow
+										hover
+										onClick={() => {
+												if(!((video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === ""))){
+													this.setState({clicked: true, vid: video._id, vname: video.metadata.matchName})
+												}
+											} 
 										}
-									}}  style = {{width: "100%", position: "relative"}}>
-
-									<span style={{	position: "absolute",
-													top: "40%",
-													left: 0,
-													width: "100%",
-													color: "white",
-													textAlign: "center",
-													fontSize: 24}}>{video.metadata.matchName}</span>
-									{(video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === "")? <img alt="processing" style={{borderRadius: 5 ,overflow: 'hidden', width: "100%"}} src="assets/images/processing.png"/>:<img alt="thumbnail" style={{borderRadius: 5 ,overflow: 'hidden'}} src={video.processedImageUri}/> }
-					
-						</Grid>)
-					)}
+									>
+										<TableCell component="th" scope="row" align="left">
+											{video.metadata.matchName}
+										</TableCell>
+										<TableCell align="left">
+											{video.metadata.tournament}
+										</TableCell>
+										<TableCell align="left">
+											{video.metadata.playerName2 == ""? "Single":"Double"}
+										</TableCell>
+										<TableCell align="left">
+											{video.metadata.playerName1}
+										</TableCell>
+										<TableCell align="left">
+											{video.metadata.playerName2 == ""? "N/A":video.metadata.playerName2}
+										</TableCell>
+										<TableCell align="left">
+											{(video.state == "tagged" && video.splicedVideoUri!=undefined) ? "Tagged":"Untagged"}
+										</TableCell>
+						            </TableRow>
+					          )
+					        )}
+					    </TableBody>
+					  </Table>
 				</Grid>
+			</Paper>
 			</div>
-		)
+
+			)
 	};
 }
 

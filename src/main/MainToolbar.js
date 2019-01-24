@@ -464,7 +464,6 @@ class MainToolbar extends Component {
 							{this.state.continued === 1?
 								<FilePond 
 									allowMultiple={true}
-
 									name="content"
 									acceptedFileTypes = {["video/mp4","video/quicktime"]}
 									server={{
@@ -492,7 +491,6 @@ class MainToolbar extends Component {
 											num_files: this.state.num_files-1
 										})
 									}}	
-					
 								/>
 								: null
 							}
@@ -520,7 +518,7 @@ class MainToolbar extends Component {
 
 										<TextField
 											id=""
-											label="Match Name"
+											label="Date Played"
 											value={this.state.match_name}
 											onChange={this.handleChange('match_name')}
 											margin="normal"
@@ -577,7 +575,7 @@ class MainToolbar extends Component {
 											{...autosuggestProps}
 											inputProps={{
 												classes,
-												label: 'Dual Match Name',
+												label: 'Opponent\'s Team Name',
 												value: this.state.tournament_name,
 												onChange: this.handleAutosuggestChange('tournament_name'),
 											}}
@@ -635,22 +633,26 @@ class MainToolbar extends Component {
 													id: `item-${fn['location']}`,
 													content: `${fn["originalname"]}`,
 												}}).map((item, index) => (
-													<Draggable key={item.id} draggableId={item.id} index={index}>
-														{(provided, snapshot) => (
-															<div
-																ref={provided.innerRef}
-																{...provided.draggableProps}
-																{...provided.dragHandleProps}
-																style={getItemStyle(
-																snapshot.isDragging,
-																provided.draggableProps.style
-																)}
-															>
-																{item.content}
-															
-															</div>
-														)}
-													</Draggable>
+													<div style={{display: "flex",   flexWrap: "nowrap"}}>
+														<div style = {{width: 30, paddingTop: 12}}>{index+1}.</div>
+														<div style = {{width: "100%"}}>
+														<Draggable key={item.id} draggableId={item.id} index={index}>
+															{(provided, snapshot) => (
+																<div
+																	ref={provided.innerRef}
+																	{...provided.draggableProps}
+																	{...provided.dragHandleProps}
+																	style={getItemStyle(
+																		snapshot.isDragging,
+																		provided.draggableProps.style
+																	)}
+																>
+																	{item.content}
+																</div>
+															)}
+														</Draggable>
+														</div>
+													</div>
 												))}
 												{provided.placeholder}
 											</div>
@@ -666,7 +668,7 @@ class MainToolbar extends Component {
 					</DialogContent>
 					<DialogActions>
 						<Button onClick={this.handleRealClose} color="primary" autoFocus>
-							Close
+							Stop Upload
 						</Button>
 					</DialogActions>
 				</Dialog>
@@ -699,10 +701,6 @@ class MainToolbar extends Component {
 						{
 							 link.length>d_idx+4 && link[d_idx+1] === "tagvideo" ? (<a className="breadcrumb">{decodeURIComponent(link[d_idx+4])}</a>) : null
 						}
-						
-						
-						
-						
 					</nav>
 				</div>
 				<div className="flex">
