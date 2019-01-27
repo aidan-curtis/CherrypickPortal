@@ -41,48 +41,6 @@ export const SET_USER_DATA = '[USER] SET DATA';
 
 registerPlugin(FilePondPluginFileValidateType)
 
-const suggestions = [
-];
-
-const suggested_player_names = [
-]
-
-
-// a little function to help us with reordering the result
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-};
-
-
-const grid = 6;
-
-const getItemStyle = (isDragging, draggableStyle) => ({
-	// some basic styles to make the items look a bit nicer
-	userSelect: 'none',
-	padding: grid * 2,
-	margin: `0 0 ${grid+2}px 0`,
-
-	// change background colour if dragging
-	background: 'white',
-	borderRadius: "3px",
-	boxShadow: "0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 0px 0px 0 rgba(0, 0, 0, 0.19)",
-
-
-	// styles we need to apply on draggables
-	...draggableStyle,
-});
-
-const getListStyle = isDraggingOver => ({
-	background: 'white',
-	padding: grid,
-	width: "100%",
-});
-
-
 const styles = theme => ({
 	root     : {
 		display   : 'flex',
@@ -103,9 +61,30 @@ const styles = theme => ({
 });
 
 
+function renderInputComponent(inputProps) {
+	const { classes, inputRef = () => {}, ref, ...other } = inputProps;
+	return (
+		<TextField
+			fullWidth
+			InputProps={{
+			inputRef: node => {
+				ref(node);
+				inputRef(node);
+			},
+			classes: {
+				input: classes.input,
+			},
+			}}
+			{...other}
+		/>
+	);
+}
+
 function getSuggestionValue(suggestion) {
 	return suggestion.label;
 }
+
+
 function renderSuggestion(suggestion, { query, isHighlighted }) {
 	const matches = match(suggestion.label, query);
 	const parts = parse(suggestion.label, matches);
@@ -129,68 +108,89 @@ function renderSuggestion(suggestion, { query, isHighlighted }) {
 	);
 }
 
-function renderInputComponent(inputProps) {
-	const { classes, inputRef = () => {}, ref, ...other } = inputProps;
-	return (
-		<TextField
-			fullWidth
-			InputProps={{
-			inputRef: node => {
-				ref(node);
-				inputRef(node);
-			},
-			classes: {
-				input: classes.input,
-			},
-			}}
-			{...other}
-		/>
-	);
-}
-function getSuggestions(value) {
-  const inputValue = deburr(value.trim()).toLowerCase();
-  const inputLength = inputValue.length;
-  let count = 0;
-  return inputLength === 0
-	? []
-	: suggestions.filter(suggestion => {
 
-		const keep =
-		  count < 5 && ((suggestion.label.slice(0, inputLength).toLowerCase() === inputValue) || inputLength === 0);
 
-		if (keep) {
-		  count += 1;
-		}
+class MainToolbar extends Component {
 
-		return keep;
-	  });
-}
-function getNameSuggestions(value) {
-	const inputValue = deburr(value.trim()).toLowerCase();
-	const inputLength = inputValue.length;
-	let count = 0;
-	return inputLength === 0
-	? []
-	: suggested_player_names.filter(suggestion => {
-		if(suggestion.label === undefined){
-			return false
-		} else {
+
+
+
+	// a little function to help us with reordering the result
+	reorder = (list, startIndex, endIndex) => {
+		const result = Array.from(list);
+		const [removed] = result.splice(startIndex, 1);
+		result.splice(endIndex, 0, removed);
+
+		return result;
+	};
+
+	getItemStyle = (isDragging, draggableStyle) => ({
+		// some basic styles to make the items look a bit nicer
+		userSelect: 'none',
+		padding: this.state.grid * 2,
+		margin: `0 0 ${this.state.grid+2}px 0`,
+
+		// change background colour if dragging
+		background: 'white',
+		borderRadius: "3px",
+		boxShadow: "0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 0px 0px 0 rgba(0, 0, 0, 0.19)",
+
+
+		// styles we need to apply on draggables
+		...draggableStyle,
+	});
+
+	getListStyle = isDraggingOver => ({
+		background: 'white',
+		padding: this.state.grid,
+		width: "100%",
+	});
+
+
+
+	
+	getSuggestions(value) {
+	  const inputValue = deburr(value.trim()).toLowerCase();
+	  const inputLength = inputValue.length;
+	  let count = 0;
+	  return inputLength === 0
+		? []
+		: this.state.suggestions.filter(suggestion => {
+
 			const keep =
-					  count < 5 && (suggestion.label.slice(0, inputLength).toLowerCase() === inputValue || inputLength === 0);
+			  count < 5 && ((suggestion.label.slice(0, inputLength).toLowerCase() === inputValue) || inputLength === 0);
+
 			if (keep) {
 			  count += 1;
 			}
 
 			return keep;
-		}
-		
-	});
-}
+		  });
+	}
+	getNameSuggestions(value) {
+		const inputValue = deburr(value.trim()).toLowerCase();
+		const inputLength = inputValue.length;
+		let count = 0;
+		return inputLength === 0
+		? []
+		: this.state.suggested_player_names.filter(suggestion => {
+			if(suggestion.label === undefined){
+				return false
+			} else {
+				const keep =
+						  count < 5 && (suggestion.label.slice(0, inputLength).toLowerCase() === inputValue || inputLength === 0);
+				if (keep) {
+				  count += 1;
+				}
+
+				return keep;
+			}
+			
+		});
+	}
 
 
 
-
-class MainToolbar extends Component {
 	state = {
 		userMenu: null,
 		player_name_1: "",
@@ -207,7 +207,8 @@ class MainToolbar extends Component {
 		num_files:0,
 		redirect:null,
 		value: 0,
-		segment_video: true
+		segment_video: true,
+		grid: 6
 	};
 
 
@@ -230,6 +231,7 @@ class MainToolbar extends Component {
 			this.setState({redirect: "/login"})
 		}
 
+		var final_this = this
 		axios({
 			method: "GET",
 			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/get_team",
@@ -243,20 +245,22 @@ class MainToolbar extends Component {
 				type   : SET_USER_DATA,
 				payload: response.data
 			})
-			this.load_suggestions(response.data.team)
+			this.load_suggestions(response.data.team, final_this)
+			console.log("response.data.team")
+			console.log(response.data.team)
 		})
 	}
 
-	load_suggestions(team) {
+	load_suggestions(team, final_this) {
 		team.Videos.forEach(function(video){
-			if(suggestions.filter(function(t){return t.label === video.metadata.tournament}).length === 0){
-				suggestions.push({"label": video.metadata.tournament})
+			if(final_this.state.suggestions.filter(function(t){return t.label === video.metadata.tournament}).length === 0){
+				final_this.state.suggestions.push({"label": video.metadata.tournament})
 			}
-			if(suggested_player_names.filter(function(t){return (t.label === video.metadata.playerName1) }).length === 0){
-				suggested_player_names.push({"label": video.metadata.playerName1})
+			if(final_this.state.suggested_player_names.filter(function(t){return (t.label === video.metadata.playerName1) }).length === 0){
+				final_this.state.suggested_player_names.push({"label": video.metadata.playerName1})
 			}
-			if(suggested_player_names.filter(function(t){return (t.label === video.metadata.playerName2) }).length === 0){
-				suggested_player_names.push({"label": video.metadata.playerName2})
+			if(final_this.state.suggested_player_names.filter(function(t){return (t.label === video.metadata.playerName2) }).length === 0){
+				final_this.state.suggested_player_names.push({"label": video.metadata.playerName2})
 			}
 		})
 	}
@@ -363,13 +367,13 @@ class MainToolbar extends Component {
 
 	handleSuggestionsFetchRequested = ({ value }) => {
 		this.setState({
-			suggestions: getSuggestions(value)
+			suggestions: this.getSuggestions(value)
 		});
 	};
 
 	handlePlayerNameSuggestionsFetchRequested = ({ value }) => {
 		this.setState({
-			suggested_player_names: getNameSuggestions(value)
+			suggested_player_names: this.getNameSuggestions(value)
 		});
 	};
 
@@ -392,7 +396,7 @@ class MainToolbar extends Component {
 			return;
 		}
 
-		const upload_filenames = reorder(
+		const upload_filenames = this.reorder(
 			this.state.upload_filenames,
 			result.source.index,
 			result.destination.index
@@ -402,7 +406,6 @@ class MainToolbar extends Component {
 			upload_filenames,
 		});
 
-		console.log(upload_filenames)
 	}
 
 
@@ -627,7 +630,7 @@ class MainToolbar extends Component {
 										{(provided, snapshot) => (
 											<div
 												ref={provided.innerRef}
-												style={getListStyle(snapshot.isDraggingOver)}
+												style={this.getListStyle(snapshot.isDraggingOver)}
 											>
 												{this.state.upload_filenames.map(function(fn){return {
 													id: `item-${fn['location']}`,
@@ -642,7 +645,7 @@ class MainToolbar extends Component {
 																	ref={provided.innerRef}
 																	{...provided.draggableProps}
 																	{...provided.dragHandleProps}
-																	style={getItemStyle(
+																	style={this.getItemStyle(
 																		snapshot.isDragging,
 																		provided.draggableProps.style
 																	)}

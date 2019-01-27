@@ -53,7 +53,6 @@ class FuseLayout extends Component {
 
     routeSettingsCheck = () => {
         const matched = matchRoutes(this.props.routes, this.props.location.pathname)[0];
-        console.log(matched)
         if ( matched && matched.route.settings )
         {
             const routeSettings = _.merge({}, this.props.defaultSettings, matched.route.settings);

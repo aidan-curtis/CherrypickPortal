@@ -8,12 +8,12 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 const propTypes = {
-    item: PropTypes.shape(
-        {
-            id      : PropTypes.string.isRequired,
-            title   : PropTypes.string,
-            children: PropTypes.array
-        })
+	item: PropTypes.shape(
+		{
+			id      : PropTypes.string.isRequired,
+			title   : PropTypes.string,
+			children: PropTypes.array
+		})
 };
 
 const defaultProps = {};
@@ -21,61 +21,57 @@ const defaultProps = {};
 function FuseNavVerticalGroup({item, nestedLevel, userRole})
 {
 
+	if ( item.auth && (!item.auth.includes(userRole) || (userRole !== 'guest' && item.auth.length === 1 && item.auth.includes('guest'))) )
+	{
+		return null;
+	}
+
+	let paddingValue = 40 + (nestedLevel * 16);
+	const listItemPadding = nestedLevel > 0 ? 'pl-' + (paddingValue > 80 ? 80 : paddingValue) : 'pl-24';
 
 
-    console.log("Fusenav v group")
-    console.log(userRole)
-    if ( item.auth && (!item.auth.includes(userRole) || (userRole !== 'guest' && item.auth.length === 1 && item.auth.includes('guest'))) )
-    {
-        return null;
-    }
+	return (
+		<React.Fragment>
 
-    let paddingValue = 40 + (nestedLevel * 16);
-    const listItemPadding = nestedLevel > 0 ? 'pl-' + (paddingValue > 80 ? 80 : paddingValue) : 'pl-24';
+			<ListSubheader disableSticky={true} className={classNames(listItemPadding, "list-subheader flex items-center")}>
+				<span className="list-subheader-text uppercase text-12">
+					{item.title}
+				</span>
+			</ListSubheader>
 
+			{item.children && (
+				<React.Fragment>
+					{   
+						item.children.map((item) => (
 
-    return (
-        <React.Fragment>
+							<React.Fragment key={item.id}>
 
-            <ListSubheader disableSticky={true} className={classNames(listItemPadding, "list-subheader flex items-center")}>
-                <span className="list-subheader-text uppercase text-12">
-                    {item.title}
-                </span>
-            </ListSubheader>
+								{item.type === 'group' && userRole.team.role === item.role &&(
+									<NavVerticalGroup item={item} nestedLevel={nestedLevel}/>
+								)}
 
-            {item.children && (
-                <React.Fragment>
-                    {   
-                        item.children.map((item) => (
+								{item.type === 'collapse' && userRole.team.role === item.role &&(
+									<FuseNavVerticalCollapse item={item} nestedLevel={nestedLevel}/>
+								)}
 
-                            <React.Fragment key={item.id}>
+								{item.type === 'item' && userRole.team.role === item.role && (
+									<FuseNavVerticalItem item={item} nestedLevel={nestedLevel}/>
+								)}
 
-                                {item.type === 'group' && userRole.team.role === item.role &&(
-                                    <NavVerticalGroup item={item} nestedLevel={nestedLevel}/>
-                                )}
-
-                                {item.type === 'collapse' && userRole.team.role === item.role &&(
-                                    <FuseNavVerticalCollapse item={item} nestedLevel={nestedLevel}/>
-                                )}
-
-                                {item.type === 'item' && userRole.team.role === item.role && (
-                                    <FuseNavVerticalItem item={item} nestedLevel={nestedLevel}/>
-                                )}
-
-                            </React.Fragment>
-                        ))
-                    }
-                </React.Fragment>
-            )}
-        </React.Fragment>
-    );
+							</React.Fragment>
+						))
+					}
+				</React.Fragment>
+			)}
+		</React.Fragment>
+	);
 }
 
 function mapStateToProps({auth})
 {
-    return {
-        userRole: auth.user
-    }
+	return {
+		userRole: auth.user
+	}
 }
 
 FuseNavVerticalGroup.propTypes = propTypes;
