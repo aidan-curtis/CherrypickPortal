@@ -243,12 +243,12 @@ class MainToolbar extends Component {
 				type   : SET_USER_DATA,
 				payload: response.data
 			})
-			this.load_suggestions()
+			this.load_suggestions(response.data.team)
 		})
 	}
 
-	load_suggestions() {
-		this.props.user.team.Videos.forEach(function(video){
+	load_suggestions(team) {
+		team.Videos.forEach(function(video){
 			if(suggestions.filter(function(t){return t.label === video.metadata.tournament}).length === 0){
 				suggestions.push({"label": video.metadata.tournament})
 			}
@@ -263,7 +263,6 @@ class MainToolbar extends Component {
 	constructor(props){
 		super()
 		this.props = props
-		this.load_suggestions()
 		this.refresh()
 	}
 
