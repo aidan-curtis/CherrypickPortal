@@ -156,7 +156,7 @@ class Matches extends Component {
 										{video.metadata.tournament}
 									</TableCell>
 									<TableCell align="left">
-										{video.metadata.playerName2 == ""? "Single":"Double"}
+										{video.metadata.playerName2 == ""? "Singles":"Doubles"}
 									</TableCell>
 									<TableCell align="left">
 										{video.metadata.playerName1}

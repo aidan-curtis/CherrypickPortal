@@ -67,6 +67,8 @@ class Video extends Component {
 			link: window.location.href.split("/")
 		}
 
+		console.log("Video")
+		console.log(this.state.video)
 
 		if(this.state.video.splicedVideoUri==undefined){
 			this.state.spliced=false
@@ -319,7 +321,7 @@ class Video extends Component {
 							<FormGroup>
 								<TextField
 									id=""
-									label="Match Name"
+									label="Date Played"
 									value={this.state.video.metadata.matchName}
 									onChange={this.handleChange('matchName')}
 									margin="normal"
@@ -341,7 +343,7 @@ class Video extends Component {
 								/>}
 								<TextField
 									id=""
-									label="Dual Match Name"
+									label="Opponent's Team Name"
 									value={this.state.video.metadata.tournament}
 									onChange={this.handleChange('tournament')}
 									margin="normal"

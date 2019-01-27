@@ -98,18 +98,15 @@ class Untagged extends Component {
 		const {classes} = this.props;
 		var props = this.props;
 		const rows = [
+			{ id: 'id', label: 'ID'},
 			{ id: 'match_name', label: 'Match Name' },
-			{ id: 'tournament', label: 'Opponent\'s Team Name' },
-			{ id: 'match_type', label: 'Match Type' },
-			{ id: 'player1_name', label: 'Player 1 Name' },
-			{ id: 'player2_name', label: 'Player 2 Name' },
 			{ id: 'state', label: 'Tagging State' },
+			{ id: 'uploader', label: 'Uploader' },
 		];
 		return (
-
-		<div style={{padding: 50}}>
-			<Paper className={classes.root} >
-				{this.renderRedirect()}
+			<div style={{padding: 50}}>
+				<Paper className={classes.root} >
+					{this.renderRedirect()}
 					<Table className={classes.table} aria-labelledby="tableTitle">
 						<TableHead>
 							<TableRow>
@@ -144,43 +141,36 @@ class Untagged extends Component {
 							{props.user.team.Videos.filter((video)=>{
 								return video.state == "untagged"	
 							}).map((video, index)=>
-									(
-								<TableRow
-									hover
-									onClick={() => {
-											if(!((video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === ""))){
-												this.setState({clicked: true, vid: video._id, vname: video.metadata.matchName})
-											}
-										} 
-									}
-								>
-									<TableCell component="th" scope="row" align="left">
-										{video.metadata.matchName}
-									</TableCell>
-									<TableCell align="left">
-										{video.metadata.tournament}
-									</TableCell>
-									<TableCell align="left">
-										{video.metadata.playerName2 == ""? "Single":"Double"}
-									</TableCell>
-									<TableCell align="left">
-										{video.metadata.playerName1}
-									</TableCell>
-									<TableCell align="left">
-										{video.metadata.playerName2 == ""? "N/A":video.metadata.playerName2}
-									</TableCell>
-									<TableCell align="left">
-										{(video.state == "tagged" && video.splicedVideoUri!=undefined) ? "Tagged":"Untagged"}
-									</TableCell>
-					            </TableRow>
-					          )
-					        )}
-					    </TableBody>
-					  </Table>
+								(
+									<TableRow
+										hover
+										onClick={() => {
+												if(!((video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === ""))){
+													this.setState({clicked: true, vid: video._id, vname: video.metadata.matchName})
+												}
+											} 
+										}
+									>
+										<TableCell component="th" scope="row" align="left">
+											{video._id}
+										</TableCell>
+										<TableCell component="th" scope="row" align="left">
+											{video.metadata.matchName}
+										</TableCell>
+										<TableCell align="left">
+											{(video.state === "tagged" && video.splicedVideoUri != undefined) ? "Tagged":"Untagged"}
+										</TableCell>
+										<TableCell component="th" scope="row" align="left">
+											{video.Team === undefined? "": video.Team.email}
+										</TableCell>
+									</TableRow>
+								)
+							)}
+						</TableBody>
+					</Table>
 				</Paper>
 			</div>
-
-			)
+		)
 	};
 }
 
