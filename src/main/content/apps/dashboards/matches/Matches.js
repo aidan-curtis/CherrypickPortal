@@ -85,7 +85,7 @@ class Matches extends Component {
 
 
 		const rows = [
-			{ id: 'match_name', label: 'Match Name' },
+			{ id: 'match_name', label: 'Date' },
 			{ id: 'tournament', label: 'Opponent\'s Team Name' },
 			{ id: 'match_type', label: 'Match Type' },
 			{ id: 'player1_name', label: 'Player 1 Name' },
