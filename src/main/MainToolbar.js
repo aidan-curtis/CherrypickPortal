@@ -204,7 +204,6 @@ class MainToolbar extends Component {
 		continued: 0,
 		popper: '',
 		suggestions: [],
-		num_files:0,
 		redirect:null,
 		value: 0,
 		segment_video: true,
@@ -289,8 +288,7 @@ class MainToolbar extends Component {
 			tournament_name: "",
 			player_name_1: "",
 			player_name_2: "",
-			match_name: "",
-			num_files:0
+			match_name: ""
 		});
 	};
 
@@ -311,8 +309,7 @@ class MainToolbar extends Component {
 			var upload_filenames = this.state.upload_filenames
 			upload_filenames.push(JSON.parse(response)["file_info"][0])
 			this.setState({
-				upload_filenames: upload_filenames,
-				num_files: this.state.num_files-1
+				upload_filenames: upload_filenames
 			})
 		}	
 	}
@@ -355,13 +352,10 @@ class MainToolbar extends Component {
 				player_name_1: "",
 				player_name_2: "",
 				match_name: "",
-				continued: 0,
-				num_files:0
+				continued: 0
 			})
 			this.refresh()
 		})
-
-
 	}
 
 
@@ -422,7 +416,6 @@ class MainToolbar extends Component {
 	render()
 	{
 		
-
 		const {classes, user, logout} = this.props;
 		const {userMenu} = this.state;
 
@@ -484,20 +477,11 @@ class MainToolbar extends Component {
 												}
 											}
 									}}
-									onaddfilestart={(file) => {
-										this.setState({
-											num_files: this.state.num_files+1
-										})
-									}}
-									onremovefile={(file) => {
-										this.setState({
-											num_files: this.state.num_files-1
-										})
-									}}	
+									
 								/>
 								: null
 							}
-							{this.state.num_files === 0 && this.state.continued === 1 && this.state.upload_filenames.length !== 0 ? 
+							{this.state.continued === 1 && this.state.upload_filenames.length !== 0 ? 
 								<Button variant="contained" onClick={this.handleSecondSubmitContinue} className={classes.button} style={{marginTop: "20px", width: "410px"}}>
 									Submit
 								</Button>: null
