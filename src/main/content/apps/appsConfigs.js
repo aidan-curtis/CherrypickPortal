@@ -6,7 +6,6 @@ import {AccountInformationConfig} from './dashboards/account_information/Account
 import {TaggedConfig} from './dashboards/tagged/TaggedConfig';
 import {TagVideoConfig} from './dashboards/tagvideo/TagVideoConfig';
 import {UntaggedConfig} from './dashboards/untagged/UntaggedConfig';
-import {ProcessingConfig} from './dashboards/processing/ProcessingConfig';
 
 export const appsConfigs = [
 	PlayersConfig,
@@ -15,7 +14,6 @@ export const appsConfigs = [
 	MatchesConfig,
 	TaggedConfig,
 	UntaggedConfig,
-	ProcessingConfig,
 	TagVideoConfig,
 	AccountInformationConfig
 ];
