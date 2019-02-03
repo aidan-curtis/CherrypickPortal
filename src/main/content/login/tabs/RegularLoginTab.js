@@ -49,7 +49,7 @@ class RegularLoginTab extends Component {
             console.log("passed")
             var pathname = ""
             if(this.props.user.team.role == "team"){
-                pathname = this.props.location.state && this.props.location.state.redirectUrl ? this.props.location.state.redirectUrl : '/apps/dashboards/tournaments/tournament';
+                pathname = this.props.location.state && this.props.location.state.redirectUrl ? this.props.location.state.redirectUrl : '/apps/dashboards/matches';
             } else {
                 pathname = this.props.location.state && this.props.location.state.redirectUrl ? this.props.location.state.redirectUrl : '/apps/dashboards/untagged';                
             }

@@ -8,7 +8,7 @@ export const VideoConfig = {
     },
     routes  : [
         {
-            path     : '/apps/dashboards/video/:type/:name/:videoname/:videoid',
+            path     : '/apps/dashboards/video/:pname1/:pname2/:vname/:vid',
             component: Video
         }
     ]

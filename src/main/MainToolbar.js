@@ -205,19 +205,20 @@ class MainToolbar extends Component {
 		popper: '',
 		suggestions: [],
 		redirect:null,
-		value: 0,
+		matchMode: 0,
 		segment_video: true,
 		grid: 6
 	};
 
 
 
-	handleChangeSlider = (event, value) => {
-		this.setState({ value });
+	handleChangeSlider = (event, matchMode) => {
+
+		this.setState({ matchMode });
 	};
 
 	handleChangeIndex = index => {
-		this.setState({ value: index });
+		this.setState({ matchMode: index });
 	};
 
 	refresh(){
@@ -342,7 +343,8 @@ class MainToolbar extends Component {
 				"player_name_1": this.state.player_name_1,
 				"player_name_2": this.state.player_name_2,
 				"match_name": this.state.match_name,
-				"process_video": this.state.segment_video
+				"process_video": this.state.segment_video,
+				"match_mode": this.state.matchMode
 			}
 		}).then((response) => {
 			this.setState({
@@ -443,6 +445,7 @@ class MainToolbar extends Component {
 		]
 		var link = window.location.href.split("/")
 		var d_idx = link.indexOf("dashboards")
+
 		return (
 			<div className={classNames(classes.root, "flex flex-row")}>
 				{this.renderRedirect()}
@@ -477,14 +480,22 @@ class MainToolbar extends Component {
 												}
 											}
 									}}
+									onremovefile={(file) => {
+
+									}}
 									
 								/>
 								: null
 							}
 							{this.state.continued === 1 && this.state.upload_filenames.length !== 0 ? 
-								<Button variant="contained" onClick={this.handleSecondSubmitContinue} className={classes.button} style={{marginTop: "20px", width: "410px"}}>
-									Submit
-								</Button>: null
+								<div style={{marginTop: "20px", width: "410px"}}>
+									<p style = {{marginTop: "10px", marginBottom: "10px", textAlign: "center"}}>
+										Don't submit until all videos have finished uploading.
+									</p>
+									<Button variant="contained" onClick={this.handleSecondSubmitContinue} className={classes.button} style={{ width: "410px"}}>
+										Submit
+									</Button>
+								</div>: null
 							}
 							{this.state.continued === 0 ?
 
@@ -492,7 +503,7 @@ class MainToolbar extends Component {
 									<FormGroup>
 										<AppBar position="static" color="default">
 											<Tabs
-												value={this.state.value}
+												value={this.state.matchMode}
 												onChange={this.handleChangeSlider}
 												indicatorColor="primary"
 												textColor="primary"
@@ -533,7 +544,7 @@ class MainToolbar extends Component {
 												)}
 											/>
 										</div>
-										{ this.state.value === 1 ?
+										{ this.state.matchMode === 1 ?
 											<div style={{marginBottom: 10}}>
 												<Autosuggest
 													{...autosuggestPropsPlayerName}
@@ -665,25 +676,16 @@ class MainToolbar extends Component {
 							 link[d_idx+1] === "account_information"? (<a className="breadcrumb">Account Information</a>) : null							
 						}
 						{
-							 link[d_idx+2] === "tournament"? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/tournaments/tournament"})}} className="breadcrumb">Dual Matches</a>) : null
+							 link[d_idx+1] === "matches"? (<a className="breadcrumb">Matches</a>) : null
 						}
 						{
-							 link[d_idx+2] === "player" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/players/player"})}} className="breadcrumb">Players</a>): null
-						}
-						{
-							 link[d_idx+2] === "untagged" || link[d_idx+1] === "untagged" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/untagged"})}} className="breadcrumb">Untagged</a>): null
+							 link[d_idx+2] === "untagged" || link[d_idx+1] === "untagged" ? (<a className="breadcrumb">Untagged</a>): null
 						}
 						{	
-							 link[d_idx+2] === "tagged" || link[d_idx+1] === "tagged"  ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/tagged"})}} className="breadcrumb">Tagged</a>): null
+							 link[d_idx+2] === "tagged" || link[d_idx+1] === "tagged"  ? (<a  className="breadcrumb">Tagged</a>): null
 						}
 						{
-							 link[d_idx+2] === "processing" || link[d_idx+1] === "processing"  ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/processing"})}} className="breadcrumb">Processing</a>): null
-						}
-						{
-							 link.length>d_idx+3 && link[d_idx+1] !== "tagvideo" ? (<a onClick={()=>{this.setState({redirect: "/apps/dashboards/matches/"+link[d_idx+2]+"/"+link[d_idx+3]})}} className="breadcrumb">{decodeURIComponent(link[d_idx+3])}</a>) : null
-						}
-						{
-							 link.length>d_idx+4 && link[d_idx+1] !== "tagvideo" ? (<a className="breadcrumb">{decodeURIComponent(link[d_idx+4])}</a>) : null
+							 link.length>d_idx+3 && link[d_idx+1] !== "tagvideo" ? (<a className="breadcrumb">{decodeURIComponent(link[d_idx+2])} {decodeURIComponent(link[d_idx+3])} {link[d_idx+4]=="None"?"":"& "+decodeURIComponent(link[d_idx+4])}</a>) : null
 						}
 						{
 							 link.length>d_idx+4 && link[d_idx+1] === "tagvideo" ? (<a className="breadcrumb">{decodeURIComponent(link[d_idx+4])}</a>) : null

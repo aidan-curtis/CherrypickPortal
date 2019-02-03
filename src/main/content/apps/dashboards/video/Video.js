@@ -61,14 +61,13 @@ class Video extends Component {
 		super(props);
 		this.state = {
 			video: this.props.user.team.Videos.filter((video)=>{
-				return video._id === this.props.match.params.videoid
+				return video._id === this.props.match.params.vid
 			})[0],
 			current_segment : 0,
 			link: window.location.href.split("/")
 		}
 
-		console.log("Video")
-		console.log(this.state.video)
+		
 
 		if(this.state.video.splicedVideoUri==undefined){
 			this.state.spliced=false
@@ -333,14 +332,14 @@ class Video extends Component {
 									onChange={this.handleChange('playerName1')}
 									margin="normal"
 								/>
-								{this.state.video.metadata.playerName2 == ""?null:
+								{(this.state.matchMode == "doubles" || this.state.video.metadata.playerName2 != "")?
 								<TextField
 									id=""
 									label="Player 2 Name"
 									value={this.state.video.metadata.playerName2}
 									onChange={this.handleChange('playerName2')}
 									margin="normal"
-								/>}
+								/>:null}
 								<TextField
 									id=""
 									label="Opponent's Team Name"

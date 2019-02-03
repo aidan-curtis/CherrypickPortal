@@ -24,13 +24,41 @@ const styles = theme => ({
 	}
 });
 
+
+function desc(a, b, orderBy) {
+	if (b[orderBy] < a[orderBy]) {
+		return -1;
+	}
+	if (b[orderBy] > a[orderBy]) {
+		return 1;
+	}
+	return 0;
+}
+
+function stableSort(array, cmp) {
+	console.log(array)
+	const stabilizedThis = array.map((el, index) => [el, index]);
+	stabilizedThis.sort((a, b) => {
+	const order = cmp(a[0], b[0]);
+	if (order !== 0) return order;
+		return a[1] - b[1];
+	});
+	return stabilizedThis.map(el => el[0]);
+}
+
+function getSorting(order, orderBy) {
+	console.log(orderBy)
+	return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
+}
+
+
+
 class Tagged extends Component {
 
 	state = {
 		clicked: false,
 		orderBy: "",
 		order: "asc"
-
 	}
 
 
@@ -72,6 +100,7 @@ class Tagged extends Component {
 				"authorization": token
 			}
 		}).then((response) => {
+
 			store.dispatch({
 				type   : SET_USER_DATA,
 				payload: response.data
@@ -86,7 +115,6 @@ class Tagged extends Component {
 
 
 	renderRedirect = () => {
-
 		if (this.state.clicked) {
 			var vname = encodeURIComponent(this.state.vname)
 			var link = '/apps/dashboards/tagvideo/tagged/'+this.state.vid+'/'+vname
@@ -94,16 +122,22 @@ class Tagged extends Component {
 		}
 	}
 
+
+
+
 	render()
 	{
+		
+
 		const {classes} = this.props;
 		var props = this.props;
+
 		const rows = [
-			{ id: '_id', label: 'ID' },
-			{ id: 'match_name', label: 'Match Name' },
-			{ id: 'tagged', label: 'Tagged' },
-			{ id: 'state', label: 'Tagging State' },
-			{ id: 'uploader', label: 'Uploader' }
+			{ id: "_id", label: 'ID' },
+			{ id: "matchName", label: 'Date' },
+			{ id: "tagger_email", label: 'Tagged' },
+			{ id: "state", label: 'Tagging State' },
+			{ id: "team_email", label: 'Uploader' }
 		];
 		return (
 			<div style={{padding: 50}}>
@@ -140,10 +174,18 @@ class Tagged extends Component {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{props.user.team.Videos.filter((video)=>{
-								return video.state == "tagged"	
-							}).map((video, index)=>
-								(
+						{stableSort(props.user.team.Videos.filter((video)=>{
+							return video.state == "tagged"
+						}), getSorting(this.state.order, this.state.orderBy)).map((video) => {
+
+								video.tagger_email = video.tagger.email
+								video.matchName = video.metadata.matchName
+								if(video.Team != undefined){
+									video.team_email = video.Team.email
+								} else {
+									video.team_email = ""
+								}
+								return (
 									<TableRow
 										hover
 										onClick={() => {
@@ -170,7 +212,10 @@ class Tagged extends Component {
 										</TableCell>
 									</TableRow>
 								)
-							)}
+							})
+						}
+				
+								
 						</TableBody>
 					</Table>
 				</Paper>

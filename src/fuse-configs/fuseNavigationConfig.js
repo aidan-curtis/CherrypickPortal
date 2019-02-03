@@ -14,28 +14,12 @@ export const fuseNavigationConfig = [
 				'role' : 'team'
 			},
 			{
-				'id'   : 'tournaments',
-				'title': 'Dual Matches',
+				'id'   : 'matches',
+				'title': 'Matches',
 				'type' : 'item',
-				'url'  : '/apps/dashboards/tournaments/tournament',
+				'url'  : '/apps/dashboards/matches',
 				'icon' : 'dashboard',
 				'role' : 'team'
-			},
-			{
-				'id'   : 'players',
-				'title': 'Players',
-				'type' : 'item',
-				'url'  : '/apps/dashboards/players/player',
-				'icon' : 'person',
-				'role' : 'team'
-			},
-			{
-				'id'   : 'processing',
-				'title': 'Processing',
-				'type' : 'item',
-				'url'  : '/apps/dashboards/processing',
-				'icon' : 'hourglass_empty',
-				'role' : 'tagger'
 			},
 			{
 				'id'   : 'untagged',

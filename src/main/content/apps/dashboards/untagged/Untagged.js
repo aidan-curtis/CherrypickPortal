@@ -25,6 +25,33 @@ const styles = theme => ({
 	}
 });
 
+function desc(a, b, orderBy) {
+	if (b[orderBy] < a[orderBy]) {
+		return -1;
+	}
+	if (b[orderBy] > a[orderBy]) {
+		return 1;
+	}
+	return 0;
+}
+
+function stableSort(array, cmp) {
+	console.log(array)
+	const stabilizedThis = array.map((el, index) => [el, index]);
+	stabilizedThis.sort((a, b) => {
+	const order = cmp(a[0], b[0]);
+	if (order !== 0) return order;
+		return a[1] - b[1];
+	});
+	return stabilizedThis.map(el => el[0]);
+}
+
+function getSorting(order, orderBy) {
+	console.log(orderBy)
+	return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
+}
+
+
 class Untagged extends Component {
 
 	state = {
@@ -99,7 +126,7 @@ class Untagged extends Component {
 		var props = this.props;
 		const rows = [
 			{ id: 'id', label: 'ID'},
-			{ id: 'match_name', label: 'Match Name' },
+			{ id: 'match_name', label: 'Date' },
 			{ id: 'state', label: 'Tagging State' },
 			{ id: 'uploader', label: 'Uploader' },
 		];
@@ -138,34 +165,45 @@ class Untagged extends Component {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{props.user.team.Videos.filter((video)=>{
-								return video.state == "untagged"	
-							}).map((video, index)=>
-								(
-									<TableRow
-										hover
-										onClick={() => {
-												if(!((video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === ""))){
-													this.setState({clicked: true, vid: video._id, vname: video.metadata.matchName})
-												}
-											} 
-										}
-									>
-										<TableCell component="th" scope="row" align="left">
-											{video._id}
-										</TableCell>
-										<TableCell component="th" scope="row" align="left">
-											{video.metadata.matchName}
-										</TableCell>
-										<TableCell align="left">
-											{(video.state === "tagged" && video.splicedVideoUri != undefined) ? "Tagged":"Untagged"}
-										</TableCell>
-										<TableCell component="th" scope="row" align="left">
-											{video.Team === undefined? "": video.Team.email}
-										</TableCell>
-									</TableRow>
-								)
-							)}
+							{stableSort(props.user.team.Videos.filter((video)=>{
+							return video.state == "untagged"
+						}), getSorting(this.state.order, this.state.orderBy)).map((video) => {
+
+								video.tagger_email = video.tagger.email
+								video.matchName = video.metadata.matchName
+								if(video.Team != undefined){
+									video.team_email = video.Team.email
+								} else {
+									video.team_email = ""
+								}
+
+								{
+									return (
+										<TableRow
+											hover
+											onClick={() => {
+													if(!((video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === ""))){
+														this.setState({clicked: true, vid: video._id, vname: video.metadata.matchName})
+													}
+												} 
+											}
+										>
+											<TableCell component="th" scope="row" align="left">
+												{video._id}
+											</TableCell>
+											<TableCell component="th" scope="row" align="left">
+												{video.metadata.matchName}
+											</TableCell>
+											<TableCell align="left">
+												{(video.state === "tagged" && video.splicedVideoUri != undefined) ? "Tagged":"Untagged"}
+											</TableCell>
+											<TableCell component="th" scope="row" align="left">
+												{video.Team === undefined? "": video.Team.email}
+											</TableCell>
+										</TableRow>
+									)
+								}
+							})}
 						</TableBody>
 					</Table>
 				</Paper>

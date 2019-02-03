@@ -23,6 +23,33 @@ const styles = theme => ({
 	}
 });
 
+function desc(a, b, orderBy) {
+	if (b[orderBy] < a[orderBy]) {
+		return -1;
+	}
+	if (b[orderBy] > a[orderBy]) {
+		return 1;
+	}
+	return 0;
+}
+
+function stableSort(array, cmp) {
+	console.log(array)
+	const stabilizedThis = array.map((el, index) => [el, index]);
+	stabilizedThis.sort((a, b) => {
+	const order = cmp(a[0], b[0]);
+	if (order !== 0) return order;
+		return a[1] - b[1];
+	});
+	return stabilizedThis.map(el => el[0]);
+}
+
+function getSorting(order, orderBy) {
+	console.log(orderBy)
+	return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
+}
+
+
 class Matches extends Component {
 
 	state = {
@@ -58,8 +85,6 @@ class Matches extends Component {
 		if(props.user.activeTournament != null){
 			this.props.setCurrentTournament(props.user.activeTournament)
 		}
-		this.state['type'] = decodeURIComponent(props.match.params.type)
-		this.state['name'] = decodeURIComponent(props.match.params.name)
 	}
 
 	redirectToTarget = () => {
@@ -72,8 +97,12 @@ class Matches extends Component {
 		if (this.state.clicked) {
 			// Need to replace slashes because urls are parsed by slash
 			var encoded_vname = encodeURIComponent(this.state.vname)
-			var encoded_name = encodeURIComponent(this.state['name'])
-			var link = '/apps/dashboards/video/'+this.state['type']+'/'+encoded_name+'/'+encoded_vname+"/"+this.state.vid
+			var encoded_pname1 = encodeURIComponent(this.state.pname1)
+			if(this.state.pname2 == "" || this.state.pname2 == undefined){
+				this.state.pname2 = "None"
+			}
+			var encoded_pname2 = encodeURIComponent(this.state.pname2)
+			var link = '/apps/dashboards/video/'+encoded_vname+'/'+encoded_pname1+'/'+encoded_pname2+"/"+this.state.vid
 			return <Redirect to={link}/>
 		}
 	}
@@ -85,11 +114,11 @@ class Matches extends Component {
 
 
 		const rows = [
-			{ id: 'match_name', label: 'Date' },
+			{ id: 'matchName', label: 'Date' },
 			{ id: 'tournament', label: 'Opponent\'s Team Name' },
-			{ id: 'match_type', label: 'Match Type' },
-			{ id: 'player1_name', label: 'Player 1 Name' },
-			{ id: 'player2_name', label: 'Player 2 Name' },
+			{ id: 'matchMode', label: 'Match Type' },
+			{ id: 'playerName1', label: 'Player 1 Name' },
+			{ id: 'playerName2', label: 'Player 2 Name' },
 			{ id: 'state', label: 'Tagging State' },
 		];
 
@@ -128,48 +157,49 @@ class Matches extends Component {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{props.user.team.Videos.filter((video)=>{
-								if(this.state.type == 'player'){
-									return (video.metadata.playerName1 === this.state.name || video.metadata.playerName2 === this.state.name)
+							{stableSort(props.user.team.Videos, getSorting(this.state.order, this.state.orderBy)).map((video) => {
+								video.matchName = video.metadata.matchName
+								video.playerName1 = video.metadata.playerName1
+								if(video.metadata.playerName2!=undefined){
+									video.playerName2 = video.metadata.playerName2
+								} else {
+									video.playerName2 = ""
 								}
-								else if(this.state.type == 'tournament'){
-									return video.metadata.tournament === this.state.name
-								}
-								else{
-									return false
-								}
-							}).map((video, index)=>
-									(
-								<TableRow
-									hover
-									onClick={() => {
-											if(!((video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === ""))){
-												this.setState({clicked: true, vid: video._id, vname: video.metadata.matchName})
+								video.tournament = video.metadata.tournament
+								video.matchMode = (video.metadata.matchMode == "doubles" || video.metadata.playerName2 != "")?"Doubles": "Singles"
+								{
+									return (
+										<TableRow
+											hover
+											onClick={() => {
+													if(!((video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === ""))){
+														this.setState({clicked: true, vid: video._id, vname: video.metadata.matchName, pname1: video.metadata.playerName1, pname2: video.metadata.playerName2})
+													}
+												} 
 											}
-										} 
-									}
-								>
-									<TableCell component="th" scope="row" align="left">
-										{video.metadata.matchName}
-									</TableCell>
-									<TableCell align="left">
-										{video.metadata.tournament}
-									</TableCell>
-									<TableCell align="left">
-										{video.metadata.playerName2 == ""? "Singles":"Doubles"}
-									</TableCell>
-									<TableCell align="left">
-										{video.metadata.playerName1}
-									</TableCell>
-									<TableCell align="left">
-										{video.metadata.playerName2 == ""? "N/A":video.metadata.playerName2}
-									</TableCell>
-									<TableCell align="left">
-										{(video.state == "tagged" && video.splicedVideoUri!=undefined) ? "Tagged":"Untagged"}
-									</TableCell>
-					            </TableRow>
-					          )
-					        )}
+										>
+											<TableCell component="th" scope="row" align="left">
+												{video.metadata.matchName}
+											</TableCell>
+											<TableCell align="left">
+												{video.metadata.tournament}
+											</TableCell>
+											<TableCell align="left">
+												{(video.metadata.matchMode == "doubles" || video.metadata.playerName2 != "")?"Doubles": "Singles"}
+											</TableCell>
+											<TableCell align="left">
+												{video.metadata.playerName1}
+											</TableCell>
+											<TableCell align="left">
+												{video.metadata.playerName2 == ""? "N/A":video.metadata.playerName2}
+											</TableCell>
+											<TableCell align="left">
+												{(video.state == "tagged" && video.splicedVideoUri!=undefined) ? "Tagged":"Untagged"}
+											</TableCell>
+							            </TableRow>
+						          	)
+								}
+					        })}
 					    </TableBody>
 					  </Table>
 			</Paper>
