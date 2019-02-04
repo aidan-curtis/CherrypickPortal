@@ -169,7 +169,6 @@ class Untagged extends Component {
 							return video.state == "untagged"
 						}), getSorting(this.state.order, this.state.orderBy)).map((video) => {
 
-								video.tagger_email = video.tagger.email
 								video.matchName = video.metadata.matchName
 								if(video.Team != undefined){
 									video.team_email = video.Team.email
