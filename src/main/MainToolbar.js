@@ -31,11 +31,21 @@ import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
 import { Redirect } from 'react-router-dom'
-
+import S3FileUpload from 'react-s3';
+ 
+//Optional Import
+import { uploadFile } from 'react-s3';
 require('./materialize.css')
 
 export const SET_USER_DATA = '[USER] SET DATA';
 
+
+const config = {
+    bucketName: 'cherrypick-game-videos',
+    region: 'us-east-1',
+    accessKeyId: 'AKIAJYNNP2CKP5RP6HSA',
+    secretAccessKey: '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',
+}
 
 
 
@@ -466,19 +476,12 @@ class MainToolbar extends Component {
 									style = {{fontSize: 50}}
 									acceptedFileTypes = {["video/mp4","video/quicktime"]}
 									server={{
-											url: process.env.REACT_APP_API_ENDPOINT+'/private_api',
-											process: {
-												url: '/upload_video',
-												method: 'POST',
-												headers: {
-													"authorization": localStorage.getItem("token")
-												},
-												withCredentials: false,
-												onload: this.handleServerResponse,
-												onerror: function(response) {
-													return response.data;
-												}
-											}
+										url: process.env.REACT_APP_API_ENDPOINT+'/private_api',
+										process: function(fieldName, file, metadata, load, error, progress, abort) {
+											uploadFile(file, config)
+												.then(data => console.log(data))
+												.catch(err => console.error(err))
+										}
 									}}
 									onremovefile={(file) => {
 

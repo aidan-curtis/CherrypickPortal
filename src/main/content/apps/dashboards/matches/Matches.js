@@ -93,7 +93,6 @@ class Matches extends Component {
 
 
 	renderRedirect = () => {
-
 		if (this.state.clicked) {
 			// Need to replace slashes because urls are parsed by slash
 			var encoded_vname = encodeURIComponent(this.state.vname)
