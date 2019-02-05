@@ -44,6 +44,7 @@ const config = {
     bucketName: 'cherrypick-game-videos',
     region: 'us-east-1',
     accessKeyId: 'AKIAJYNNP2CKP5RP6HSA',
+    dirName: '/',
     secretAccessKey: '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',
 }
 
