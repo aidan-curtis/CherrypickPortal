@@ -29,48 +29,38 @@ const styles = theme => ({
 	}
 });
 
-class TagVideo extends Component {
+class VideoQuality extends Component {
 
-	handleKeyPress = (event) => {
-		if(event.key === 's') {
-			var temp_segments = this.state.segments
-			if(this.state.segment_index%2==0){
-				temp_segments[this.state.segment_index/2]['start'] = parseInt(this.state.player.currentTime)
+
+
+	handleStateChange(state, prevState) {
+		// copy player state to this component's state
+		
+		if(!state.paused){
+			if(this.state.current_segment < this.state.video.Segments.length){
+
+				if(state.currentTime < this.state.video.Segments[this.state.current_segment].start ){
+					this.refs.player.seek(this.state.video.Segments[this.state.current_segment].start);
+				}
+				if(state.currentTime > this.state.video.Segments[this.state.current_segment].stop ){
+					if(this.state.current_segment+1 < this.state.video.Segments.length){
+						this.refs.player.seek(this.state.video.Segments[this.state.current_segment].start);
+					}
+					this.setState({
+						current_segment: this.state.current_segment+1
+					})
+				}
+				this.setState({
+					player: state
+				});
+				this.refs.player.play()
 			} else {
-				temp_segments[parseInt(this.state.segment_index/2)]['stop'] = parseInt(this.state.player.currentTime)
-			}
-			if((this.state.segment_index+1)/2 === this.state.segments.length ){
-				temp_segments.push({})
-			}
-			this.setState({segments: temp_segments, segment_index: this.state.segment_index+1})
-			this.state.tagEnd.scrollIntoView({ behavior: "smooth" });
-
-		}
-		else if(event.key === 'a') {
-			if(this.state.segment_index > 0){
-				this.setState({
-					segment_index: this.state.segment_index-1
-				})
-			}
-		}
-		else if(event.key === 'd') {
-			if((this.state.segment_index+1)/2 < this.state.segments.length){
-				this.setState({
-					segment_index: this.state.segment_index+1
-				})
-				this.state.tagEnd.scrollIntoView({ behavior: "smooth" });
-			}
-		}
-		if((event.key === 'd' || event.key === 'a') && this.refs.player != undefined){
-			//Seek tag in video player
-			if(Math.floor(this.state.segment_index/2) != this.state.segment_index/2){
-				this.refs.player.seek(this.state.segments[Math.floor(this.state.segment_index/2)]["stop"]);
-			}
-			else {
-				this.refs.player.seek(this.state.segments[Math.floor(this.state.segment_index/2)]["start"]);
+				console.log("pause")
+				this.refs.player.pause()
 			}
 		}
 	}
+
 
 
 	constructor(props)
@@ -82,25 +72,14 @@ class TagVideo extends Component {
 			})[0],
 			current_segment : 0,
 			segment_index: 0,
-			segments: [{}],
-			submit_timestamps: "Submit Timestamps"
+			submit_timestamps: "Submit Quality Check",
 		}
-
-		this.state.segments = this.state.video.Segments
-		console.log(this.state.segments)
 	}
 
-	handleStateChange(state, prevState) {
-		// copy player state to this component's state
-		this.setState({
-			player: state
-		});
-	}
 
 	componentDidMount() {
 		// subscribe state change
 		this.refs.player.subscribeToStateChange(this.handleStateChange.bind(this));
-		document.addEventListener("keydown", this.handleKeyPress.bind(this));
 	}
 
 	changeCurrentTime(seconds) {
@@ -114,12 +93,15 @@ class TagVideo extends Component {
 		})
 	}
 
-	submitTimestamps(){
-		var cloneSegments = this.state.segments.slice();
+
+	
+
+	qualityCheck(){
+		var cloneSegments = this.state.video.Segments.slice();
 		cloneSegments.splice(-1,1)
 		axios({
 			method: "POST",
-			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/process_video",
+			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/quality_check",
 			responseType: 'json',
 			headers: {
 				"authorization": localStorage.token
@@ -184,7 +166,7 @@ class TagVideo extends Component {
 								<ForwardControl seconds={10} order={3.2} />
 							</ControlBar>
 						</Player>
-						<Button type="submit" disabled={this.state.submit_timestamps=="Submitted"} variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick = {()=>{this.submitTimestamps()}} >{this.state.submit_timestamps}</Button>
+						<Button type="submit" disabled={this.state.submit_timestamps=="Submitted"} variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick = {()=>{this.qualityCheck()}} >{this.state.submit_timestamps}</Button>
 					</Grid>
 					<Grid item xs={4}>
 						<Paper>
@@ -194,46 +176,52 @@ class TagVideo extends Component {
 										<TableRow>
 											<TableCell>Start</TableCell>
 											<TableCell>Stop</TableCell>
+											<TableCell></TableCell>
 										</TableRow>
 									</TableHead>
 									<TableBody>
-										{this.state.segments.map((segment, index)=>{
-											
-
-											if(segment['reject'] !== undefined && segment['reject']){
-												cell_color_start = "#FFB9B9"	
-												cell_color_stop = "#FFB9B9"	
-												if(this.state.segment_index===index*2){
-													cell_color_start = "#DDA0A0"
-												}
-												if(this.state.segment_index===index*2+1){
-													cell_color_stop = "#DDA0A0"
-												}
-
-											} else {
-												var cell_color_start = "#fff"
-												var cell_color_stop = "#fff"
-												if(this.state.segment_index===index*2){
-													cell_color_start = "#eee"
-												}
-												if(this.state.segment_index===index*2+1){
-													cell_color_stop = "#eee"
-												}
+										{this.state.video.Segments.map((segment, index)=>{
+											var cell_color = "#fff"
+								
+											if(this.state.current_segment===index){
+												cell_color = "#eee"
 											}
-
+											if(segment['reject'] !== undefined && segment['reject']){
+												cell_color = "#FFB9B9"	
+											}
+											
 											return (
-												<TableRow key={index} >
-													<TableCell style ={{backgroundColor: cell_color_start}} component="th" scope="row" onClick = {()=>{
-														this.setState({segment_index: index*2})
+												<TableRow key={index} style = {{backgroundColor: cell_color}}>
+													<TableCell component="th" scope="row" onClick = {()=>{
+														this.setState({current_segment: index})
 														this.changeCurrentTime(segment.start)
 													}}>
 														{ this.get_time(segment.start)}
 													</TableCell>
-													<TableCell style ={{backgroundColor: cell_color_stop}} component="th" scope="row" onClick = {()=>{
-														this.setState({segment_index: index*2+1})
-														this.changeCurrentTime(segment.stop)
-													}} >
+													<TableCell component="th" scope="row" onClick = {()=>{
+														this.setState({current_segment: index})
+														this.changeCurrentTime(segment.start)
+													}}>
 														{this.get_time(segment.stop)}
+													</TableCell>
+													<TableCell>
+														<Button  onClick = {()=>{
+														if(this.state.video.Segments[index]['reject']){
+															this.state.video.Segments[index]['reject'] = false
+														} else {
+															this.state.video.Segments[index]['reject'] = true
+														}
+														
+														this.setState(prevState => ({
+															...prevState,
+															video:{
+																...prevState.video,
+																Segments: this.state.video.Segments
+															}
+														}))
+														
+														
+													}}>{this.state.video.Segments[index]['reject']?"Undo":"Reject"}</Button>
 													</TableCell>
 												</TableRow>
 											)
@@ -269,4 +257,4 @@ function mapStateToProps({auth})
 	}
 }
 
-export default withStyles(styles, {withTheme: true})(withRouter(connect(mapStateToProps, mapDispatchToProps)(TagVideo)));
+export default withStyles(styles, {withTheme: true})(withRouter(connect(mapStateToProps, mapDispatchToProps)(VideoQuality)));

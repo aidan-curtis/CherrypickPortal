@@ -53,7 +53,7 @@ function getSorting(order, orderBy) {
 
 
 
-class Tagged extends Component {
+class QualityCheck extends Component {
 
 	state = {
 		clicked: false,
@@ -115,11 +115,11 @@ class Tagged extends Component {
 
 
 	renderRedirect = () => {
-		// if (this.state.clicked) {
-		// 	var vname = encodeURIComponent(this.state.vname)
-		// 	var link = '/apps/dashboards/tagvideo/tagged/'+this.state.vid+'/'+vname
-		// 	return <Redirect to={link}/>
-		// }
+		if (this.state.clicked) {
+			var vname = encodeURIComponent(this.state.vname)
+			var link = '/apps/dashboards/video_quality/tagged/'+this.state.vid+'/'+vname
+			return <Redirect to={link}/>
+		}
 	}
 
 
@@ -136,7 +136,7 @@ class Tagged extends Component {
 			{ id: "_id", label: 'ID' },
 			{ id: "matchName", label: 'Date' },
 			{ id: "tagger_email", label: 'Tagged' },
-			{ id: "checker_email", label: 'Checker' },
+			{ id: "state", label: 'Tagging State' },
 			{ id: "team_email", label: 'Uploader' }
 		];
 		return (
@@ -175,17 +175,11 @@ class Tagged extends Component {
 						</TableHead>
 						<TableBody>
 						{stableSort(props.user.team.Videos.filter((video)=>{
-							return video.state == "tagged"
+							return video.state == "quality"
 						}), getSorting(this.state.order, this.state.orderBy)).map((video) => {
 
-								if(video.checker != undefined){
-									video.checker_email = video.checker.email
-								} else{
-									video.checker_email = ""
-								}
-								video.matchName = video.metadata.matchName
-
 								video.tagger_email = video.tagger.email
+								video.matchName = video.metadata.matchName
 								if(video.Team != undefined){
 									video.team_email = video.Team.email
 								} else {
@@ -210,8 +204,8 @@ class Tagged extends Component {
 										<TableCell component="th" scope="row" align="left">
 											{video.tagger.email}
 										</TableCell>
-										<TableCell component="th" scope="row" align="left">
-											{video.checker_email}
+										<TableCell align="left">
+											Quality Check
 										</TableCell>
 										<TableCell component="th" scope="row" align="left">
 											{video.Team === undefined? "": video.Team.email}
@@ -247,4 +241,4 @@ function mapStateToProps({auth})
 	}
 }
 
-export default withStyles(styles, {withTheme: true})(withRouter(connect(mapStateToProps, mapDispatchToProps)(Tagged)));
+export default withStyles(styles, {withTheme: true})(withRouter(connect(mapStateToProps, mapDispatchToProps)(QualityCheck)));

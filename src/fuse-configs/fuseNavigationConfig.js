@@ -22,6 +22,14 @@ export const fuseNavigationConfig = [
 				'role' : 'team'
 			},
 			{
+				'id'   : 'quality',
+				'title': 'Quality Check',
+				'type' : 'item',
+				'url'  : '/apps/dashboards/quality',
+				'icon' : 'remove_red_eye',
+				'role' : 'tagger'
+			}, 
+			{
 				'id'   : 'untagged',
 				'title': 'Untagged',
 				'type' : 'item',

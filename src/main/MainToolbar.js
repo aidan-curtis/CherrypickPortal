@@ -31,23 +31,10 @@ import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
 import { Redirect } from 'react-router-dom'
-import S3FileUpload from 'react-s3';
- 
-//Optional Import
-import { uploadFile } from 'react-s3';
+
 require('./materialize.css')
 
 export const SET_USER_DATA = '[USER] SET DATA';
-
-
-const config = {
-    bucketName: 'cherrypick-game-videos',
-    region: 'us-east-1',
-    accessKeyId: 'AKIAJYNNP2CKP5RP6HSA',
-    dirName: '/',
-    secretAccessKey: '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',
-}
-
 
 
 registerPlugin(FilePondPluginFileValidateType)
@@ -125,6 +112,10 @@ class MainToolbar extends Component {
 
 
 
+	handleFinishedUpload = info => {
+		console.log('File uploaded with filename', info.filename)
+		console.log('Access it on s3 at', info.fileUrl)
+	}
 
 	// a little function to help us with reordering the result
 	reorder = (list, startIndex, endIndex) => {
@@ -477,12 +468,19 @@ class MainToolbar extends Component {
 									style = {{fontSize: 50}}
 									acceptedFileTypes = {["video/mp4","video/quicktime"]}
 									server={{
-										url: process.env.REACT_APP_API_ENDPOINT+'/private_api',
-										process: function(fieldName, file, metadata, load, error, progress, abort) {
-											uploadFile(file, config)
-												.then(data => console.log(data))
-												.catch(err => console.error(err))
-										}
+											url: process.env.REACT_APP_API_ENDPOINT+'/private_api',
+											process: {
+												url: '/upload_video',
+												method: 'POST',
+												headers: {
+													"authorization": localStorage.getItem("token")
+												},
+												withCredentials: false,
+												onload: this.handleServerResponse,
+												onerror: function(response) {
+													return response.data;
+												}
+											}
 									}}
 									onremovefile={(file) => {
 
@@ -687,6 +685,9 @@ class MainToolbar extends Component {
 						}
 						{	
 							 link[d_idx+2] === "tagged" || link[d_idx+1] === "tagged"  ? (<a  className="breadcrumb">Tagged</a>): null
+						}
+						{	
+							 link[d_idx+2] === "quality" || link[d_idx+1] === "quality"  ? (<a  className="breadcrumb">Quality Check</a>): null
 						}
 						{
 							 link.length>d_idx+3 && link[d_idx+1] !== "tagvideo" ? (<a className="breadcrumb">{decodeURIComponent(link[d_idx+2])} {decodeURIComponent(link[d_idx+3])} {link[d_idx+4]=="None"?"":"& "+decodeURIComponent(link[d_idx+4])}</a>) : null
