@@ -85,8 +85,12 @@ class TagVideo extends Component {
 			segments: [{}],
 			submit_timestamps: "Submit Timestamps"
 		}
+		if(this.state.video.Segments != []){
+			this.state.segments = this.state.video.Segments
+		} else {
+			this.state.segments = [{}]
+		}
 
-		this.state.segments = this.state.video.Segments
 		console.log(this.state.segments)
 	}
 
