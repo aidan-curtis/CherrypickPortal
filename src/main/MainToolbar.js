@@ -248,8 +248,6 @@ class MainToolbar extends Component {
 				payload: response.data
 			})
 			this.load_suggestions(response.data.team, final_this)
-			console.log("response.data.team")
-			console.log(response.data.team)
 		})
 	}
 
@@ -276,7 +274,13 @@ class MainToolbar extends Component {
 		this.setState({userMenu: event.currentTarget});
 	};
 	uploadVideo = event => {
-		this.setState({open: true, continued: 0, upload_filenames: []})
+		if(this.props.user.Videos.length<this.props.user.tagCap){
+			this.setState({open: true, continued: 0, upload_filenames: []})
+		} else {
+			this.setState({
+				warning_active: true
+			})
+		}
 	};
 	userMenuClose = () => {
 		this.setState({userMenu: null});
@@ -294,6 +298,14 @@ class MainToolbar extends Component {
 			match_name: ""
 		});
 	};
+
+
+	handleWarningClose = () => {
+		this.setState({
+			warning_active: false
+		});
+	};
+
 
 
 	handleCheckChange = name => event => {
@@ -452,6 +464,19 @@ class MainToolbar extends Component {
 			<div className={classNames(classes.root, "flex flex-row")}>
 				{this.renderRedirect()}
 
+				<Dialog
+					open={this.state.warning_active}
+					onClose={this.handleWarningClose}
+					aria-labelledby="alert-dialog-title"
+					aria-describedby="alert-dialog-description"
+				>
+					<DialogTitle id="alert-dialog-title">You've reached your match limit. If you'd like to extend your limit, please email james@cherrypick-analytics.com</DialogTitle>
+					<DialogActions>
+						<Button onClick={this.handleWarningClose} color="primary" autoFocus>
+							Close
+						</Button>
+					</DialogActions>
+				</Dialog>
 				<Dialog
 					open={this.state.open}
 					onClose={this.handleClose}
@@ -660,7 +685,7 @@ class MainToolbar extends Component {
 										</Droppable>
 									</DragDropContext>
 									<Button variant="contained" onClick={this.handleSubmitForm} className={classes.button} style={{marginTop: 20, width: "420px"}}>
-											Continue
+										Continue
 									</Button>
 								</FormControl>:null
 							}

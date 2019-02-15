@@ -43,7 +43,7 @@ class AccountInformation extends Component {
 	{
 		const {classes} = this.props;
 		var props = this.props;
-		var num_tagged = this.props.user.team.Videos.filter(function(video){return video.state=="tagged"}).length
+		var num_tagged = this.props.user.team.Videos.length
 		return (
 			<div className={classes.root} style = {{padding: 50}}>
 				<Card style={{width: "100%", height: "100px"}}>
