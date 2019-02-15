@@ -23,7 +23,6 @@ import { PersistGate } from 'redux-persist/integration/react'
 import store from 'store';
 import { persistStore } from 'redux-persist'
 
-require('dotenv').config({ path: './.env' })
 
 const jss = create({
 	...jssPreset(),
