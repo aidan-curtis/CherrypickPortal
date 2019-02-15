@@ -11,7 +11,6 @@
         "axios-mock-adapter": "1.15.0",
         "babel-polyfill": "6.26.0",
         "chart.js": "2.7.2",
-        "dotenv": "^6.1.0",
         "downshift": "2.2.2",
         "filepond-plugin-file-validate-type": "^1.2.0",
         "filepond-plugin-image-preview": "^3.0.0",
