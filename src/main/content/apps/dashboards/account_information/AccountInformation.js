@@ -43,28 +43,23 @@ class AccountInformation extends Component {
 	{
 		const {classes} = this.props;
 		var props = this.props;
-		var num_tagged = this.props.user.team.Videos.length
+		var num_tagged = this.props.user.team.Videos.filter(function(video){return video.state=="tagged"}).length
 		return (
 			<div className={classes.root} style = {{padding: 50}}>
-				<Card style={{width: "100%", height: "100px"}}>
+				<Card style={{width: "100%", height: "125px"}}>
 					<CardContent>
 						<Typography className={classes.title} color="textPrimary" gutterBottom>
-
 							Usage Stats
-
 						</Typography>
-
 						<Typography className={classes.title} color="textSecondary" gutterBottom>
-
 							Matches Tagged: {num_tagged}
-
 						</Typography>
 						<Typography className={classes.title} color="textSecondary" gutterBottom>
-
-							Matches Remaining: {this.props.user.team.tagCap - num_tagged}
-
+							Matches Being Tagged: {this.props.user.team.Videos.length - num_tagged}
 						</Typography>
-						
+						<Typography className={classes.title} color="textSecondary" gutterBottom>
+							Matches Remaining: {this.props.user.team.tagCap - this.props.user.team.Videos.length}
+						</Typography>
 					</CardContent>
 				</Card>
 				
