@@ -274,7 +274,7 @@ class MainToolbar extends Component {
 		this.setState({userMenu: event.currentTarget});
 	};
 	uploadVideo = event => {
-		if(this.props.user.Videos.length<this.props.user.tagCap){
+		if(this.props.user.team.Videos.length<this.props.user.team.tagCap){
 			this.setState({open: true, continued: 0, upload_filenames: []})
 		} else {
 			this.setState({
