@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom'
 import {bindActionCreators} from 'redux';
 import { Redirect } from 'react-router-dom'
-import Grid from '@material-ui/core/Grid';
 import store from 'store'
 import Paper from '@material-ui/core/Paper';
 import * as Actions from 'auth/store/actions';
@@ -80,16 +79,16 @@ class QualityCheck extends Component {
 	constructor(props)
 	{
 		super(props);
-		if(props.user.activePlayer != null){
+		if(props.user.activePlayer !== null){
 			this.props.setCurrentPlayer(props.user.activePlayer)
 		}
-		if(props.user.activeTournament != null){
+		if(props.user.activeTournament !== null){
 			this.props.setCurrentTournament(props.user.activeTournament)
 		}
 		this.state['type'] = decodeURIComponent(props.match.params.type)
 		this.state['name'] = decodeURIComponent(props.match.params.name)
 		var token = this.props.user.token
-		if(token == "" || token == undefined){
+		if(token === "" || token === undefined){
 			token = localStorage.token
 		}
 		axios({
@@ -175,12 +174,12 @@ class QualityCheck extends Component {
 						</TableHead>
 						<TableBody>
 						{stableSort(props.user.team.Videos.filter((video)=>{
-							return video.state == "quality"
+							return video.state === "quality"
 						}), getSorting(this.state.order, this.state.orderBy)).map((video) => {
 
 								video.tagger_email = video.tagger.email
 								video.matchName = video.metadata.matchName
-								if(video.Team != undefined){
+								if(video.Team !== undefined){
 									video.team_email = video.Team.email
 								} else {
 									video.team_email = ""

@@ -12,8 +12,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import store from 'store'
 import * as Actions from 'auth/store/actions';
 
 
@@ -79,10 +77,10 @@ class Matches extends Component {
 	constructor(props)
 	{
 		super(props);
-		if(props.user.activePlayer != null){
+		if(props.user.activePlayer !== null){
 			this.props.setCurrentPlayer(props.user.activePlayer)
 		}
-		if(props.user.activeTournament != null){
+		if(props.user.activeTournament !== null){
 			this.props.setCurrentTournament(props.user.activeTournament)
 		}
 	}
@@ -97,8 +95,10 @@ class Matches extends Component {
 			// Need to replace slashes because urls are parsed by slash
 			var encoded_vname = encodeURIComponent(this.state.vname)
 			var encoded_pname1 = encodeURIComponent(this.state.pname1)
-			if(this.state.pname2 == "" || this.state.pname2 == undefined){
-				this.state.pname2 = "None"
+			if(this.state.pname2 === "" || this.state.pname2 === undefined){
+				this.setState({
+					pname2: "None"
+				})
 			}
 			var encoded_pname2 = encodeURIComponent(this.state.pname2)
 			var link = '/apps/dashboards/video/'+encoded_vname+'/'+encoded_pname1+'/'+encoded_pname2+"/"+this.state.vid
@@ -159,45 +159,45 @@ class Matches extends Component {
 							{stableSort(props.user.team.Videos, getSorting(this.state.order, this.state.orderBy)).map((video) => {
 								video.matchName = video.metadata.matchName
 								video.playerName1 = video.metadata.playerName1
-								if(video.metadata.playerName2!=undefined){
+								if(video.metadata.playerName2 !== undefined){
 									video.playerName2 = video.metadata.playerName2
 								} else {
 									video.playerName2 = ""
 								}
 								video.tournament = video.metadata.tournament
-								video.matchMode = (video.metadata.matchMode == "doubles" || video.metadata.playerName2 != "")?"Doubles": "Singles"
-								{
-									return (
-										<TableRow
-											hover
-											onClick={() => {
-													if(!((video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === ""))){
-														this.setState({clicked: true, vid: video._id, vname: video.metadata.matchName, pname1: video.metadata.playerName1, pname2: video.metadata.playerName2})
-													}
-												} 
-											}
-										>
-											<TableCell component="th" scope="row" align="left">
-												{video.metadata.matchName}
-											</TableCell>
-											<TableCell align="left">
-												{video.metadata.tournament}
-											</TableCell>
-											<TableCell align="left">
-												{(video.metadata.matchMode == "doubles" || video.metadata.playerName2 != "")?"Doubles": "Singles"}
-											</TableCell>
-											<TableCell align="left">
-												{video.metadata.playerName1}
-											</TableCell>
-											<TableCell align="left">
-												{video.metadata.playerName2 == ""? "N/A":video.metadata.playerName2}
-											</TableCell>
-											<TableCell align="left">
-												{(video.state == "tagged" && video.splicedVideoUri!=undefined) ? "Tagged":"Untagged"}
-											</TableCell>
-							            </TableRow>
-						          	)
-								}
+								video.matchMode = (video.metadata.matchMode === "doubles" || video.metadata.playerName2 !== "")?"Doubles": "Singles"
+
+								return (
+									<TableRow
+										hover
+										onClick={() => {
+												if(!((video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === ""))){
+													this.setState({clicked: true, vid: video._id, vname: video.metadata.matchName, pname1: video.metadata.playerName1, pname2: video.metadata.playerName2})
+												}
+											} 
+										}
+									>
+										<TableCell component="th" scope="row" align="left">
+											{video.metadata.matchName}
+										</TableCell>
+										<TableCell align="left">
+											{video.metadata.tournament}
+										</TableCell>
+										<TableCell align="left">
+											{(video.metadata.matchMode === "doubles" || video.metadata.playerName2 !== "")?"Doubles": "Singles"}
+										</TableCell>
+										<TableCell align="left">
+											{video.metadata.playerName1}
+										</TableCell>
+										<TableCell align="left">
+											{video.metadata.playerName2 === ""? "N/A":video.metadata.playerName2}
+										</TableCell>
+										<TableCell align="left">
+											{(video.state === "tagged" && video.splicedVideoUri !== undefined) ? "Tagged":"Untagged"}
+										</TableCell>
+						            </TableRow>
+					          	)
+								
 					        })}
 					    </TableBody>
 					  </Table>

@@ -16,9 +16,6 @@ import TableHead from '@material-ui/core/TableHead';
 import axios from 'axios/index';
 import TableRow from '@material-ui/core/TableRow';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 
@@ -129,7 +126,7 @@ class VideoQuality extends Component {
 	}
 
 	get_time(time_string){
-		if(time_string == undefined){
+		if(time_string === undefined){
 			return ""
 		} else{
 			return this.lpad(Math.floor(time_string/60.0), 2)+":"+this.lpad(time_string%60, 2)
@@ -166,7 +163,7 @@ class VideoQuality extends Component {
 								<ForwardControl seconds={10} order={3.2} />
 							</ControlBar>
 						</Player>
-						<Button type="submit" disabled={this.state.submit_timestamps=="Submitted"} variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick = {()=>{this.qualityCheck()}} >{this.state.submit_timestamps}</Button>
+						<Button type="submit" disabled={this.state.submit_timestamps === "Submitted"} variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick = {()=>{this.qualityCheck()}} >{this.state.submit_timestamps}</Button>
 					</Grid>
 					<Grid item xs={4}>
 						<Paper>
@@ -183,7 +180,7 @@ class VideoQuality extends Component {
 										{this.state.video.Segments.map((segment, index)=>{
 											var cell_color = "#fff"
 								
-											if(this.state.current_segment===index){
+											if(this.state.current_segment === index){
 												cell_color = "#eee"
 											}
 											if(segment['reject'] !== undefined && segment['reject']){
@@ -206,17 +203,19 @@ class VideoQuality extends Component {
 													</TableCell>
 													<TableCell>
 														<Button  onClick = {()=>{
-														if(this.state.video.Segments[index]['reject']){
-															this.state.video.Segments[index]['reject'] = false
+
+														var segs = this.state.video.Segments
+														if(segs[index]['reject']){
+															segs[index]['reject'] = false
 														} else {
-															this.state.video.Segments[index]['reject'] = true
+															segs[index]['reject'] = true
 														}
 														
 														this.setState(prevState => ({
 															...prevState,
 															video:{
 																...prevState.video,
-																Segments: this.state.video.Segments
+																Segments: segs
 															}
 														}))
 														
@@ -227,7 +226,7 @@ class VideoQuality extends Component {
 											)
 										})}
 										<div ref={(el) => { 
-											if(this.state.tagEnd == undefined){
+											if(this.state.tagEnd === undefined){
 												this.setState({
 													tagEnd: el
 												})

@@ -1,5 +1,3 @@
-import {PlayersConfig} from './dashboards/players/PlayersConfig';
-import {TournamentsConfig} from './dashboards/tournaments/TournamentsConfig';
 import {VideoConfig} from './dashboards/video/VideoConfig';
 import {MatchesConfig} from './dashboards/matches/MatchesConfig';
 import {AccountInformationConfig} from './dashboards/account_information/AccountInformationConfig';
@@ -10,8 +8,6 @@ import {VideoQualityConfig} from './dashboards/video_quality/VideoQualityConfig'
 import {UntaggedConfig} from './dashboards/untagged/UntaggedConfig';
 
 export const appsConfigs = [
-	PlayersConfig,
-	TournamentsConfig,
 	VideoConfig,
 	MatchesConfig,
 	TaggedConfig,

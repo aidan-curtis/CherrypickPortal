@@ -14,24 +14,18 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import {Popover} from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import axios from 'axios/index';
-import AppBar from '@material-ui/core/AppBar';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Tab from '@material-ui/core/Tab';
 import TextField from '@material-ui/core/TextField';
-import Autosuggest from 'react-autosuggest';
 import { Redirect } from 'react-router-dom'
 
-import store from 'store';
 export const SET_USER_DATA = '[USER] SET DATA';
 
 
@@ -69,7 +63,7 @@ class Video extends Component {
 
 		
 
-		if(this.state.video.splicedVideoUri==undefined){
+		if(this.state.video.splicedVideoUri === undefined){
 			this.state.spliced=false
 		} else {
 			this.state.spliced=true
@@ -79,7 +73,7 @@ class Video extends Component {
 
 
 		var token = this.props.user.token
-		if(token == "" || token == undefined){
+		if(token === "" || token === undefined){
 			token = localStorage.token
 		}
 
@@ -87,7 +81,7 @@ class Video extends Component {
 
 		//Build up the segments for spliced points
 		var spliced_points = [0]
-		if(this.state.video.Segments != undefined){
+		if(this.state.video.Segments !== undefined){
 			for (var i = 0 ; i< this.state.video.Segments.length; i+=1){
 				spliced_points.push(parseFloat(spliced_points[i])+parseFloat(this.state.video.Segments[i].stop)-parseFloat(this.state.video.Segments[i].start))
 			}
@@ -119,14 +113,14 @@ class Video extends Component {
 	handleSegmentsStateChange(state, prevState){
 		for (var i=0; i<this.state.spliced_points.length; i+=1){
 			// For seeking after splice switch
-			if(this.state.spliced_seek != undefined){
+			if(this.state.spliced_seek !== undefined){
 				this.setState({
 					spliced_seek: undefined
 				})
 				this.refs.player.seek(this.state.spliced_seek)
 			}
 			if(state.currentTime<this.state.spliced_points[i]){
-				if(this.state.current_segment != i-1){
+				if(this.state.current_segment !== i-1){
 					this.setState({
 						current_segment: i-1
 					})
@@ -140,7 +134,7 @@ class Video extends Component {
 	handleFullMatch(state, prevState){
 		if(this.state.video.Segments.length>0){
 			//For seeking after splice switch
-			if(this.state.full_seek != undefined){
+			if(this.state.full_seek !== undefined){
 				this.setState({
 					full_seek: undefined
 				})
@@ -148,7 +142,7 @@ class Video extends Component {
 			}
 			for (var i=0; i<this.state.spliced_points.length; i+=1){
 				if(state.currentTime<this.state.video.Segments[i]['start']){
-					if(this.state.current_segment != i-1){
+					if(this.state.current_segment !== i-1){
 						this.setState({
 							current_segment: i-1
 						})
@@ -194,7 +188,7 @@ class Video extends Component {
 
 	handleSwitchChange = name => event => {
 		// If the video has finished splicing, we can move to the spliced version of the video
-		if(this.state.video.splicedVideoUri != undefined){
+		if(this.state.video.splicedVideoUri !== undefined){
 			if(this.state.spliced){
 				// From spliced to full
 				this.setState({
@@ -233,7 +227,7 @@ class Video extends Component {
 
 	handleSubmitContinue = () => {
 		var token = this.props.user.token
-		if(token == "" || token == undefined){
+		if(token === "" || token === undefined){
 			token = localStorage.token
 		}
 		
@@ -332,7 +326,7 @@ class Video extends Component {
 									onChange={this.handleChange('playerName1')}
 									margin="normal"
 								/>
-								{(this.state.matchMode == "doubles" || this.state.video.metadata.playerName2 != "")?
+								{(this.state.matchMode === "doubles" || this.state.video.metadata.playerName2 !== "")?
 								<TextField
 									id=""
 									label="Player 2 Name"
@@ -394,15 +388,15 @@ class Video extends Component {
 									<TableBody>
 										{this.state.video.Segments.map((segment, index)=>{
 											var cell_color = "#fff"
-											if(Math.floor(this.state.current_segment)===index){
+											if(Math.floor(this.state.current_segment) === index){
 												cell_color = "#eee"
 											}
 											return (
 												<TableRow key={index} style ={{backgroundColor: cell_color}} onClick = {()=>{this.changeCurrentTime(segment.start, index)}}>
 													<TableCell component="th" scope="row" onClick = {()=>{this.setState({selected: index})}}>
 														Point {index+1}
-													{index==this.state.current_segment?<div style = {{width: 0}} ref={(el) => { 
-														if(this.state.tagEnd == undefined || this.state.tagEndIdx !== index){
+													{index === this.state.current_segment?<div style = {{width: 0}} ref={(el) => { 
+														if(this.state.tagEnd === undefined || this.state.tagEndIdx !== index){
 															this.setState({
 																tagEnd: el,
 																tagEndIdx: index

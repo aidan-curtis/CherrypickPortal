@@ -16,9 +16,6 @@ import TableHead from '@material-ui/core/TableHead';
 import axios from 'axios/index';
 import TableRow from '@material-ui/core/TableRow';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 
@@ -34,10 +31,10 @@ class TagVideo extends Component {
 	handleKeyPress = (event) => {
 		if(event.key === 's') {
 			var temp_segments = this.state.segments
-			if(this.state.segment_index%2==0){
-				temp_segments[this.state.segment_index/2]['start'] = parseInt(this.state.player.currentTime)
+			if(this.state.segment_index%2 === 0){
+				temp_segments[this.state.segment_index/2]['start'] = parseInt(this.state.player.currentTime, 10)
 			} else {
-				temp_segments[parseInt(this.state.segment_index/2)]['stop'] = parseInt(this.state.player.currentTime)
+				temp_segments[parseInt(this.state.segment_index/2, 10)]['stop'] = parseInt(this.state.player.currentTime, 10)
 			}
 			if((this.state.segment_index+1)/2 === this.state.segments.length ){
 				temp_segments.push({})
@@ -61,9 +58,9 @@ class TagVideo extends Component {
 				this.state.tagEnd.scrollIntoView({ behavior: "smooth" });
 			}
 		}
-		if((event.key === 'd' || event.key === 'a') && this.refs.player != undefined){
+		if((event.key === 'd' || event.key === 'a') && this.refs.player !== undefined){
 			//Seek tag in video player
-			if(Math.floor(this.state.segment_index/2) != this.state.segment_index/2){
+			if(Math.floor(this.state.segment_index/2) !== this.state.segment_index/2){
 				this.refs.player.seek(this.state.segments[Math.floor(this.state.segment_index/2)]["stop"]);
 			}
 			else {
@@ -85,7 +82,7 @@ class TagVideo extends Component {
 			segments: [{}],
 			submit_timestamps: "Submit Timestamps"
 		}
-		if(this.state.video.Segments.length != 0){
+		if(this.state.video.Segments.length !== 0){
 			this.state.segments = this.state.video.Segments
 		}
 
@@ -149,7 +146,7 @@ class TagVideo extends Component {
 	}
 
 	get_time(time_string){
-		if(time_string == undefined){
+		if(time_string === undefined){
 			return ""
 		} else{
 			return this.lpad(Math.floor(time_string/60.0), 2)+":"+this.lpad(time_string%60, 2)
@@ -186,7 +183,7 @@ class TagVideo extends Component {
 								<ForwardControl seconds={10} order={3.2} />
 							</ControlBar>
 						</Player>
-						<Button type="submit" disabled={this.state.submit_timestamps=="Submitted"} variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick = {()=>{this.submitTimestamps()}} >{this.state.submit_timestamps}</Button>
+						<Button type="submit" disabled={this.state.submit_timestamps === "Submitted"} variant="outlined" color="primary" style={{width: "100%", marginTop: 10}} onClick = {()=>{this.submitTimestamps()}} >{this.state.submit_timestamps}</Button>
 					</Grid>
 					<Grid item xs={4}>
 						<Paper>
@@ -201,24 +198,23 @@ class TagVideo extends Component {
 									<TableBody>
 										{this.state.segments.map((segment, index)=>{
 											
-
+											var cell_color_start = "#FFB9B9"	
+											var cell_color_stop = "#FFB9B9"	
 											if(segment['reject'] !== undefined && segment['reject']){
-												cell_color_start = "#FFB9B9"	
-												cell_color_stop = "#FFB9B9"	
-												if(this.state.segment_index===index*2){
+												if(this.state.segment_index === index*2){
 													cell_color_start = "#DDA0A0"
 												}
-												if(this.state.segment_index===index*2+1){
+												if(this.state.segment_index === index*2+1){
 													cell_color_stop = "#DDA0A0"
 												}
 
 											} else {
-												var cell_color_start = "#fff"
-												var cell_color_stop = "#fff"
-												if(this.state.segment_index===index*2){
+												cell_color_start = "#fff"
+												cell_color_stop = "#fff"
+												if(this.state.segment_index === index*2){
 													cell_color_start = "#eee"
 												}
-												if(this.state.segment_index===index*2+1){
+												if(this.state.segment_index === index*2+1){
 													cell_color_stop = "#eee"
 												}
 											}
@@ -241,7 +237,7 @@ class TagVideo extends Component {
 											)
 										})}
 										<div ref={(el) => { 
-											if(this.state.tagEnd == undefined){
+											if(this.state.tagEnd === undefined){
 												this.setState({
 													tagEnd: el
 												})

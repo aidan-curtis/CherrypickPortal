@@ -225,10 +225,10 @@ class MainToolbar extends Component {
 
 	refresh(){
 		var token = this.props.user.token
-		if(token == "" || token == undefined){
+		if(token === "" || token === undefined){
 			token = localStorage.token
 		}
-		if(token == "" || token == undefined){
+		if(token === "" || token === undefined){
 			//This person does not have a token. redirect to login
 			this.setState({redirect: "/login"})
 		}
@@ -715,7 +715,7 @@ class MainToolbar extends Component {
 							 link[d_idx+2] === "quality" || link[d_idx+1] === "quality"  ? (<a  className="breadcrumb">Quality Check</a>): null
 						}
 						{
-							 link.length>d_idx+3 && link[d_idx+1] !== "tagvideo" ? (<a className="breadcrumb">{decodeURIComponent(link[d_idx+2])} {decodeURIComponent(link[d_idx+3])} {link[d_idx+4]=="None"?"":"& "+decodeURIComponent(link[d_idx+4])}</a>) : null
+							 link.length>d_idx+3 && link[d_idx+1] !== "tagvideo" ? (<a className="breadcrumb">{decodeURIComponent(link[d_idx+2])} {decodeURIComponent(link[d_idx+3])} {link[d_idx+4] === "None"?"":"& "+decodeURIComponent(link[d_idx+4])}</a>) : null
 						}
 						{
 							 link.length>d_idx+4 && link[d_idx+1] === "tagvideo" ? (<a className="breadcrumb">{decodeURIComponent(link[d_idx+4])}</a>) : null
@@ -723,7 +723,7 @@ class MainToolbar extends Component {
 					</nav>
 				</div>
 				<div className="flex">
-					<Button className="h-64" onClick={this.uploadVideo} hidden={user.team.role!="team"}>
+					<Button className="h-64" onClick={this.uploadVideo} hidden={user.team.role !== "team"}>
 							<Icon className="text-16 ml-12 hidden sm:flex" variant="action">cloud_upload</Icon>
 							<Typography component="span" className="normal-case font-500 flex">
 								&nbsp; Upload Video
