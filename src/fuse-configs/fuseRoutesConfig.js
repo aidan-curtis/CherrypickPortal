@@ -25,8 +25,5 @@ export const routes = [
         path     : '/',
         exact    : true,
         component: () => <Redirect to="/login"/>
-    },
-    {
-        component: () => <Redirect to="/login"/>
     }
 ];
