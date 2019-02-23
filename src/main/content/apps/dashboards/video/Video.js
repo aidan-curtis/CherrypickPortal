@@ -25,6 +25,7 @@ import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import { Redirect } from 'react-router-dom'
+import env from '../../../../../config'
 
 export const SET_USER_DATA = '[USER] SET DATA';
 
@@ -91,7 +92,7 @@ class Video extends Component {
 
 		axios({
 			method: "POST",
-			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/get_signed_url_for_key",
+			url: env.REACT_APP_API_ENDPOINT + "/private_api/get_signed_url_for_key",
 			responseType: 'json',
 			headers: {
 				"authorization": token
@@ -233,7 +234,7 @@ class Video extends Component {
 		
 		axios({
 			method: "POST",
-			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/update_video_metadata",
+			url: env.REACT_APP_API_ENDPOINT + "/private_api/update_video_metadata",
 			responseType: 'json',
 			headers: {
 				"authorization": token

@@ -23,15 +23,14 @@ import { PersistGate } from 'redux-persist/integration/react'
 import store from 'store';
 import { persistStore } from 'redux-persist'
 
-
-const jss = create({
+var jss = create({
 	...jssPreset(),
 	plugins: [...jssPreset().plugins, jssExtend()]
 });
 
 jss.options.insertionPoint = document.getElementById('jss-insertion-point');
-const generateClassName = createGenerateClassName();
-const persistor = persistStore(store)
+var generateClassName = createGenerateClassName();
+var persistor = persistStore(store)
 
 ReactDOM.render(
 	<JssProvider jss={jss} generateClassName={generateClassName}>

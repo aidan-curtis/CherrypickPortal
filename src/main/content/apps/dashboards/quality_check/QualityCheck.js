@@ -15,6 +15,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TableRow from '@material-ui/core/TableRow';
 import axios from 'axios/index';
+import env from '../../../../../config'
+
 export const SET_USER_DATA = '[USER] SET DATA';
 
 const styles = theme => ({
@@ -93,7 +95,7 @@ class QualityCheck extends Component {
 		}
 		axios({
 			method: "GET",
-			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/get_team",
+			url: env.REACT_APP_API_ENDPOINT + "/private_api/get_team",
 			responseType: 'json',
 			headers: {
 				"authorization": token

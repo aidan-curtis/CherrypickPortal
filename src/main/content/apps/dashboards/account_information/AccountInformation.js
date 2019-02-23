@@ -34,8 +34,6 @@ class AccountInformation extends Component {
 		this.state['name'] = props.match.params.name
 	}
 
-	
-
 	render()
 	{
 		const {classes} = this.props;

@@ -30,9 +30,10 @@ import store from 'store';
 import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
+import env from '../config'
 import { Redirect } from 'react-router-dom'
-
 require('./materialize.css')
+
 
 export const SET_USER_DATA = '[USER] SET DATA';
 
@@ -209,7 +210,8 @@ class MainToolbar extends Component {
 		redirect:null,
 		matchMode: 0,
 		segment_video: true,
-		grid: 6
+		grid: 6,
+		warning_active: false
 	};
 
 
@@ -236,7 +238,7 @@ class MainToolbar extends Component {
 		var final_this = this
 		axios({
 			method: "GET",
-			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/get_team",
+			url: env.REACT_APP_API_ENDPOINT + "/private_api/get_team",
 			responseType: 'json',
 			headers: {
 				"authorization": token
@@ -345,7 +347,7 @@ class MainToolbar extends Component {
 	handleSubmitForm = () => {
 		axios({
 			method: "POST",
-			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/create_video",
+			url: env.REACT_APP_API_ENDPOINT + "/private_api/create_video",
 			responseType: 'json',
 			headers: {
 				"authorization": localStorage.token
@@ -493,7 +495,7 @@ class MainToolbar extends Component {
 									style = {{fontSize: 50}}
 									acceptedFileTypes = {["video/mp4","video/quicktime"]}
 									server={{
-											url: process.env.REACT_APP_API_ENDPOINT+'/private_api',
+											url: env.REACT_APP_API_ENDPOINT+'/private_api',
 											process: {
 												url: '/upload_video',
 												method: 'POST',

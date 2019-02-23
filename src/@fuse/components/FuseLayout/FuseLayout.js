@@ -76,7 +76,7 @@ class FuseLayout extends Component {
         const {settings, classes} = this.props;
         // console.warn('FuseLayout:: rendered');
         const Layout = FuseLayouts[settings.layout.style].component;
-        
+        console.log(settings.layout.style)
         return (
             <Layout className={classes.root} {...this.props}/>
         );

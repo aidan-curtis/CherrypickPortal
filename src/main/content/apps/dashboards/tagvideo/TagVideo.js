@@ -17,6 +17,7 @@ import axios from 'axios/index';
 import TableRow from '@material-ui/core/TableRow';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import env from '../../../../../config'
 
 
 
@@ -118,7 +119,7 @@ class TagVideo extends Component {
 		cloneSegments.splice(-1,1)
 		axios({
 			method: "POST",
-			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/process_video",
+			url: env.REACT_APP_API_ENDPOINT + "/private_api/process_video",
 			responseType: 'json',
 			headers: {
 				"authorization": localStorage.token

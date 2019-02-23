@@ -17,6 +17,7 @@ import axios from 'axios/index';
 import TableRow from '@material-ui/core/TableRow';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import env from '../../../../../config'
 
 
 
@@ -98,7 +99,7 @@ class VideoQuality extends Component {
 		cloneSegments.splice(-1,1)
 		axios({
 			method: "POST",
-			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/quality_check",
+			url: env.REACT_APP_API_ENDPOINT + "/private_api/quality_check",
 			responseType: 'json',
 			headers: {
 				"authorization": localStorage.token

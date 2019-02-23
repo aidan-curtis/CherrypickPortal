@@ -23,7 +23,7 @@ export const fuseNavigationConfig = [
 			},
 			{
 				'id'   : 'quality',
-				'title': 'Quality Check',
+				'title': 'Quality Checking',
 				'type' : 'item',
 				'url'  : '/apps/dashboards/quality',
 				'icon' : 'remove_red_eye',

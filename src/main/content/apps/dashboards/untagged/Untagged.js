@@ -16,6 +16,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TableRow from '@material-ui/core/TableRow';
 import axios from 'axios/index';
+import env from '../../../../../config'
+
 export const SET_USER_DATA = '[USER] SET DATA';
 
 const styles = theme => ({
@@ -35,7 +37,6 @@ function desc(a, b, orderBy) {
 }
 
 function stableSort(array, cmp) {
-	console.log(array)
 	const stabilizedThis = array.map((el, index) => [el, index]);
 	stabilizedThis.sort((a, b) => {
 	const order = cmp(a[0], b[0]);
@@ -46,7 +47,6 @@ function stableSort(array, cmp) {
 }
 
 function getSorting(order, orderBy) {
-	console.log(orderBy)
 	return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
 }
 
@@ -93,7 +93,7 @@ class Untagged extends Component {
 		}
 		axios({
 			method: "GET",
-			url: process.env.REACT_APP_API_ENDPOINT + "/private_api/get_team",
+			url: env.REACT_APP_API_ENDPOINT + "/private_api/get_team",
 			responseType: 'json',
 			headers: {
 				"authorization": token
@@ -145,11 +145,13 @@ class Untagged extends Component {
 											sortDirection={this.state.orderBy === row.id ? this.state.order : false}
 										>
 											<Tooltip
+												key={row.id}
 												title="Sort"
 												placement={row.numeric ? 'bottom-end' : 'bottom-start'}
 												enterDelay={300}
 											>
 												<TableSortLabel
+													key={row.id}
 													active={this.state.orderBy === row.id}
 													direction={this.state.order}
 													onClick={this.createSortHandler(row.id)}
@@ -176,6 +178,7 @@ class Untagged extends Component {
 								}
 								return (
 									<TableRow
+										key={video._id}
 										hover
 										onClick={() => {
 												if(!((video.processedImageUri === null || video.processedImageUri === undefined || video.processedImageUri === ""))){

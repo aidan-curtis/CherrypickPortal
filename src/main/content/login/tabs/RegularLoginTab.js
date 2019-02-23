@@ -9,133 +9,127 @@ import connect from 'react-redux/es/connect/connect';
 
 
 const styles = theme => ({
-    root: {
-        width: '100%'
-    }
+	root: {
+		width: '100%'
+	}
 });
 
 class RegularLoginTab extends Component {
-    state = {
-        canSubmit: false,
-        loginError: false
-    };
+	state = {
+		canSubmit: false,
+		loginError: false
+	};
 
-    form = React.createRef();
+	form = React.createRef();
 
-    disableButton = () => {
-        this.setState({canSubmit: false});
-    };
+	disableButton = () => {
+		this.setState({canSubmit: false});
+	};
 
-    enableButton = () => {
-        this.setState({canSubmit: true});
-    };
+	enableButton = () => {
+		this.setState({canSubmit: true});
+	};
 
-    onSubmit = (model) => {
-        this.props.submitLogin(model);
-    };
+	onSubmit = (model) => {
+		this.props.submitLogin(model);
+	};
 
-    componentDidMount(){
-        this.props.login.error=null
-    }
-    componentDidUpdate(prevProps, prevState)
-    {
+	componentDidMount(){
+		this.props.login.error=null
+	}
+	componentDidUpdate(prevProps, prevState)
+	{
+		if ( this.props.user.token !== '' )
+		{
+			var pathname = ""
+			if(this.props.user.team.role === "team"){
+				pathname = this.props.location.state && this.props.location.state.redirectUrl ? this.props.location.state.redirectUrl : '/apps/dashboards/matches';
+			} else {
+				pathname = this.props.location.state && this.props.location.state.redirectUrl ? this.props.location.state.redirectUrl : '/apps/dashboards/untagged';                
+			}
+			this.props.history.push({
+				pathname
+			});
+		}
+		return null;
+	}
 
-        console.log("Login")
-        console.log(this.props.user.token)
-        console.log(localStorage.token)
+	render()
+	{
+		const {classes} = this.props;
+		const {canSubmit} = this.state;
 
-        if ( this.props.user.token !== '' )
-        {
-            console.log("passed")
-            var pathname = ""
-            if(this.props.user.team.role === "team"){
-                pathname = this.props.location.state && this.props.location.state.redirectUrl ? this.props.location.state.redirectUrl : '/apps/dashboards/matches';
-            } else {
-                pathname = this.props.location.state && this.props.location.state.redirectUrl ? this.props.location.state.redirectUrl : '/apps/dashboards/untagged';                
-            }
-            this.props.history.push({
-                pathname
-            });
-        }
-        return null;
-    }
+		return (
+			<div className={classes.root}>
+				{this.props.login.error!=null?<p style={{color: "red", marginBottom: 10}}>The information you entered was incorrect.</p>:null}
+				<Formsy
+					onValidSubmit={this.onSubmit}
+					onValid={this.enableButton}
+					onInvalid={this.disableButton}
+					ref={(form) => this.form = form}
+					className="flex flex-col justify-center w-full"
+				>
+					<TextFieldFormsy
+						className="mb-16"
+						type="text"
+						name="email"
+						label="Username"
+						validations={{
+							minLength: 4
+						}}
+						validationErrors={{
+							minLength: 'Min character length is 4'
+						}}
+						required
+					/>
 
-    render()
-    {
-        const {classes} = this.props;
-        const {canSubmit} = this.state;
+					<TextFieldFormsy
+						className="mb-16"
+						type="password"
+						name="password"
+						label="Password"
+						validations={{
+							minLength: 4
+						}}
+						validationErrors={{
+							minLength: 'Min character length is 4'
+						}}
+						required
+					/>
 
-        return (
-            <div className={classes.root}>
-                {this.props.login.error!=null?<p style={{color: "red", marginBottom: 10}}>The information you entered was incorrect.</p>:null}
-                <Formsy
-                    onValidSubmit={this.onSubmit}
-                    onValid={this.enableButton}
-                    onInvalid={this.disableButton}
-                    ref={(form) => this.form = form}
-                    className="flex flex-col justify-center w-full"
-                >
-                    <TextFieldFormsy
-                        className="mb-16"
-                        type="text"
-                        name="email"
-                        label="Username"
-                        validations={{
-                            minLength: 4
-                        }}
-                        validationErrors={{
-                            minLength: 'Min character length is 4'
-                        }}
-                        required
-                    />
+					<Button
+						type="submit"
+						variant="raised"
+						color="primary"
+						className="w-full mx-auto mt-16 normal-case"
+						aria-label="LOG IN"
+						disabled={!canSubmit}
+						value="legacy"
+					>
+						Log In
+					</Button>
 
-                    <TextFieldFormsy
-                        className="mb-16"
-                        type="password"
-                        name="password"
-                        label="Password"
-                        validations={{
-                            minLength: 4
-                        }}
-                        validationErrors={{
-                            minLength: 'Min character length is 4'
-                        }}
-                        required
-                    />
+				</Formsy>
 
-                    <Button
-                        type="submit"
-                        variant="raised"
-                        color="primary"
-                        className="w-full mx-auto mt-16 normal-case"
-                        aria-label="LOG IN"
-                        disabled={!canSubmit}
-                        value="legacy"
-                    >
-                        Log In
-                    </Button>
-
-                </Formsy>
-
-            </div>
-        );
-    }
+			</div>
+		);
+	}
 }
 
 
 function mapDispatchToProps(dispatch)
 {
-    return bindActionCreators({
-        submitLogin: Actions.submitLogin
-    }, dispatch);
+	return bindActionCreators({
+		submitLogin: Actions.submitLogin
+	}, dispatch);
 }
 
 function mapStateToProps({auth})
 {
-    return {
-        login: auth.login,
-        user : auth.user
-    }
+	return {
+		login: auth.login,
+		user : auth.user
+	}
 }
 
 export default withStyles(styles, {withTheme: true})(withRouter(connect(mapStateToProps, mapDispatchToProps)(RegularLoginTab)));

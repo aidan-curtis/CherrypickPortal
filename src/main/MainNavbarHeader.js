@@ -34,7 +34,7 @@ function MainNavbarHeader({classes})
     return (
         <div className={classes.root}>
             <div className={classNames(classes.logo, "flex items-center")}>
-                <img alt = "logo" src="assets/images/logos/cherrypick_full_logo.png" height="50" /> 
+                <img alt = "logo" src="public/assets/images/logos/cherrypick_full_logo.png" height="50" /> 
             </div>
         </div>
     );

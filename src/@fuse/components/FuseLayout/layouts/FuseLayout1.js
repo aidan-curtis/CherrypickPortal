@@ -220,6 +220,7 @@ class FuseLayout1 extends Component {
 
     render()
     {
+        console.log("rendering layout1")
         const {classes, toolbar, footer, navbarHeader, navbarContent, settings, navbar, navbarOpenMobile, navbarCloseMobile, navbarOpenFolded, navbarCloseFolded, children, leftSidePanel, rightSidePanel, contentWrapper} = this.props;
         // console.warn('FuseLayout:: rendered');
         const layoutConfig = settings.layout.config;
@@ -331,6 +332,9 @@ class FuseLayout1 extends Component {
                 </AppBar>
             </MuiThemeProvider>
         );
+
+        console.log("starting switch")
+        console.log(layoutConfig.scroll)
         switch ( layoutConfig.scroll )
         {
             case 'body':
