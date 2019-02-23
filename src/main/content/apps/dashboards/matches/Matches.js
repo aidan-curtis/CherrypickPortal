@@ -95,12 +95,10 @@ class Matches extends Component {
 			// Need to replace slashes because urls are parsed by slash
 			var encoded_vname = encodeURIComponent(this.state.vname)
 			var encoded_pname1 = encodeURIComponent(this.state.pname1)
-			if(this.state.pname2 === "" || this.state.pname2 === undefined){
-				this.setState({
-					pname2: "None"
-				})
-			}
 			var encoded_pname2 = encodeURIComponent(this.state.pname2)
+			if(encoded_pname2 === "" || encoded_pname2 === undefined){
+				encoded_pname2 = "None"
+			}
 			var link = '/apps/dashboards/video/'+encoded_vname+'/'+encoded_pname1+'/'+encoded_pname2+"/"+this.state.vid
 			return <Redirect to={link}/>
 		}

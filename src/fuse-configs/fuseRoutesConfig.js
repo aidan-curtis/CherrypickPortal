@@ -10,23 +10,23 @@ import {LogoutConfig} from 'main/content/logout/LogoutConfig';
 import {CallbackConfig} from 'main/content/callback/CallbackConfig';
 
 const routeConfigs = [
-    ...appsConfigs,
-    ...pagesConfigs,
-    LoginConfig,
-    UserInterfaceConfig,
-    RegisterConfig,
-    LogoutConfig,
-    CallbackConfig
+	...appsConfigs,
+	...pagesConfigs,
+	LoginConfig,
+	UserInterfaceConfig,
+	RegisterConfig,
+	LogoutConfig,
+	CallbackConfig
 ];
 
 export const routes = [
-    ...FuseUtils.generateRoutesFromConfigs(routeConfigs),
-    {
-        path     : '/',
-        exact    : true,
-        component: () => <Redirect to="/login"/>
-    },
-    {
-        component: () => <Redirect to="/login"/>
-    }
+	...FuseUtils.generateRoutesFromConfigs(routeConfigs),
+	{
+		path     : '/',
+		exact    : true,
+		component: () => <Redirect to="/login"/>
+	},
+	{
+		component: () => <Redirect to="/login"/>
+	}
 ];
