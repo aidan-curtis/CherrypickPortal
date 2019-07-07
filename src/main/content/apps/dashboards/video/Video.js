@@ -175,7 +175,6 @@ class Video extends Component {
 
 
 	changeCurrentTime(seconds, index) {
-		console.log("Change current time")
 		this.setState({
 			current_segment: index
 		})
@@ -224,6 +223,18 @@ class Video extends Component {
 			}
 		});
 	};
+
+
+	save_notes(){
+		// save the notes made by the coach
+	}
+
+	handleChange = name => event => {
+		this.setState({
+			[name]: event.target.value,
+		});
+	};
+
 
 
 	handleSubmitContinue = () => {
@@ -384,6 +395,7 @@ class Video extends Component {
 									<TableHead>
 										<TableRow>
 											<TableCell>Points</TableCell>
+											<TableCell>Notes</TableCell>
 										</TableRow>
 									</TableHead>
 									<TableBody>
@@ -405,6 +417,17 @@ class Video extends Component {
 														}
 													}}></div>:null}
 													</TableCell>
+
+													<TableCell component="th" scope="row" onClick = {()=>{this.setState({selected: index})}}>
+														 <TextField
+															id="outlined-bare"
+															className={classes.textField}
+															style={{width: "100%"}}
+															margin="normal"
+															variant="outlined"
+														/>
+													</TableCell>
+
 												</TableRow>
 												
 											)

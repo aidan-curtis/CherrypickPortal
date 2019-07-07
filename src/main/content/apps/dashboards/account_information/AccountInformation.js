@@ -43,7 +43,7 @@ class AccountInformation extends Component {
 				<Card style={{width: "100%", height: "125px"}}>
 					<CardContent>
 						<Typography className={classes.title} color="textPrimary" gutterBottom>
-							Usage Stats
+							Usage Statistics
 						</Typography>
 						<Typography className={classes.title} color="textSecondary" gutterBottom>
 							Matches Tagged: {num_tagged}
