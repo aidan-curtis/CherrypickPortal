@@ -41,7 +41,7 @@ class Login extends Component {
                     className={classNames(classes.intro, "flex flex-col flex-no-grow items-center p-16 text-center md:p-128 md:items-start md:flex-no-shrink md:flex-1 md:text-left")}>
 
                     <FuseAnimate animation="transition.expandIn">
-                        <img className="w-128 mb-32" src="public/assets/images/logos/alpha_white.png"  alt="logo"/>
+                        <img className="w-128 mb-32" src="assets/images/logos/alpha_white.png"  alt="logo"/>
                     </FuseAnimate>
 
                     <FuseAnimate animation="transition.slideUpIn" delay={300}>
